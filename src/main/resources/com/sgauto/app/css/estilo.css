@@ -1,1 +1,135 @@
-/* Estilos da aplicação SGAuto */
+.root {
+    /* Paleta */
+    -bg-app: #1a1c20;
+    -bg-sidebar: #121316;
+    -bg-card: #24262b;
+    -bg-card-hover: #2b2e34;
+    -border-subtle: #2f3237;
+
+    -accent: #ff7a30;
+    -accent-hover: #ff8f4f;
+    -accent-soft: #3a2a1e;
+
+    -text-primary: #f2f2f2;
+    -text-secondary: #9aa0a6;
+    -text-muted: #6b7076;
+    -text-white: #FFFFFF;
+
+    -success: #3ecf8e;
+    -danger: #ef5350;
+    -warning: #f5c518;
+
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: -bg-app;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+    -fx-background-color: -bg-sidebar;
+    -fx-padding: 0;
+    -fx-pref-width: 230;
+    -fx-min-width: 230;
+}
+
+.sidebar-brand {
+    -fx-padding: 24 20 24 20;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.sidebar-brand-text {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.sidebar-brand-accent {
+    -fx-text-fill: -accent;
+}
+
+.sidebar-section-label {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 18 20 6 20;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-white;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 20 12 20;
+    -fx-pref-width: 230;
+    -fx-background-radius: 0;
+    -fx-cursor: hand;
+    -fx-graphic-text-gap: 12;
+}
+
+.nav-button:hover {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-primary;
+}
+
+.nav-button:selected {
+    -fx-background-color: -accent-soft;
+    -fx-text-fill: -accent;
+    -fx-font-weight: bold;
+    -fx-border-color: -accent;
+    -fx-border-width: 0 0 0 3;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+    -fx-background-color: -bg-app;
+    -fx-padding: 20 30 10 30;
+    -fx-border-color: -border-subtle;
+    -fx-border-width: 0 0 1 0;
+}
+
+.page-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.page-subtitle {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+}
+
+/* ===== CONTENT ===== */
+.content-area {
+    -fx-background-color: -bg-app;
+    -fx-padding: 25 30 30 30;
+}
+
+/* ===== CARDS (KPIs) ===== */
+.card {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 6;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+}
+
+.card-title {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+}
+
+.card-value {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.card-value-accent {
+    -fx-text-fill: -accent;
+}
+
+.placeholder-text {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 15px;
+}
