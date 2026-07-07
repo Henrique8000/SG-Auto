@@ -52,6 +52,11 @@ public class PrincipalController {
     }
 
     @FXML
+    private void irParaVeiculos() {
+        mostrarTela("Veículos", "Cadastro e visualização de Veículos", montarPlaceholder("Tela de Veículos em construção"));
+    }
+
+    @FXML
     private void irParaServicos() {
         mostrarTela("Serviços", "Cadastro e visualização de serviços", montarPlaceholder("Tela de Serviços em construção"));
     }

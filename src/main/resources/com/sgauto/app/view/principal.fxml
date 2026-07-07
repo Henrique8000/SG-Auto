@@ -27,6 +27,7 @@
             <ToggleButton fx:id="btnDashboard" text="Dashboard" styleClass="nav-button" toggleGroup="$menuLateral" selected="true" onAction="#irParaDashboard"/>
             <ToggleButton fx:id="btnOrdens" text="Ordens de Serviço" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaOrdens"/>
             <ToggleButton fx:id="btnClientes" text="Clientes" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaClientes"/>
+            <ToggleButton fx:id="btnVeiculos" text="Veículos" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaVeiculos"/>
             <ToggleButton fx:id="btnServicos" text="Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaServicos"/>
             <ToggleButton fx:id="btnPatioAtual" text="Pátio Atual" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
 

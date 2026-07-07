@@ -21,13 +21,17 @@ public class App extends Application {
         );
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 640, 480);
+        Scene scene = new Scene(root);
+
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("css/estilo.css")).toExternalForm()
         );
 
         primaryStage.setTitle("SGAuto");
         primaryStage.setScene(scene);
+
+        primaryStage.setMaximized(true);
+
         primaryStage.show();
     }
 
