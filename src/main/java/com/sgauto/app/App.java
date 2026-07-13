@@ -5,34 +5,35 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.Objects;
-
-/**
- * Ponto de entrada da aplicação SGAuto.
- * Inicializa o JavaFX e carrega a primeira View (FXML).
- */
 public class App extends Application {
 
+    private ConfigurableApplicationContext springContext;
+
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(
-                Objects.requireNonNull(getClass().getResource("view/principal.fxml"))
-        );
+    public void init() {
+        springContext = new SpringApplicationBuilder(SgAutoApplication.class)
+                .headless(false)
+                .run();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/principal.fxml"));
+        loader.setControllerFactory(springContext::getBean);
+
         Parent root = loader.load();
+        stage.setScene(new Scene(root));
+        stage.setTitle("SGAuto");
+        stage.show();
+        stage.setMaximized(true);
+    }
 
-        Scene scene = new Scene(root);
-
-        scene.getStylesheets().add(
-                Objects.requireNonNull(getClass().getResource("css/estilo.css")).toExternalForm()
-        );
-
-        primaryStage.setTitle("SGAuto");
-        primaryStage.setScene(scene);
-
-        primaryStage.setMaximized(true);
-
-        primaryStage.show();
+    @Override
+    public void stop() {
+        springContext.close();
     }
 
     public static void main(String[] args) {

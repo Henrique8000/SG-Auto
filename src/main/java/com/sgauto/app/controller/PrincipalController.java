@@ -1,11 +1,18 @@
 package com.sgauto.app.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
+@Component
 public class PrincipalController {
 
     @FXML private StackPane contentArea;
@@ -13,6 +20,8 @@ public class PrincipalController {
     @FXML private Label lblSubtituloPagina;
 
     @FXML private ToggleGroup menuLateral;
+
+    private final ApplicationContext applicationContext;
 
     @FXML private ToggleButton btnDashboard;
     @FXML private ToggleButton btnOrdens;
@@ -22,6 +31,10 @@ public class PrincipalController {
     @FXML private ToggleButton btnEstoque;
     @FXML private ToggleButton btnCaixa;
     @FXML private ToggleButton btnConfiguracoes;
+
+    public PrincipalController(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @FXML
     public void initialize() {
@@ -68,7 +81,14 @@ public class PrincipalController {
 
     @FXML
     private void irParaEstoque() {
-        mostrarTela("Estoque", "Peças e controle de estoque", montarPlaceholder("Tela de Estoque em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Estoque", "Peças e controle de estoque", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Estoque", e);
+        }
     }
 
     @FXML

@@ -1,0 +1,2 @@
+ALTER TABLE t_peca
+    ADD COLUMN peca_modelo VARCHAR(100) NOT NULL DEFAULT 'Geral';
