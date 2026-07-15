@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.sgauto.app.controller.PrincipalController">
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.PrincipalController"
+            stylesheets="@../css/estilo.css">
+
+    <fx:define>
+        <ToggleGroup fx:id="menuLateral"/>
+    </fx:define>
+
+    <!-- MENU LATERAL -->
+    <left>
+        <VBox styleClass="sidebar" BorderPane.alignment="CENTER">
+            <VBox styleClass="sidebar-brand">
+                <Label text="SG Auto" styleClass="sidebar-brand-text">
+                    <graphic>
+                        <Label text="⚙" styleClass="sidebar-brand-accent" style="-fx-font-size: 20px;"/>
+                    </graphic>
+                </Label>
+            </VBox>
+
+            <Label text="OPERAÇÃO" styleClass="sidebar-section-label"/>
+            <ToggleButton fx:id="btnDashboard" text="Dashboard" styleClass="nav-button" toggleGroup="$menuLateral" selected="true" onAction="#irParaDashboard"/>
+            <ToggleButton fx:id="btnOrdens" text="Ordens de Serviço" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaOrdens"/>
+            <ToggleButton fx:id="btnClientes" text="Clientes" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaClientes"/>
+            <ToggleButton fx:id="btnVeiculos" text="Veículos" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaVeiculos"/>
+            <ToggleButton fx:id="btnServicos" text="Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaServicos"/>
+            <ToggleButton fx:id="btnPatioAtual" text="Pátio Atual" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
+
+            <Label text="GESTÃO" styleClass="sidebar-section-label"/>
+            <ToggleButton fx:id="btnEstoque" text="Estoque" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaEstoque"/>
+            <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Label text="SISTEMA" styleClass="sidebar-section-label"/>
+            <ToggleButton fx:id="btnConfiguracoes" text="Configurações" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaConfiguracoes"/>
+        </VBox>
+    </left>
+
+    <!-- CONTEÚDO -->
     <center>
-        <Label text="SGAuto" />
+        <BorderPane>
+            <top>
+                <VBox styleClass="topbar">
+                    <Label fx:id="lblTituloPagina" text="Dashboard" styleClass="page-title"/>
+                    <Label fx:id="lblSubtituloPagina" text="Visão geral da oficina" styleClass="page-subtitle"/>
+                </VBox>
+            </top>
+            <center>
+                <StackPane fx:id="contentArea" styleClass="content-area"/>
+            </center>
+        </BorderPane>
     </center>
 </BorderPane>
