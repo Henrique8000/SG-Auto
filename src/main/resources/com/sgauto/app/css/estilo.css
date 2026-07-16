@@ -269,3 +269,27 @@
 .modal-container {
     -fx-background-color: -bg-app;
 }
+
+/* ===== TOGGLE PF/PJ (formulário de cliente) ===== */
+.tipo-toggle {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-secondary;
+    -fx-background-radius: 8;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+    -fx-padding: 9 16;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+}
+
+.tipo-toggle:hover {
+    -fx-background-color: -bg-card-hover;
+    -fx-text-fill: -text-primary;
+}
+
+.tipo-toggle:selected {
+    -fx-background-color: -accent-soft;
+    -fx-text-fill: -accent;
+    -fx-font-weight: bold;
+    -fx-border-color: -accent;
+}

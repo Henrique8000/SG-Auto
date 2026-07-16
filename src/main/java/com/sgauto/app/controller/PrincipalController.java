@@ -61,7 +61,15 @@ public class PrincipalController {
 
     @FXML
     private void irParaClientes() {
-        mostrarTela("Clientes", "Cadastro e histórico de clientes", montarPlaceholder("Tela de Clientes em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Clientes", "Cadastro e histórico de clientes", tela);
+        } 
+        catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Clientes", e);
+        }
     }
 
     @FXML
