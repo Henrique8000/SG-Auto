@@ -28,11 +28,11 @@
             <ToggleButton fx:id="btnOrdens" text="Ordens de Serviço" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaOrdens"/>
             <ToggleButton fx:id="btnClientes" text="Clientes" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaClientes"/>
             <ToggleButton fx:id="btnVeiculos" text="Veículos" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaVeiculos"/>
-            <ToggleButton fx:id="btnServicos" text="Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaServicos"/>
             <ToggleButton fx:id="btnPatioAtual" text="Pátio Atual" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
 
             <Label text="GESTÃO" styleClass="sidebar-section-label"/>
             <ToggleButton fx:id="btnEstoque" text="Estoque" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaEstoque"/>
+            <ToggleButton fx:id="btnCatalogoServicos" text="Catálogo de Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCatalogoServicos"/>
             <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
 
             <Region VBox.vgrow="ALWAYS"/>

@@ -40,8 +40,8 @@
     <center>
         <TableView fx:id="tabelaPecas" styleClass="modern-table">
             <columns>
-                <TableColumn fx:id="colCodigo" text="Código" prefWidth="110"/>
-                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="260"/>
+                <TableColumn fx:id="colCodigo" text="Código" prefWidth="25"/>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="300"/>
                 <TableColumn fx:id="colModelo" text="Modelo" prefWidth="120"/>
                 <TableColumn fx:id="colPrecoCusto" text="Preço Custo" prefWidth="110"/>
                 <TableColumn fx:id="colPrecoVenda" text="Preço Venda" prefWidth="110"/>

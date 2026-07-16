@@ -70,8 +70,8 @@ public class PrincipalController {
     }
 
     @FXML
-    private void irParaServicos() {
-        mostrarTela("Serviços", "Cadastro e visualização de serviços", montarPlaceholder("Tela de Serviços em construção"));
+    private void irParaCatalogoServicos() {
+        mostrarTela("Catálogo de Serviços", "Serviços disponíveis para uso em Ordens de Serviço", montarPlaceholder("Tela de Catálogo de Serviços em construção"));
     }
 
     @FXML
