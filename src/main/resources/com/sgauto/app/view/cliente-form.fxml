@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.ClienteFormController"
+      styleClass="modal-container" spacing="16" prefWidth="440">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoTipoPessoa"/>
+    </fx:define>
+
+    <Label fx:id="lblTituloModal" text="Novo Cliente" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Tipo de cliente" styleClass="form-label"/>
+        <HBox spacing="8">
+            <ToggleButton fx:id="btnTipoPF" text="Pessoa Física" styleClass="tipo-toggle"
+                          toggleGroup="$grupoTipoPessoa" selected="true" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <ToggleButton fx:id="btnTipoPJ" text="Pessoa Jurídica" styleClass="tipo-toggle"
+                          toggleGroup="$grupoTipoPessoa" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label fx:id="lblNome" text="Nome completo" styleClass="form-label"/>
+        <TextField fx:id="txtNome" styleClass="form-input"/>
+    </VBox>
+
+    <!-- Visível apenas para PJ -->
+    <VBox fx:id="boxNomeFantasia" spacing="4" visible="false" managed="false">
+        <Label text="Nome fantasia" styleClass="form-label"/>
+        <TextField fx:id="txtNomeFantasia" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label fx:id="lblDocumento" text="CPF" styleClass="form-label"/>
+        <TextField fx:id="txtDocumento" styleClass="form-input" promptText="Somente números (11 dígitos)"/>
+    </VBox>
+
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Celular" styleClass="form-label"/>
+            <TextField fx:id="txtCelular" styleClass="form-input" promptText="DDD + número"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Telefone (opcional)" styleClass="form-label"/>
+            <TextField fx:id="txtTelefone" styleClass="form-input"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="4">
+        <Label text="E-mail (opcional)" styleClass="form-label"/>
+        <TextField fx:id="txtEmail" styleClass="form-input"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>
