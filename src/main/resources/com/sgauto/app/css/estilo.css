@@ -269,3 +269,97 @@
 .modal-container {
     -fx-background-color: -bg-app;
 }
+
+/* ===== BADGES DE STATUS ===== */
+.badge {
+    -fx-padding: 4 12;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.badge-active {
+    -fx-background-color: #1e3a2e;
+    -fx-text-fill: -success;
+}
+.badge-inactive {
+    -fx-background-color: #3a1e1e;
+    -fx-text-fill: -danger;
+}
+
+/* ===== TABS ===== */
+.tab-pane {
+    -fx-background-color: transparent;
+    -fx-tab-min-width: 140px;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 10 20;
+}
+.tab-pane .tab-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -accent;
+}
+.tab-pane .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+}
+.tab-pane .tab:selected {
+    -fx-border-color: -accent;
+    -fx-border-width: 0 0 2 0;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-alignment: CENTER;
+}
+
+/* ===== FORM TEXTAREA ===== */
+.form-textarea .content {
+    -fx-background-color: -bg-card;
+}
+.form-textarea {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+}
+.form-textarea:focused {
+    -fx-border-color: -accent;
+}
+
+.btn-table-toggle-on {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -danger;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+.btn-table-toggle-off {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -success;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.btn-table-delete {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+}
+
+.btn-table-delete:hover {
+    -fx-text-fill: #c0392b;
+    -fx-underline: true;
+}

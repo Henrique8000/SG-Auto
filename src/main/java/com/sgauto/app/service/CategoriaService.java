@@ -3,12 +3,10 @@ package com.sgauto.app.service;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ServicoRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -26,8 +24,7 @@ public class CategoriaService {
 
         verificarCampos(categoria);
 
-        String nomeTrim = categoria.getNome().trim();
-        String nomeFormatado = nomeTrim.substring(0, 1).toUpperCase() + nomeTrim.substring(1).toLowerCase();
+        String nomeFormatado = formatarNome(categoria.getNome());
 
         categoria.setNome(nomeFormatado);
 
@@ -43,31 +40,31 @@ public class CategoriaService {
 
         verificarCampos(categoria);
 
-        String nomeTrim = categoria.getNome().trim();
-        String nomeFormatado = nomeTrim.substring(0, 1).toUpperCase() + nomeTrim.substring(1).toLowerCase();
+        String nomeFormatado = formatarNome(categoria.getNome());
 
         categoriaRepository.findByNome(nomeFormatado).ifPresent(c -> {
-            throw new IllegalArgumentException("Já existe uma categoria com este nome");
+            if (!c.getId().equals(categoria.getId())) {
+                throw new IllegalArgumentException("Já existe uma categoria com este nome");
+            }
         });
 
         return categoriaRepository.save(categoria);
     }
 
     @Transactional
-    public void desativar(Long id) {
-        Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com o ID: " + id));
+    public void ativar(Long id) {
+        Categoria categoria = buscarOuFalhar(id);
+        categoria.setAtivo(true);
+    }
 
+    @Transactional
+    public void desativar(Long id) {
+        Categoria categoria = buscarOuFalhar(id);
         boolean existeServico = servicoRepository.existsByCategoria(categoria.getNome());
         if (existeServico) {
             throw new IllegalStateException("Não é possível desativar a categoria pois existem serviços associados a ela.");
         }
-
-        // 2. Desativação (Soft Delete): Altera o status da categoria
         categoria.setAtivo(false);
-
-        // Opcional: categoriaRepository.save(categoria);
-        // (Como usamos @Transactional, o JPA faz o "Dirty Checking" e atualiza no banco automaticamente)
     }
 
     @Transactional(readOnly = true)
@@ -95,7 +92,12 @@ public class CategoriaService {
         }
 
         if (categoria.getTipo() == null || categoria.getTipo().isEmpty()){
-            throw new IllegalArgumentException("Selecione o tipo \"PEÇA\" ou \"CARRO\". Caso não selecione nenhum dos dois será definido como \"AMBOS\"");
+            throw new IllegalArgumentException("Selecione o tipo PEÇA, CARRO ou AMBOS");
         }
+    }
+
+    private String formatarNome(String nome) {
+        String nomeTrim = nome.trim();
+        return nomeTrim.substring(0, 1).toUpperCase() + nomeTrim.substring(1).toLowerCase();
     }
 }

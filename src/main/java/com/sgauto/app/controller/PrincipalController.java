@@ -71,7 +71,14 @@ public class PrincipalController {
 
     @FXML
     private void irParaCatalogoServicos() {
-        mostrarTela("Catálogo de Serviços", "Serviços disponíveis para uso em Ordens de Serviço", montarPlaceholder("Tela de Catálogo de Serviços em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/catalogo-servico.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Catálogo de Serviços", e);
+        }
     }
 
     @FXML
