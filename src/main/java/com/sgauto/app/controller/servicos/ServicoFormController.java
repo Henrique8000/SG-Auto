@@ -1,4 +1,4 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.servicos;
 
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.service.CategoriaService;

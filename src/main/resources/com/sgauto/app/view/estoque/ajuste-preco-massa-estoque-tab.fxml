@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.estoque.AjustePrecoMassaEstoqueController">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoTipoAjuste"/>
+        <ToggleGroup fx:id="grupoCampoAlvo"/>
+    </fx:define>
+
+    <top>
+        <VBox spacing="14">
+            <padding><Insets bottom="16"/></padding>
+            <Label text="Selecione as peças e defina o ajuste de preço" styleClass="page-subtitle"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por código ou descrição..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbFiltroModelo" promptText="Todos os modelos" styleClass="search-field"/>
+                <CheckBox fx:id="chkSelecionarTodos" text="Selecionar todos" onAction="#alternarSelecionarTodos"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox>
+            <padding><Insets top="0" bottom="16"/></padding>
+            <TableView fx:id="tabela" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colSelecionar" prefWidth="40" sortable="false"/>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="80"/>
+                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="230"/>
+                    <TableColumn fx:id="colModelo" text="Modelo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrecoCusto" text="Preço Custo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrecoVenda" text="Preço Venda" prefWidth="100"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox styleClass="painel-ajuste">
+            <HBox spacing="20">
+                <VBox spacing="6">
+                    <Label text="Tipo de ajuste" styleClass="form-label"/>
+                    <HBox styleClass="segmented-control">
+                        <ToggleButton fx:id="btnValorFixo" text="Valor Fixo (R\$)" styleClass="segmented-button" toggleGroup="$grupoTipoAjuste" selected="true"/>
+                        <ToggleButton fx:id="btnPercentual" text="Percentual (%)" styleClass="segmented-button" toggleGroup="$grupoTipoAjuste"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="6">
+                    <Label text="Aplicar em" styleClass="form-label"/>
+                    <HBox styleClass="segmented-control">
+                        <ToggleButton fx:id="btnCampoCusto" text="Custo" styleClass="segmented-button" toggleGroup="$grupoCampoAlvo"/>
+                        <ToggleButton fx:id="btnCampoVenda" text="Venda" styleClass="segmented-button" toggleGroup="$grupoCampoAlvo" selected="true"/>
+                        <ToggleButton fx:id="btnCampoAmbos" text="Ambos" styleClass="segmented-button" toggleGroup="$grupoCampoAlvo"/>
+                    </HBox>
+                </VBox>
+
+                <VBox spacing="6" HBox.hgrow="ALWAYS">
+                    <Label text="Valor do ajuste" styleClass="form-label"/>
+                    <TextField fx:id="txtValor" promptText="Ex: 10 ou -5" styleClass="form-input"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <padding><Insets top="16"/></padding>
+                <Label fx:id="lblSelecionados" text="0 peça(s) selecionada(s)" styleClass="selecionados-count"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false"/>
+                <Button text="Aplicar Ajuste" styleClass="btn-primary" onAction="#aplicarAjuste"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

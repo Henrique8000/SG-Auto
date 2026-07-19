@@ -5,21 +5,16 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sgauto.app.controller.CategoriaFormController"
+      fx:controller="com.sgauto.app.controller.estoque.ModeloFormController"
       styleClass="modal-container" spacing="16" prefWidth="420">
 
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
-    <Label fx:id="lblTituloModal" text="Nova Categoria" styleClass="page-title"/>
+    <Label fx:id="lblTituloModal" text="Novo Modelo" styleClass="page-title"/>
 
     <VBox spacing="4">
         <Label text="Nome" styleClass="form-label"/>
         <TextField fx:id="txtNome" styleClass="form-input"/>
-    </VBox>
-
-    <VBox spacing="4">
-        <Label text="Tipo" styleClass="form-label"/>
-        <ComboBox fx:id="cmbTipo" styleClass="form-input" maxWidth="Infinity"/>
     </VBox>
 
     <VBox spacing="4">

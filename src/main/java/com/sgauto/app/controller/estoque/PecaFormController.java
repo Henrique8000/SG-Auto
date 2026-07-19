@@ -1,9 +1,14 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.estoque;
 
 import com.sgauto.app.model.Peca;
 import com.sgauto.app.service.EstoqueService;
+import com.sgauto.app.service.ModeloService;
+import com.sgauto.app.util.AutoCompleteComboBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -21,17 +26,20 @@ public class PecaFormController {
     @FXML private TextField txtPrecoVenda;
     @FXML private TextField txtQuantidade;
     @FXML private TextField txtEstoqueMinimo;
-    @FXML private TextField txtModelo;
+    @FXML private ComboBox cmbModelo;
     @FXML private Label lblErro;
     @FXML private Button btnSalvar;
 
 
     private final EstoqueService estoqueService;
+    private final ModeloService modeloService;
     private Peca pecaEmEdicao;
     private Runnable aoSalvar;
+    private AutoCompleteComboBox autoCompleteCategoria;
 
-    public PecaFormController(EstoqueService estoqueService) {
+    public PecaFormController(EstoqueService estoqueService, ModeloService modeloService) {
         this.estoqueService = estoqueService;
+        this.modeloService = modeloService;
     }
 
     public void configurar(Peca pecaExistente, Runnable aoSalvar) {
@@ -46,16 +54,23 @@ public class PecaFormController {
             txtPrecoVenda.setText(pecaExistente.getPrecoVenda().toString());
             txtQuantidade.setText(pecaExistente.getQuantidadeEstoque().toString());
             txtEstoqueMinimo.setText(pecaExistente.getEstoqueMinimo().toString());
-            txtModelo.setText(pecaExistente.getModelo());
+            cmbModelo.setValue(pecaExistente.getModelo());
         }
     }
+
+    @FXML
+    public void initialize() {
+        autoCompleteCategoria = new AutoCompleteComboBox(cmbModelo);
+        atualizarComboModelos();
+    }
+
 
     @FXML
     private void salvar() {
         try {
             String codigo = txtCodigo.getText().trim();
             String descricao = txtDescricao.getText().trim();
-            String modelo = txtModelo.getText().trim();
+            String modelo = cmbModelo.getValue() != null ? cmbModelo.getValue().toString().trim() : "Geral";
             BigDecimal precoCusto = new BigDecimal(txtPrecoCusto.getText().trim());
             BigDecimal precoVenda = new BigDecimal(txtPrecoVenda.getText().trim());
             int quantidade = Integer.parseInt(txtQuantidade.getText().trim());
@@ -99,6 +114,19 @@ public class PecaFormController {
         lblErro.setText(mensagem);
         lblErro.setVisible(true);
         lblErro.setManaged(true);
+    }
+
+    private void atualizarComboModelos() {
+        var selecionadoAntes = cmbModelo.getValue();
+        ObservableList<String> opcoes = FXCollections.observableArrayList();
+        opcoes.addAll(modeloService.listarAtivas().stream().map(c -> c.getNome()).toList());
+        autoCompleteCategoria.definirItens(opcoes);
+
+        if (selecionadoAntes != null && opcoes.contains(selecionadoAntes)) {
+            cmbModelo.setValue(selecionadoAntes);
+        } else {
+            cmbModelo.getSelectionModel().selectFirst();
+        }
     }
 
     private void fecharModal() {

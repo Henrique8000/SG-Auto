@@ -3,6 +3,7 @@ package com.sgauto.app.service;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ServicoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,8 @@ public class CategoriaService {
 
     @Transactional
     public Categoria cadastrar(Categoria categoria) {
-
         verificarCampos(categoria);
-
         String nomeFormatado = formatarNome(categoria.getNome());
-
         categoria.setNome(nomeFormatado);
 
         categoriaRepository.findByNome(nomeFormatado).ifPresent(c -> {
@@ -37,10 +35,9 @@ public class CategoriaService {
 
     @Transactional
     public Categoria atualizar(Categoria categoria) {
-
         verificarCampos(categoria);
-
         String nomeFormatado = formatarNome(categoria.getNome());
+        categoria.setNome(nomeFormatado);
 
         categoriaRepository.findByNome(nomeFormatado).ifPresent(c -> {
             if (!c.getId().equals(categoria.getId())) {
@@ -53,18 +50,30 @@ public class CategoriaService {
 
     @Transactional
     public void ativar(Long id) {
-        Categoria categoria = buscarOuFalhar(id);
-        categoria.setAtivo(true);
+        buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
         Categoria categoria = buscarOuFalhar(id);
-        boolean existeServico = servicoRepository.existsByCategoria(categoria.getNome());
-        if (existeServico) {
-            throw new IllegalStateException("Não é possível desativar a categoria pois existem serviços associados a ela.");
+        if (estaEmUso(categoria.getNome())) {
+            throw new IllegalStateException("Não é possível desativar: existem serviços associados a esta categoria.");
         }
         categoria.setAtivo(false);
+    }
+
+    @Transactional
+    public void excluir(Long id) {
+        Categoria categoria = buscarOuFalhar(id);
+        if (estaEmUso(categoria.getNome())) {
+            throw new IllegalStateException("Não é possível excluir: existem serviços associados a esta categoria.");
+        }
+        categoriaRepository.delete(categoria);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean estaEmUso(String nomeCategoria) {
+        return servicoRepository.existsByCategoria(nomeCategoria);
     }
 
     @Transactional(readOnly = true)
@@ -79,20 +88,18 @@ public class CategoriaService {
 
     private Categoria buscarOuFalhar(Long id) {
         return categoriaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada: " + id));
     }
 
-    private void verificarCampos(Categoria categoria){
+    private void verificarCampos(Categoria categoria) {
         if (categoria.getNome() == null || categoria.getNome().trim().isEmpty()) {
             throw new IllegalArgumentException("O nome da categoria é obrigatório");
         }
-
-        if (categoria.getAtivo() == null){
+        if (categoria.getAtivo() == null) {
             throw new IllegalArgumentException("É necessário definir como ATIVO ou INATIVO");
         }
-
-        if (categoria.getTipo() == null || categoria.getTipo().isEmpty()){
-            throw new IllegalArgumentException("Selecione o tipo PEÇA, CARRO ou AMBOS");
+        if (categoria.getTipo() == null || categoria.getTipo().isEmpty()) {
+            throw new IllegalArgumentException("Selecione o tipo: PEÇA, CARRO ou AMBOS.");
         }
     }
 

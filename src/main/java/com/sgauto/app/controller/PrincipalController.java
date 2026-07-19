@@ -72,7 +72,7 @@ public class PrincipalController {
     @FXML
     private void irParaCatalogoServicos() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/catalogo-servico.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/catalogo-servico.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
@@ -89,7 +89,7 @@ public class PrincipalController {
     @FXML
     private void irParaEstoque() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/catalogo-estoque.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Estoque", "Peças e controle de estoque", tela);

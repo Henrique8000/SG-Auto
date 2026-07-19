@@ -1,5 +1,6 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.repository.CategoriaRepository;
@@ -71,7 +72,19 @@ public class ServicoService {
     }
 
     @Transactional
-    public void deletar(Long id){servicoRepository.deleteById(id);}
+    public void excluir(Long id) {
+        Servico servico = buscarOuFalhar(id);
+        if (estaEmUso(id)) {
+            throw new IllegalStateException("Não é possível excluir: este serviço está vinculado a uma ou mais Ordens de Serviço.");
+        }
+        servicoRepository.delete(servico);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean estaEmUso(Long servicoId) {
+        // TODO: quando o módulo de Ordem de Serviço existir, trocar por uma
+        return false;
+    }
 
     @Transactional(readOnly = true)
     public List<Servico> listarTodos() {
@@ -86,6 +99,31 @@ public class ServicoService {
     @Transactional(readOnly = true)
     public List<Servico> listarInativos() {
         return servicoRepository.findByAtivo(false);
+    }
+
+    @Transactional
+    public int ajustarValoresEmMassa(List<Long> idsServicos, TipoAjustePreco tipo, BigDecimal valor) {
+        if (idsServicos == null || idsServicos.isEmpty()) {
+            throw new IllegalArgumentException("Selecione ao menos um serviço para ajustar.");
+        }
+        if (valor == null) {
+            throw new IllegalArgumentException("Informe o valor do ajuste.");
+        }
+
+        List<Servico> servicos = servicoRepository.findAllById(idsServicos);
+        for (Servico servico : servicos) {
+            BigDecimal novoValor = (tipo == TipoAjustePreco.VALOR_FIXO)
+                    ? servico.getValor().add(valor)
+                    : servico.getValor().multiply(BigDecimal.ONE.add(valor.divide(new BigDecimal("100"))))
+                    .setScale(2, java.math.RoundingMode.HALF_UP);
+
+            if (novoValor.compareTo(BigDecimal.ZERO) < 0) {
+                throw new IllegalStateException("O ajuste resultaria em valor negativo. Revise o valor informado.");
+            }
+            servico.setValor(novoValor);
+        }
+        servicoRepository.saveAll(servicos);
+        return servicos.size();
     }
 
     private Servico buscarOuFalhar(Long id) {
