@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.caixa.MovimentacaoCaixaModalController"
+      styleClass="modal-container" spacing="16" prefWidth="420">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Nova Movimentação" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Origem" styleClass="form-label"/>
+        <ComboBox fx:id="cmbOrigem" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox fx:id="boxTipo" spacing="4">
+
+        <fx:define>
+            <ToggleGroup fx:id="grupoTipo"/>
+        </fx:define>
+
+        <Label text="Tipo" styleClass="form-label"/>
+
+        <HBox styleClass="segmented-control">
+            <ToggleButton fx:id="btnEntrada" text="Entrada"
+                          styleClass="segmented-button"
+                          toggleGroup="$grupoTipo"
+                          selected="true"
+                          HBox.hgrow="ALWAYS"/>
+
+            <ToggleButton fx:id="btnSaida" text="Saída"
+                          styleClass="segmented-button"
+                          toggleGroup="$grupoTipo"
+                          HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Forma de Pagamento" styleClass="form-label"/>
+        <ComboBox fx:id="cmbFormaPagamento" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Valor (R\$)" styleClass="form-label"/>
+        <TextField fx:id="txtValor" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Descrição" styleClass="form-label"/>
+        <TextField fx:id="txtDescricao" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Placa do veículo (opcional)" styleClass="form-label"/>
+        <TextField fx:id="txtPlaca" styleClass="form-input"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Confirmar" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

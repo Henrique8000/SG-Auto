@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.caixa.CaixaController">
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <Label fx:id="lblCaixaAbertoDesde" text="Caixa aberto desde: --" styleClass="page-subtitle"/>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="VALOR DE ABERTURA" styleClass="card-title"/>
+                    <Label fx:id="lblValorAbertura" text="R\$ 0,00" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL ENTRADAS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalEntradas" text="R\$ 0,00" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL SAÍDAS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalSaidas" text="R\$ 0,00" styleClass="card-value-warning"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="VALOR ESPERADO EM CAIXA" styleClass="card-title"/>
+                    <Label fx:id="lblValorEsperado" text="R\$ 0,00" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nova Movimentação" styleClass="btn-secondary" onAction="#abrirModalMovimentacao"/>
+                <Button text="Fechar Caixa" styleClass="btn-primary" onAction="#abrirModalFechamento"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabelaMovimentacoes" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colData" text="Data/Hora" prefWidth="140"/>
+                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="90"/>
+                <TableColumn fx:id="colOrigem" text="Origem" prefWidth="130"/>
+                <TableColumn fx:id="colFormaPagamento" text="Pagamento" prefWidth="110"/>
+                <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="240"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+</BorderPane>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.FechamentoCaixaModalController"
+      styleClass="modal-container" spacing="16" prefWidth="440">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Fechar Caixa" styleClass="page-title"/>
+
+    <VBox styleClass="card">
+        <Label text="VALOR ESPERADO EM CAIXA" styleClass="card-title"/>
+        <Label fx:id="lblValorEsperado" text="R\$ 0,00" styleClass="card-value-accent"/>
+    </VBox>
+
+    <VBox fx:id="boxContagem" spacing="4">
+        <Label text="Valor Contado (R\$)" styleClass="form-label"/>
+        <TextField fx:id="txtValorContado" styleClass="form-input"/>
+    </VBox>
+
+    <Label fx:id="lblSemConferencia" text="Este fechamento não exige conferência de dinheiro."
+           styleClass="page-subtitle" managed="false" visible="false" wrapText="true"/>
+
+    <VBox fx:id="boxJustificativa" spacing="4" managed="false" visible="false">
+        <Label text="Justificativa da diferença" styleClass="form-label"/>
+        <TextArea fx:id="txtJustificativa" styleClass="form-textarea" prefRowCount="3" wrapText="true"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Fechar Caixa" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

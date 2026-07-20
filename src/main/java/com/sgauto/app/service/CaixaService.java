@@ -9,9 +9,11 @@ import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.ConfiguracaoCaixa;
 import com.sgauto.app.repository.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.CaixaRepository;
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.classfile.instruction.ThrowInstruction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,13 +39,8 @@ public class CaixaService {
     }
 
     private Caixa abrirNovoCaixa() {
-        Caixa caixa = new Caixa();
-        caixa.setUsuarioAbertura("teste");
-        caixa.setDataAbertura(LocalDateTime.now());
-        caixa.setStatus(StatusCaixa.ABERTO);
-        caixa.setValorAbertura(BigDecimal.ZERO);
-        caixaRepository.save(caixa);
-        return caixa;
+        Caixa caixa = new Caixa("Sistema", BigDecimal.ZERO);
+        return caixaRepository.save(caixa);
     }
 
 
@@ -57,69 +54,138 @@ public class CaixaService {
     public CaixaMovimentacao registrarMovimentacao(TipoMovimentacao tipo, OrigemMovimentacao origem,
                                                    FormaPagamento formaPagamento, BigDecimal valor,
                                                    String descricao, Long clienteId, String placa) {
-        CaixaMovimentacao mov = new CaixaMovimentacao();
-        mov.setTipo(tipo);
-        mov.setOrigem(origem);
-        mov.setFormaPagamento(formaPagamento);
-        mov.setValor(valor);
-        mov.setDescricao(descricao);
+        Caixa caixaAberto = buscarCaixaAberto();
+
+        CaixaMovimentacao mov = new CaixaMovimentacao(caixaAberto, tipo, origem, formaPagamento, valor, descricao);
         mov.setClienteId(clienteId);
         mov.setPlaca(placa);
+        return caixaMovimentacaoRepository.save(mov);
+    }
 
-        return mov;
+    @Transactional(readOnly = true)
+    public BigDecimal calcularValorEsperado(Long caixaId) {
+        Caixa caixa = caixaRepository.findById(caixaId)
+                .orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + caixaId));
+
+        List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixa.getId());
+
+        BigDecimal entradasDinheiro = movimentacoes.stream()
+                .filter(m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getFormaPagamento() == FormaPagamento.DINHEIRO)
+                .map(CaixaMovimentacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal saidasDinheiro = movimentacoes.stream()
+                .filter(m -> m.getTipo() == TipoMovimentacao.SAIDA)
+                .map(CaixaMovimentacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return caixa.getValorAbertura().add(entradasDinheiro).subtract(saidasDinheiro);
+    }
+    @Transactional(readOnly = true)
+    public BigDecimal calcularValorBruto(Long caixaId) {
+        List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixaId);
+
+        return movimentacoes.stream()
+                .filter(m -> m.getTipo() == TipoMovimentacao.ENTRADA)
+                .map(CaixaMovimentacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Caixa> listarHistorico() {
+        return caixaRepository.findAllByStatus(StatusCaixa.FECHADO);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CaixaMovimentacao> listarMovimentacoes(Long caixaId) {
+        return caixaMovimentacaoRepository.findByCaixaId(caixaId);
     }
 
     @Transactional
     public Caixa fecharCaixaAtual(BigDecimal valorContado, String justificativaDiferenca) {
         ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
+        Caixa caixa = buscarCaixaAberto();
+
+        BigDecimal valorEsperado = calcularValorEsperado(caixa.getId());
+        BigDecimal valorContadoFinal;
+        BigDecimal diferenca;
 
         switch (config.getModoConferencia()) {
+            case SEM_CONFERENCIA -> {
+                valorContadoFinal = valorEsperado;
+                diferenca = BigDecimal.ZERO;
+            }
             case OBRIGATORIA -> {
+                if (valorContado == null) {
+                    throw new IllegalArgumentException("Informe o valor contado para fechar o caixa.");
+                }
+                valorContadoFinal = valorContado;
+                diferenca = calcularDiferenca(valorEsperado, valorContadoFinal);
+                validarJustificativaSeNecessario(diferenca, justificativaDiferenca);
             }
             case OPCIONAL -> {
-            }
-            case SEM_CONFERENCIA -> {
+                valorContadoFinal = valorContado;
+                if (valorContadoFinal != null) {
+                    diferenca = calcularDiferenca(valorEsperado, valorContadoFinal);
+                    validarJustificativaSeNecessario(diferenca, justificativaDiferenca);
+                } else {
+                    diferenca = null;
+                }
             }
             default -> throw new IllegalStateException("Modo de conferência não suportado.");
-
-
         }
-        return null;
+
+        preencherTotais(caixa);
+
+        caixa.setValorEsperado(valorEsperado);
+        caixa.setValorContado(valorContadoFinal);
+        caixa.setDiferenca(diferenca);
+        caixa.setModoConferenciaUsado(config.getModoConferencia());
+        caixa.setJustificativaDiferenca(justificativaDiferenca);
+        caixa.setUsuarioFechamento("Sistema"); // trocar quando existir usuário logado
+        caixa.setDataFechamento(LocalDateTime.now());
+        caixa.setStatus(StatusCaixa.FECHADO);
+
+        Caixa caixaFechado = caixaRepository.save(caixa);
+
+        abrirNovoCaixa();
+
+        return caixaFechado;
     }
 
-    /**
-     * Calcula o valor esperado em dinheiro no caixa, com base no
-     * valorAbertura + entradas em dinheiro - saídas em dinheiro
-     * (sangria). Usado tanto para exibir na tela antes do fechamento
-     * quanto internamente por fecharCaixaAtual().
-     */
-    @Transactional(readOnly = true)
-    public BigDecimal calcularValorEsperado(Long caixaId) {
-        Optional<Caixa> caixa = caixaRepository.findById(caixaId);
-        BigDecimal soma = BigDecimal.ZERO;
-        soma = caixa.get().getValorAbertura();
-        soma = soma.add(caixa.get().getTotalDinheiro());
-        soma = soma.subtract(caixa.get().getTotalSaidas());
-        return soma;
+    private BigDecimal calcularDiferenca(BigDecimal esperado, BigDecimal contado) {
+        return contado.subtract(esperado);
     }
 
-    @Transactional(readOnly = true)
-    public BigDecimal calcularValorBruto(Long caixaId) {
-        Optional<Caixa> caixa = caixaRepository.findById(caixaId);
-        BigDecimal soma = BigDecimal.ZERO;
-        soma = caixa.get().getValorAbertura();
-        soma = soma.add(caixa.get().getTotalDinheiro());
-        soma = soma.add(caixa.get().getTotalAvulso());
-        soma = soma.add(caixa.get().getTotalCredito());
-        soma = soma.add(caixa.get().getTotalDebito());
-        return soma;
+    private void validarJustificativaSeNecessario(BigDecimal diferenca, String justificativa) {
+        if (diferenca.compareTo(BigDecimal.ZERO) != 0
+                && (justificativa == null || justificativa.isBlank())) {
+            throw new IllegalArgumentException("Há uma diferença de caixa. Informe uma justificativa para fechar.");
+        }
     }
 
-    /**
-     * Lista o histórico de caixas já fechados, para relatório/consulta.
-     */
-    @Transactional(readOnly = true)
-    public List<Caixa> listarHistorico() {
-        return caixaRepository.findByStatus(StatusCaixa.FECHADO);
+    private void preencherTotais(Caixa caixa) {
+        List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixa.getId());
+
+        caixa.setTotalEntradas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA));
+        caixa.setTotalSaidas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA));
+
+        caixa.setTotalVendasPecas(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.VENDA_PECA));
+        caixa.setTotalServicos(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SERVICO));
+        caixa.setTotalAvulso(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.AVULSO));
+        caixa.setTotalSangria(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SANGRIA));
+        caixa.setTotalSuprimento(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SUPRIMENTO));
+
+        caixa.setTotalDinheiro(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.DINHEIRO));
+        caixa.setTotalDebito(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.DEBITO));
+        caixa.setTotalCredito(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.CREDITO));
+        caixa.setTotalPix(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.PIX));
+    }
+
+    private BigDecimal somarPor(List<CaixaMovimentacao> movimentacoes, java.util.function.Predicate<CaixaMovimentacao> filtro) {
+        return movimentacoes.stream()
+                .filter(filtro)
+                .map(CaixaMovimentacao::getValor)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface CaixaRepository extends JpaRepository<Caixa, Long> {
     Optional<Caixa> findByStatus(StatusCaixa status);
+    List<Caixa> findAllByStatus(StatusCaixa status);
     List<Caixa> findByDataAberturaBetween(LocalDateTime inicio, LocalDateTime fim);
 }

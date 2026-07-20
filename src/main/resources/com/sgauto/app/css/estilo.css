@@ -632,3 +632,42 @@
     -fx-font-weight: bold;
     -fx-border-color: -accent;
 }
+
+/* ═══════════════ 18. RADIO BUTTON (tela de Configurações) ═══════════════ */
+.radio-button > .radio {
+    -fx-background-color: -bg-app;
+    -fx-border-color: -text-muted;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 4px;
+}
+.radio-button:selected > .radio {
+    -fx-border-color: -accent;
+}
+.radio-button:selected > .radio > .dot {
+    -fx-background-color: -accent;
+    -fx-background-insets: 0;
+    -fx-padding: 4px;
+}
+.radio-button .text,
+.radio-button {
+    -fx-text-fill: -text-primary;
+}
+
+.config-option {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 10;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 10;
+    -fx-padding: 16;
+}
+.config-option-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+.config-option-desc {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}

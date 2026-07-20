@@ -108,12 +108,26 @@ public class PrincipalController {
 
     @FXML
     private void irParaCaixa() {
-        mostrarTela("Caixa", "Contas a pagar, a receber e fluxo de caixa", montarPlaceholder("Tela de Caixa em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/caixa.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Caixa", e);
+        }
     }
 
     @FXML
     private void irParaConfiguracoes() {
-        mostrarTela("Configurações", "Preferências do sistema", montarPlaceholder("Tela de Configurações em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/configuracoes/configuracoes.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Configurações", "Preferências do sistema", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Configurações", e);
+        }
     }
 
     private void mostrarTela(String titulo, String subtitulo, javafx.scene.Node conteudo) {
