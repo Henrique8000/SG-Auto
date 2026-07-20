@@ -1,6 +1,6 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.clientes;
 
-import com.sgauto.app.controller.ClientesController.ClienteRow;
+import com.sgauto.app.controller.clientes.ClientesController.ClienteRow;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

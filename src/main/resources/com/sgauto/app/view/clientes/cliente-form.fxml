@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sgauto.app.controller.ClienteFormController"
+      fx:controller="com.sgauto.app.controller.clientes.ClienteFormController"
       styleClass="modal-container" spacing="16" prefWidth="440">
 
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>

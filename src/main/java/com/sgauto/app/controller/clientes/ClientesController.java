@@ -1,5 +1,6 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.clientes;
 
+import com.sgauto.app.util.ModalUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -135,17 +136,14 @@ public class ClientesController {
 
     private void abrirModal(ClienteRow clienteExistente) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/cliente-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes/cliente-form.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
             ClienteFormController controller = loader.getController();
             controller.configurar(clienteExistente, this::carregarDados);
 
-            Stage modal = new Stage();
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.setTitle(clienteExistente == null ? "Novo Cliente" : "Editar Cliente");
-            modal.setScene(new javafx.scene.Scene(root));
+            Stage modal = ModalUtil.abrir(root, clienteExistente == null ? "Novo Cliente" : "Editar Cliente");
             modal.showAndWait();
 
             carregarDados();
