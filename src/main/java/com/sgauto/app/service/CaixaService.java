@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CaixaService {
@@ -94,7 +95,24 @@ public class CaixaService {
      */
     @Transactional(readOnly = true)
     public BigDecimal calcularValorEsperado(Long caixaId) {
-        return null;
+        Optional<Caixa> caixa = caixaRepository.findById(caixaId);
+        BigDecimal soma = BigDecimal.ZERO;
+        soma = caixa.get().getValorAbertura();
+        soma = soma.add(caixa.get().getTotalDinheiro());
+        soma = soma.subtract(caixa.get().getTotalSaidas());
+        return soma;
+    }
+
+    @Transactional(readOnly = true)
+    public BigDecimal calcularValorBruto(Long caixaId) {
+        Optional<Caixa> caixa = caixaRepository.findById(caixaId);
+        BigDecimal soma = BigDecimal.ZERO;
+        soma = caixa.get().getValorAbertura();
+        soma = soma.add(caixa.get().getTotalDinheiro());
+        soma = soma.add(caixa.get().getTotalAvulso());
+        soma = soma.add(caixa.get().getTotalCredito());
+        soma = soma.add(caixa.get().getTotalDebito());
+        return soma;
     }
 
     /**
@@ -102,6 +120,6 @@ public class CaixaService {
      */
     @Transactional(readOnly = true)
     public List<Caixa> listarHistorico() {
-        return null;
+        return caixaRepository.findByStatus(StatusCaixa.FECHADO);
     }
 }
