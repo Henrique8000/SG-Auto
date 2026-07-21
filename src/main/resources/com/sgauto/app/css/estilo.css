@@ -1,54 +1,61 @@
 /* ══════════════════════════════════════════════════════════════
-   SGAuto — Design System
-   Paleta grafite escuro + laranja âmbar (identidade automotiva)
+   SGAuto — Design System (Conceito: Titânio Mate & Ocre Anodizado)
+   Estética: Industrial Opaco, Baixo Contraste, CAD & Automotive UI
    ══════════════════════════════════════════════════════════════ */
 
-/* ═══════════════ 1. PALETA DE CORES E BASE GLOBAL ═══════════════
-   Todas as cores do sistema são "looked-up colors" definidas aqui.
-   Nunca usar hex direto em outra regra — sempre referenciar essas
-   variáveis, para manter consistência e facilitar trocar o tema. */
+/* ═══════════════ 1. PALETA DE CORES E BASE GLOBAL ═══════════════ */
 .root {
-    -bg-app: #1a1c20;           /* fundo principal das telas */
-    -bg-sidebar: #121316;       /* fundo do menu lateral e cabeçalhos de tabela */
-    -bg-card: #24262b;          /* fundo de cards, inputs, linhas de tabela */
-    -bg-card-hover: #2b2e34;    /* fundo de linhas alternadas / hover */
-    -border-subtle: #2f3237;    /* bordas discretas em cards, inputs, tabelas */
+    /* Tons Foscos / Monocromáticos (Sem traços azuis ou roxos) */
+    -bg-app: #181818;           /* Carbono Mate - Neutro absoluto, absorve a luz */
+    -bg-sidebar: #121212;       /* Grafite Profundo - Sólido e ancorado */
+    -bg-card: #222222;          /* Superfície Titânio - Nível 1 de elevação opaca */
+    -bg-card-hover: #2a2a2a;    /* Hover sutil sem brilho */
+    -bg-input: #141414;         /* Recesso fosco para áreas de digitação */
 
-    -accent: #ff7a30;           /* cor de destaque (ações primárias, seleção) */
-    -accent-hover: #ff8f4f;
-    -accent-soft: #3a2a1e;      /* fundo suave para estados "ativo" do menu */
+    /* Bordas de Estrutura Arquitetônica */
+    -border-subtle: #333333;    /* Linhas divisórias sólidas e discretas */
+    -border-focus: #c68a3c;     /* Foco no mesmo tom do ocre anodizado */
 
-    -text-primary: #f2f2f2;
-    -text-secondary: #9aa0a6;
-    -text-muted: #6b7076;
-    -text-white: #ffffff;
+    /* Cor de Destaque Opaca (Ocre Anodizado / Bronze Industrial) */
+    -accent: #c68a3c;           /* Ocre desaturado - Ação primária elegante e sem neon */
+    -accent-hover: #d49a4d;     /* Tom ligeiramente mais aberto para clique */
+    -accent-soft: rgba(198, 138, 60, 0.15); /* Fundo translúcido opaco */
 
-    -success: #3ecf8e;
-    -danger: #ef5350;
-    -warning: #f5c518;
+    /* Tipografia de Baixo Ofuscamento (Zero Branco Puro) */
+    -text-primary: #e0e0e0;     /* Cinza Papiro - Descanso máximo para os olhos */
+    -text-secondary: #8e8e8e;   /* Cinza Mineral - Hierarquia intermediária */
+    -text-muted: #5e5e5e;       /* Cinza Pedra - Informações inativas/placeholders */
+    -text-white: #f5f5f5;
 
-    -fx-font-family: "Segoe UI", sans-serif;
+    /* Cores Semânticas Desaturadas (Matte Status) */
+    -success: #5e977a;          /* Verde Oliva Mate */
+    -danger: #c95d53;           /* Vermelho Óxido / Ferrugem */
+    -warning: #d8a45f;          /* Âmbar Opaco */
+
+    -fx-font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
     -fx-background-color: -bg-app;
 }
-
 
 /* ═══════════════ 2. MENU LATERAL (SIDEBAR) ═══════════════ */
 .sidebar {
     -fx-background-color: -bg-sidebar;
     -fx-padding: 0;
-    -fx-pref-width: 230;
-    -fx-min-width: 230;
+    -fx-pref-width: 240;
+    -fx-min-width: 240;
+    -fx-border-color: transparent -border-subtle transparent transparent;
+    -fx-border-width: 0 1 0 0;
 }
 
 .sidebar-brand {
-    -fx-padding: 24 20 24 20;
+    -fx-padding: 24 20;
     -fx-alignment: CENTER_LEFT;
 }
 
 .sidebar-brand-text {
     -fx-text-fill: -text-primary;
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
+    -fx-letter-spacing: 0.5px;
 }
 
 .sidebar-brand-accent {
@@ -59,22 +66,23 @@
     -fx-text-fill: -text-muted;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 18 20 6 20;
+    -fx-padding: 20 20 8 20;
 }
 
 .nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: -text-white;
-    -fx-font-size: 14px;
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13.5px;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 12 20 12 20;
-    -fx-pref-width: 230;
-    -fx-background-radius: 0;
+    -fx-padding: 10 16;
+    -fx-margin: 2 12;
+    -fx-pref-width: 216;
+    -fx-background-radius: 4; /* Cantos mais secos, estilo ferramenta técnica */
     -fx-cursor: hand;
     -fx-graphic-text-gap: 12;
 }
 .nav-button:hover {
-    -fx-background-color: -bg-card;
+    -fx-background-color: #1a1a1a;
     -fx-text-fill: -text-primary;
 }
 .nav-button:selected {
@@ -82,27 +90,27 @@
     -fx-text-fill: -accent;
     -fx-font-weight: bold;
     -fx-border-color: -accent;
-    -fx-border-width: 0 0 0 3;
+    -fx-border-width: 0 0 0 3; /* Retorno da barra lateral sólida, mas opaca */
 }
 
-
-/* ═══════════════ 3. TOPBAR (título da tela) ═══════════════ */
+/* ═══════════════ 3. TOPBAR ═══════════════ */
 .topbar {
     -fx-background-color: -bg-app;
-    -fx-padding: 20 30 10 30;
+    -fx-padding: 24 32 16 32;
     -fx-border-color: -border-subtle;
     -fx-border-width: 0 0 1 0;
 }
 
 .page-title {
     -fx-text-fill: -text-primary;
-    -fx-font-size: 22px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
 .page-subtitle {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 13px;
+    -fx-padding: 4 0 0 0;
 }
 
 .page-subtitle-caixa {
@@ -110,48 +118,45 @@
     -fx-font-size: 13.5px;
 }
 
-
-
 /* ═══════════════ 4. ÁREA DE CONTEÚDO ═══════════════ */
 .content-area {
     -fx-background-color: -bg-app;
-    -fx-padding: 25 30 30 30;
+    -fx-padding: 32;
 }
 
-
-/* ═══════════════ 5. CARDS DE KPI (dashboard, topo das telas) ═══════════════ */
+/* ═══════════════ 5. CARDS DE KPI (METRIC BLOCKS) ═══════════════ */
 .card {
     -fx-background-color: -bg-card;
-    -fx-background-radius: 12;
-    -fx-padding: 20;
-    -fx-spacing: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 20 24;
+    -fx-spacing: 8;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 12;
+    -fx-border-radius: 6;
     -fx-border-width: 1;
 }
 
 .card-title {
     -fx-text-fill: -text-secondary;
-    -fx-font-size: 13px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
 }
 
 .card-value {
     -fx-text-fill: -text-primary;
-    -fx-font-size: 28px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
 }
 .card-value-accent {
     -fx-text-fill: -accent;
-    -fx-font-size: 28px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
 }
 .card-value-warning {
     -fx-text-fill: -warning;
-    -fx-font-size: 28px;
+    -fx-font-size: 26px;
     -fx-font-weight: bold;
 }
 
-/* wrapper do valor + botão "Ver itens" no card de Estoque Baixo */
 .box-estoque-baixo {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -160,25 +165,24 @@
 
 .placeholder-text {
     -fx-text-fill: -text-secondary;
-    -fx-font-size: 15px;
+    -fx-font-size: 14px;
 }
 
-
-/* ═══════════════ 6. CAMPOS DE BUSCA E FORMULÁRIO (TextField/ComboBox) ═══════════════ */
+/* ═══════════════ 6. CAMPOS DE BUSCA E FORMULÁRIO ═══════════════ */
 .search-field, .form-input {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
     -fx-text-fill: -text-primary;
     -fx-prompt-text-fill: -text-muted;
-    -fx-background-radius: 8;
+    -fx-background-radius: 4;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
-    -fx-padding: 10 14;
+    -fx-border-radius: 4;
+    -fx-padding: 9 12;
     -fx-font-size: 13px;
-
     -fx-max-width: infinity;
 }
 .search-field:focused, .form-input:focused {
-    -fx-border-color: -accent;
+    -fx-border-color: -border-focus;
+    -fx-background-color: #181818;
 }
 
 .form-label {
@@ -192,47 +196,36 @@
     -fx-font-size: 12px;
 }
 
-/* --- TextArea (observações, descrições longas)
-       TextArea é internamente um ScrollPane com viewport + content.
-       Cada uma dessas camadas precisa de fundo explícito, senão o
-       branco padrão do JavaFX aparece nas bordas/cantos arredondados. --- */
 .form-textarea {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
     -fx-text-fill: -text-primary;
-    -fx-background-radius: 8;
+    -fx-background-radius: 4;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
+    -fx-border-radius: 4;
     -fx-background-insets: 0;
 }
-.form-textarea .scroll-pane {
+.form-textarea .scroll-pane, .form-textarea .viewport {
     -fx-background-color: transparent;
-    -fx-background-insets: 0;
-}
-.form-textarea .viewport {
-    -fx-background-color: -bg-card;
 }
 .form-textarea .content {
-    -fx-background-color: -bg-card;
-    -fx-background-radius: 8;
+    -fx-background-color: -bg-input;
+    -fx-background-radius: 4;
 }
 .form-textarea .corner {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
 }
 .form-textarea .text-area-prompt-text,
 .form-textarea .text {
     -fx-fill: -text-primary;
 }
 .form-textarea:focused {
-    -fx-border-color: -accent;
+    -fx-border-color: -border-focus;
 }
 .form-textarea:focused .content {
-    -fx-background-color: -bg-card;
+    -fx-background-color: #181818;
 }
 
-
-/* ═══════════════ 7. COMBOBOX (não-editável e editável/pesquisável) ═══════════════ */
-
-/* --- Modo não-editável: célula que mostra o valor selecionado --- */
+/* ═══════════════ 7. COMBOBOX ═══════════════ */
 .combo-box.search-field .list-cell,
 .combo-box.form-input .list-cell {
     -fx-text-fill: -text-primary;
@@ -243,9 +236,6 @@
     -fx-text-fill: -text-muted;
 }
 
-/* --- Modo editável (AutoCompleteComboBox): o editor é um TextField
-       de verdade e precisa ser estilizado à parte, senão o texto
-       digitado fica com baixo contraste até o hover. --- */
 .combo-box.search-field > .text-field,
 .combo-box.form-input > .text-field {
     -fx-background-color: transparent;
@@ -256,7 +246,6 @@
     -fx-highlight-text-fill: -text-primary;
 }
 
-/* --- Botão/seta de abrir o dropdown --- */
 .combo-box.search-field, .combo-box.form-input {
     -fx-mark-color: -text-muted;
 }
@@ -277,167 +266,154 @@
     -fx-background-color: -accent;
 }
 
-/* --- Popup/dropdown da lista de opções --- */
 .combo-box-popup .list-view {
     -fx-background-color: -bg-card;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
+    -fx-border-radius: 4;
 }
 .combo-box-popup .list-view .list-cell {
     -fx-text-fill: -text-primary;
     -fx-background-color: -bg-card;
-    -fx-padding: 8 14;
+    -fx-padding: 8 12;
 }
 .combo-box-popup .list-view .list-cell:filled:hover,
 .combo-box-popup .list-view .list-cell:filled:selected {
     -fx-background-color: -accent;
-    -fx-text-fill: white;
+    -fx-text-fill: #ffffff;
 }
-
 
 /* ═══════════════ 8. BOTÕES ═══════════════ */
-
-/* --- Ação primária (Salvar, Novo Item, Aplicar Ajuste) --- */
 .btn-primary {
     -fx-background-color: -accent;
-    -fx-text-fill: white;
+    -fx-text-fill: #121212; /* Texto escuro no fundo ocre para contraste opaco perfeito */
     -fx-font-weight: bold;
-    -fx-background-radius: 8;
-    -fx-padding: 10 20;
+    -fx-font-size: 13px;
+    -fx-background-radius: 4;
+    -fx-padding: 9 18;
     -fx-cursor: hand;
 }
-.btn-primary:hover { -fx-background-color: -accent-hover; }
+.btn-primary:hover {
+    -fx-background-color: -accent-hover;
+}
 
-/* --- Ação secundária (Cancelar, Fechar) --- */
 .btn-secondary {
     -fx-background-color: -bg-card;
     -fx-text-fill: -text-primary;
-    -fx-background-radius: 8;
-    -fx-padding: 10 20;
+    -fx-background-radius: 4;
+    -fx-padding: 9 18;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
+    -fx-border-radius: 4;
     -fx-cursor: hand;
 }
+.btn-secondary:hover {
+    -fx-background-color: #2a2a2a;
+    -fx-border-color: -text-secondary;
+}
 
-/* --- Botões pequenos dentro de linhas de tabela --- */
 .btn-table-action {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
     -fx-text-fill: -text-secondary;
-    -fx-background-radius: 6;
+    -fx-background-radius: 4;
     -fx-padding: 4 10;
     -fx-font-size: 11px;
     -fx-cursor: hand;
+    -fx-border-color: #2c2c2c;
 }
-.btn-table-danger:hover { -fx-background-color: -danger; -fx-text-fill: white; }
+.btn-table-danger:hover {
+    -fx-background-color: -danger;
+    -fx-text-fill: white;
+}
 
 .btn-table-delete {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-text-fill: #e74c3c;
+    -fx-text-fill: -danger;
     -fx-cursor: hand;
     -fx-padding: 4 8;
     -fx-font-size: 13px;
 }
 .btn-table-delete:hover {
-    -fx-text-fill: #c0392b;
+    -fx-text-fill: #e07a70;
     -fx-underline: true;
 }
 
-/* --- Botão de alternar Ativo/Inativo (Categoria, Serviço) --- */
 .btn-table-toggle-on {
-    -fx-background-color: -bg-card;
+    -fx-background-color: rgba(201, 93, 83, 0.15);
     -fx-text-fill: -danger;
-    -fx-background-radius: 6;
+    -fx-background-radius: 4;
     -fx-padding: 4 10;
     -fx-font-size: 11px;
     -fx-cursor: hand;
 }
 .btn-table-toggle-off {
-    -fx-background-color: -bg-card;
+    -fx-background-color: rgba(94, 151, 122, 0.15);
     -fx-text-fill: -success;
-    -fx-background-radius: 6;
+    -fx-background-radius: 4;
     -fx-padding: 4 10;
     -fx-font-size: 11px;
     -fx-cursor: hand;
 }
 
-
-/* ═══════════════ 9. TABELAS (TableView) ═══════════════ */
+/* ═══════════════ 9. TABELAS ═══════════════ */
 .modern-table {
     -fx-background-color: transparent;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 12;
+    -fx-border-radius: 6;
 }
 
-/* --- Cabeçalho: barra de fundo + cada célula de coluna + o "filler"
-       (espaço vazio à direita da última coluna). As três camadas
-       precisam ser estilizadas separadamente, senão a célula de
-       coluna (que fica por cima da barra) aparece clara/default. --- */
 .modern-table .column-header,
 .modern-table .filler {
-    -fx-background-color: -bg-sidebar;
+    -fx-background-color: #151515;
 }
 .modern-table .column-header {
-    -fx-border-color: transparent -border-subtle transparent transparent;
-    -fx-border-width: 0 1 0 0;
+    -fx-border-color: transparent transparent -border-subtle transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 6 0;
 }
 .modern-table .column-header-background {
-    -fx-background-color: -bg-sidebar;
-    -fx-background-radius: 12 12 0 0;
-}
-.modern-table .column-header,
-.modern-table .filler {
-    -fx-background-color: -bg-sidebar;
-}
-.modern-table .column-header {
-    -fx-border-color: transparent -border-subtle transparent transparent;
-    -fx-border-width: 0 1 0 0;
+    -fx-background-color: #151515;
+    -fx-background-radius: 6 6 0 0;
 }
 .modern-table .column-header .label {
     -fx-text-fill: -text-secondary;
     -fx-font-weight: bold;
-    -fx-font-size: 12px;
+    -fx-font-size: 11.5px;
 }
 
-/* --- Linhas e células --- */
 .modern-table .table-row-cell {
     -fx-background-color: -bg-card;
-    -fx-table-cell-border-color: -border-subtle;
+    -fx-table-cell-border-color: #282828;
 }
 .modern-table .table-row-cell:odd {
+    -fx-background-color: #1c1c1c; /* Contraste opaco e sutil entre linhas */
+}
+.modern-table .table-row-cell:hover {
     -fx-background-color: -bg-card-hover;
 }
 .modern-table .table-cell {
     -fx-text-fill: -text-primary;
     -fx-font-size: 13px;
     -fx-alignment: CENTER_LEFT;
-    -fx-padding: 10 14;
+    -fx-padding: 11 14;
 }
 
-
-/* ═══════════════ 10. CHECKBOX (seleção em massa nas tabelas) ═══════════════ */
-
-/* --- Quadrado do checkbox, estado padrão (não marcado) --- */
+/* ═══════════════ 10. CHECKBOX ═══════════════ */
 .table-view .check-box > .box,
 .check-box > .box {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
     -fx-border-color: -text-muted;
     -fx-border-width: 1.5;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
     -fx-padding: 1px;
 }
 
-/* --- Símbolo de "check": a forma (shape) sempre existe, mas fica
-       transparente até o estado :selected pintar de branco. Isso é
-       o que garante que o check só aparece quando o usuário marca. --- */
 .table-view .check-box > .box > .mark,
 .check-box > .box > .mark {
     -fx-background-color: transparent;
     -fx-shape: "M9 16.2l-3.5-3.5c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4.2 4.2c.4.4 1 .4 1.4 0L20.3 7.7c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0L9 16.2z";
 }
 
-/* --- Estado marcado --- */
 .table-view .check-box:selected > .box,
 .check-box:selected > .box {
     -fx-background-color: -accent;
@@ -445,62 +421,56 @@
 }
 .table-view .check-box:selected > .box > .mark,
 .check-box:selected > .box > .mark {
-    -fx-background-color: white;
+    -fx-background-color: #121212; /* Check escuro sobre fundo ocre */
 }
 
-
-/* ═══════════════ 11. BADGES DE STATUS (Ativo/Inativo) ═══════════════ */
+/* ═══════════════ 11. BADGES DE STATUS ═══════════════ */
 .badge {
-    -fx-padding: 4 12;
-    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-background-radius: 4;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 .badge-active {
-    -fx-background-color: #1e3a2e;
+    -fx-background-color: rgba(94, 151, 122, 0.15);
     -fx-text-fill: -success;
 }
 .badge-inactive {
-    -fx-background-color: #3a1e1e;
+    -fx-background-color: rgba(201, 93, 83, 0.15);
     -fx-text-fill: -danger;
 }
 
-/* --- Badge de situação de estoque (Normal/Baixo/Zerado) --- */
 .badge-normal {
-    -fx-background-color: -bg-card-hover;
+    -fx-background-color: #2a2a2a;
     -fx-text-fill: -text-secondary;
 }
 .badge-baixo {
-    -fx-background-color: #3a2e14;
+    -fx-background-color: rgba(216, 164, 95, 0.15);
     -fx-text-fill: -warning;
 }
 .badge-zerado {
-    -fx-background-color: #3a1e1e;
+    -fx-background-color: rgba(201, 93, 83, 0.15);
     -fx-text-fill: -danger;
 }
 
-
-/* ═══════════════ 12. CHIPS E INDICADORES AUXILIARES ═══════════════ */
-
-/* --- Chip de categoria na tabela de Serviços --- */
+/* ═══════════════ 12. CHIPS E INDICADORES ═══════════════ */
 .chip {
     -fx-background-color: -accent-soft;
     -fx-text-fill: -accent;
-    -fx-padding: 4 12;
-    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-background-radius: 4;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 .chip-neutral {
-    -fx-background-color: -bg-card-hover;
+    -fx-background-color: #282828;
     -fx-text-fill: -text-secondary;
-    -fx-padding: 4 12;
-    -fx-background-radius: 20;
+    -fx-padding: 3 10;
+    -fx-background-radius: 4;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
-/* --- Indicador "Em uso" / "Livre" (Categoria) --- */
 .dot-indicator {
     -fx-min-width: 8; -fx-min-height: 8;
     -fx-max-width: 8; -fx-max-height: 8;
@@ -509,14 +479,13 @@
 .dot-em-uso { -fx-background-color: -accent; }
 .dot-livre { -fx-background-color: -text-muted; }
 
-
-/* ═══════════════ 13. FILTRO SEGMENTADO (Todos/Ativos/Inativos etc.) ═══════════════ */
+/* ═══════════════ 13. FILTRO SEGMENTADO ═══════════════ */
 .segmented-control {
-    -fx-background-color: -bg-card;
-    -fx-background-radius: 8;
+    -fx-background-color: -bg-input;
+    -fx-background-radius: 4;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
-    -fx-padding: 3;
+    -fx-border-radius: 4;
+    -fx-padding: 2;
     -fx-spacing: 2;
 }
 .segmented-button {
@@ -524,20 +493,20 @@
     -fx-text-fill: -text-secondary;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 7 16;
+    -fx-background-radius: 3;
+    -fx-padding: 6 14;
     -fx-cursor: hand;
 }
 .segmented-button:hover {
     -fx-text-fill: -text-primary;
 }
 .segmented-button:selected {
-    -fx-background-color: -accent;
-    -fx-text-fill: white;
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: #383838;
 }
 
-
-/* ═══════════════ 14. ABAS (TabPane — Catálogo de Serviços, Configurações Avançadas) ═══════════════ */
+/* ═══════════════ 14. ABAS (TabPane) ═══════════════ */
 .tab-pane {
     -fx-background-color: -bg-app;
     -fx-tab-min-width: 140px;
@@ -548,7 +517,7 @@
 .tab-pane .tab {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
-    -fx-padding: 10 20;
+    -fx-padding: 12 16;
 }
 .tab-pane .tab-label {
     -fx-text-fill: -text-secondary;
@@ -556,7 +525,7 @@
     -fx-font-weight: bold;
 }
 .tab-pane .tab:selected .tab-label {
-    -fx-text-fill: -accent;
+    -fx-text-fill: -text-primary;
 }
 .tab-pane .tab:selected .focus-indicator {
     -fx-border-width: 0;
@@ -569,8 +538,7 @@
     -fx-alignment: CENTER;
 }
 
-
-/* ═══════════════ 15. ESTADO VAZIO (tabela sem resultados) ═══════════════ */
+/* ═══════════════ 15. ESTADO VAZIO ═══════════════ */
 .empty-state-icon {
     -fx-font-size: 40px;
     -fx-text-fill: -text-muted;
@@ -585,37 +553,31 @@
     -fx-font-size: 12px;
 }
 
-
-/* ═══════════════ 16. CONTADOR DE RESULTADOS ("N resultado(s)") ═══════════════ */
+/* ═══════════════ 16. CONTADOR DE RESULTADOS ═══════════════ */
 .results-count {
     -fx-text-fill: -text-muted;
     -fx-font-size: 12px;
-    -fx-font-style: italic;
 }
 
-
-/* ═══════════════ 17. MODAIS (formulários e Configurações Avançadas) ═══════════════ */
+/* ═══════════════ 17. MODAIS E TOGGLES ═══════════════ */
 .modal-container {
     -fx-background-color: -bg-app;
 }
 
-/* ===== TOGGLE PF/PJ (formulário de cliente) ===== */
 .tipo-toggle {
-    -fx-background-color: -bg-card;
+    -fx-background-color: -bg-input;
     -fx-text-fill: -text-secondary;
-    -fx-background-radius: 8;
+    -fx-background-radius: 4;
     -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
-    -fx-padding: 9 16;
+    -fx-border-radius: 4;
+    -fx-padding: 8 16;
     -fx-font-size: 13px;
     -fx-cursor: hand;
 }
-
 .tipo-toggle:hover {
     -fx-background-color: -bg-card-hover;
     -fx-text-fill: -text-primary;
 }
-
 .tipo-toggle:selected {
     -fx-background-color: -accent-soft;
     -fx-text-fill: -accent;
