@@ -68,7 +68,7 @@
                     <TableColumn fx:id="colPrecoCusto" text="Preço Custo" prefWidth="100"/>
                     <TableColumn fx:id="colPrecoVenda" text="Preço Venda" prefWidth="100"/>
                     <TableColumn fx:id="colEstoque" text="Estoque" prefWidth="90"/>
-                    <TableColumn fx:id="colSituacao" text="Situação" prefWidth="90"/>
+                    <TableColumn fx:id="colSituacao" text="Situação" prefWidth="40"/>
                     <TableColumn fx:id="colAcoes" text="Ações" prefWidth="210"/>
                 </columns>
                 <columnResizePolicy>

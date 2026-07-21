@@ -42,7 +42,8 @@ public class MovimentacaoCaixaModalController {
             "Dinheiro", FormaPagamento.DINHEIRO,
             "Débito", FormaPagamento.DEBITO,
             "Crédito", FormaPagamento.CREDITO,
-            "Pix", FormaPagamento.PIX
+            "Pix", FormaPagamento.PIX,
+            "Outros", FormaPagamento.OUTROS
     );
 
     public MovimentacaoCaixaModalController(CaixaService caixaService) {
@@ -52,7 +53,7 @@ public class MovimentacaoCaixaModalController {
     @FXML
     public void initialize() {
         cmbOrigem.setItems(FXCollections.observableArrayList("Venda Avulsa", "Sangria", "Suprimento"));
-        cmbFormaPagamento.setItems(FXCollections.observableArrayList("Dinheiro", "Débito", "Crédito", "Pix"));
+        cmbFormaPagamento.setItems(FXCollections.observableArrayList("Dinheiro", "Débito", "Crédito", "Pix", "Outros"));
         cmbFormaPagamento.getSelectionModel().select("Dinheiro");
 
         cmbOrigem.valueProperty().addListener((obs, antigo, novo) -> ajustarCamposConformeOrigem(novo));

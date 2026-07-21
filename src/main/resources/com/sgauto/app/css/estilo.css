@@ -105,6 +105,12 @@
     -fx-font-size: 13px;
 }
 
+.page-subtitle-caixa {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13.5px;
+}
+
+
 
 /* ═══════════════ 4. ÁREA DE CONTEÚDO ═══════════════ */
 .content-area {

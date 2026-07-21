@@ -57,12 +57,12 @@
         <StackPane>
             <TableView fx:id="tabelaServicos" styleClass="modern-table">
                 <columns>
-                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="90"/>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="30"/>
                     <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
-                    <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="140"/>
-                    <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
-                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
-                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="170"/>
+                    <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="100"/>
+                    <TableColumn fx:id="colValor" text="Valor" prefWidth="70"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="30"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="230"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>

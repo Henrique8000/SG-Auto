@@ -11,7 +11,8 @@
         <VBox spacing="16">
             <padding><Insets bottom="20"/></padding>
 
-            <Label fx:id="lblCaixaAbertoDesde" text="Caixa aberto desde: --" styleClass="page-subtitle"/>
+            <Label fx:id="lblCaixaAbertoDesde" text="Caixa aberto desde: --" styleClass="page-subtitle-caixa"/>
+            <Label fx:id="lblIdCaixaAtual" text="ID do caixa: --" styleClass="page-subtitle-caixa"/>
 
             <HBox spacing="16">
                 <VBox styleClass="card" HBox.hgrow="ALWAYS">
@@ -56,4 +57,12 @@
             </columnResizePolicy>
         </TableView>
     </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT">
+            <padding><Insets top="16"/></padding>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Histórico - Fechamentos" styleClass="btn-secondary" onAction="#abrirModalFechamento"/>
+        </HBox>
+    </bottom>
 </BorderPane>

@@ -32,6 +32,7 @@ import java.util.List;
 public class CaixaController {
 
     @FXML private Label lblCaixaAbertoDesde;
+    @FXML private Label lblIdCaixaAtual;
     @FXML private Label lblValorAbertura;
     @FXML private Label lblTotalEntradas;
     @FXML private Label lblTotalSaidas;
@@ -85,6 +86,8 @@ public class CaixaController {
 
         lblCaixaAbertoDesde.setText("Caixa aberto desde: " + caixaAberto.getDataAbertura().format(FORMATADOR_DATA));
         lblValorAbertura.setText(formatarMoeda(caixaAberto.getValorAbertura()));
+
+        lblIdCaixaAtual.setText("ID do caixa: " + caixaAberto.getId());
 
         List<CaixaMovimentacao> lista = caixaService.listarMovimentacoes(caixaAberto.getId());
         movimentacoes.setAll(lista);

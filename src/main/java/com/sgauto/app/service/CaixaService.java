@@ -102,6 +102,13 @@ public class CaixaService {
     }
 
     @Transactional
+    public Long retornaIdCaixaAtual(){
+        Caixa caixa = buscarCaixaAberto();
+        Long id = caixa.getId();
+        return id;
+    }
+
+    @Transactional
     public Caixa fecharCaixaAtual(BigDecimal valorContado, String justificativaDiferenca) {
         ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
         Caixa caixa = buscarCaixaAberto();

@@ -1,6 +1,7 @@
 package com.sgauto.app.controller.clientes;
 
 import com.sgauto.app.controller.clientes.ClientesController.ClienteRow;
+import com.sgauto.app.util.ModalUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -112,6 +113,7 @@ public class ClienteFormController {
         lblErro.setText(mensagem);
         lblErro.setVisible(true);
         lblErro.setManaged(true);
+
     }
 
     private void fecharModal() {
