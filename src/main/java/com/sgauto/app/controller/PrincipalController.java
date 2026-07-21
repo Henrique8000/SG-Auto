@@ -62,11 +62,11 @@ public class PrincipalController {
     @FXML
     private void irParaClientes() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes/clientes.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Clientes", "Cadastro e histórico de clientes", tela);
-        } 
+        }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Clientes", e);
         }
@@ -78,8 +78,15 @@ public class PrincipalController {
     }
 
     @FXML
-    private void irParaServicos() {
-        mostrarTela("Serviços", "Cadastro e visualização de serviços", montarPlaceholder("Tela de Serviços em construção"));
+    private void irParaCatalogoServicos() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/catalogo-servico.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Catálogo de Serviços", e);
+        }
     }
 
     @FXML
@@ -90,7 +97,7 @@ public class PrincipalController {
     @FXML
     private void irParaEstoque() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/catalogo-estoque.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Estoque", "Peças e controle de estoque", tela);
@@ -101,12 +108,26 @@ public class PrincipalController {
 
     @FXML
     private void irParaCaixa() {
-        mostrarTela("Caixa", "Contas a pagar, a receber e fluxo de caixa", montarPlaceholder("Tela de Caixa em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/caixa.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Caixa", e);
+        }
     }
 
     @FXML
     private void irParaConfiguracoes() {
-        mostrarTela("Configurações", "Preferências do sistema", montarPlaceholder("Tela de Configurações em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/configuracoes/configuracoes.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Configurações", "Preferências do sistema", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Configurações", e);
+        }
     }
 
     private void mostrarTela(String titulo, String subtitulo, javafx.scene.Node conteudo) {

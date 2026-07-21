@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.MovimentacaoEstoqueController"
+      styleClass="modal-container" spacing="16" prefWidth="380">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoTipo"/>
+    </fx:define>
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Movimentar Estoque" styleClass="page-title"/>
+    <Label fx:id="lblPeca" styleClass="page-subtitle" wrapText="true"/>
+
+    <HBox styleClass="segmented-control">
+        <ToggleButton fx:id="btnEntrada" text="Entrada" styleClass="segmented-button" toggleGroup="$grupoTipo" selected="true" HBox.hgrow="ALWAYS"/>
+        <ToggleButton fx:id="btnSaida" text="Saída" styleClass="segmented-button" toggleGroup="$grupoTipo" HBox.hgrow="ALWAYS"/>
+    </HBox>
+
+    <VBox spacing="4">
+        <Label text="Quantidade" styleClass="form-label"/>
+        <TextField fx:id="txtQuantidade" styleClass="form-input"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Confirmar" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

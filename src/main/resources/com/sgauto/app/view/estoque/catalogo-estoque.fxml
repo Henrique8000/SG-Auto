@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+         tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane">
+    <tabs>
+        <Tab text="Estoque">
+            <content>
+                <fx:include source="estoque.fxml"/>
+            </content>
+        </Tab>
+        <Tab text="Modelos">
+            <content>
+                <fx:include source="modelo-tab.fxml"/>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

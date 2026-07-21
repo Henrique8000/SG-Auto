@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.ModeloFormController"
+      styleClass="modal-container" spacing="16" prefWidth="420">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTituloModal" text="Novo Modelo" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Nome" styleClass="form-label"/>
+        <TextField fx:id="txtNome" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Descrição" styleClass="form-label"/>
+        <TextArea fx:id="txtDescricao" styleClass="form-textarea" prefRowCount="3" wrapText="true"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>

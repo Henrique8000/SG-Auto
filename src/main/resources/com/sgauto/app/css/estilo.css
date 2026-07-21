@@ -1,19 +1,27 @@
-.root {
-    /* Paleta */
-    -bg-app: #1a1c20;
-    -bg-sidebar: #121316;
-    -bg-card: #24262b;
-    -bg-card-hover: #2b2e34;
-    -border-subtle: #2f3237;
+/* ══════════════════════════════════════════════════════════════
+   SGAuto — Design System
+   Paleta grafite escuro + laranja âmbar (identidade automotiva)
+   ══════════════════════════════════════════════════════════════ */
 
-    -accent: #ff7a30;
+/* ═══════════════ 1. PALETA DE CORES E BASE GLOBAL ═══════════════
+   Todas as cores do sistema são "looked-up colors" definidas aqui.
+   Nunca usar hex direto em outra regra — sempre referenciar essas
+   variáveis, para manter consistência e facilitar trocar o tema. */
+.root {
+    -bg-app: #1a1c20;           /* fundo principal das telas */
+    -bg-sidebar: #121316;       /* fundo do menu lateral e cabeçalhos de tabela */
+    -bg-card: #24262b;          /* fundo de cards, inputs, linhas de tabela */
+    -bg-card-hover: #2b2e34;    /* fundo de linhas alternadas / hover */
+    -border-subtle: #2f3237;    /* bordas discretas em cards, inputs, tabelas */
+
+    -accent: #ff7a30;           /* cor de destaque (ações primárias, seleção) */
     -accent-hover: #ff8f4f;
-    -accent-soft: #3a2a1e;
+    -accent-soft: #3a2a1e;      /* fundo suave para estados "ativo" do menu */
 
     -text-primary: #f2f2f2;
     -text-secondary: #9aa0a6;
     -text-muted: #6b7076;
-    -text-white: #FFFFFF;
+    -text-white: #ffffff;
 
     -success: #3ecf8e;
     -danger: #ef5350;
@@ -23,7 +31,8 @@
     -fx-background-color: -bg-app;
 }
 
-/* ===== SIDEBAR ===== */
+
+/* ═══════════════ 2. MENU LATERAL (SIDEBAR) ═══════════════ */
 .sidebar {
     -fx-background-color: -bg-sidebar;
     -fx-padding: 0;
@@ -64,12 +73,10 @@
     -fx-cursor: hand;
     -fx-graphic-text-gap: 12;
 }
-
 .nav-button:hover {
     -fx-background-color: -bg-card;
     -fx-text-fill: -text-primary;
 }
-
 .nav-button:selected {
     -fx-background-color: -accent-soft;
     -fx-text-fill: -accent;
@@ -78,7 +85,8 @@
     -fx-border-width: 0 0 0 3;
 }
 
-/* ===== TOPBAR ===== */
+
+/* ═══════════════ 3. TOPBAR (título da tela) ═══════════════ */
 .topbar {
     -fx-background-color: -bg-app;
     -fx-padding: 20 30 10 30;
@@ -97,13 +105,21 @@
     -fx-font-size: 13px;
 }
 
-/* ===== CONTENT ===== */
+.page-subtitle-caixa {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13.5px;
+}
+
+
+
+/* ═══════════════ 4. ÁREA DE CONTEÚDO ═══════════════ */
 .content-area {
     -fx-background-color: -bg-app;
     -fx-padding: 25 30 30 30;
 }
 
-/* ===== CARDS (KPIs) ===== */
+
+/* ═══════════════ 5. CARDS DE KPI (dashboard, topo das telas) ═══════════════ */
 .card {
     -fx-background-color: -bg-card;
     -fx-background-radius: 12;
@@ -129,13 +145,26 @@
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
+.card-value-warning {
+    -fx-text-fill: -warning;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/* wrapper do valor + botão "Ver itens" no card de Estoque Baixo */
+.box-estoque-baixo {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-alignment: center;
+}
 
 .placeholder-text {
     -fx-text-fill: -text-secondary;
     -fx-font-size: 15px;
 }
 
-/* ===== BUSCA E FORMULÁRIO ===== */
+
+/* ═══════════════ 6. CAMPOS DE BUSCA E FORMULÁRIO (TextField/ComboBox) ═══════════════ */
 .search-field, .form-input {
     -fx-background-color: -bg-card;
     -fx-text-fill: -text-primary;
@@ -145,48 +174,11 @@
     -fx-border-radius: 8;
     -fx-padding: 10 14;
     -fx-font-size: 13px;
+
+    -fx-max-width: infinity;
 }
 .search-field:focused, .form-input:focused {
     -fx-border-color: -accent;
-}
-
-.combo-box.search-field .list-cell,
-.combo-box.form-input .list-cell {
-    -fx-text-fill: -text-primary;
-    -fx-background-color: transparent;
-}
-
-.combo-box.search-field .list-cell:empty,
-.combo-box.form-input .list-cell:empty {
-    -fx-text-fill: -text-muted;
-}
-
-.combo-box.search-field .arrow,
-.combo-box.form-input .arrow {
-    -fx-background-color: -text-muted;
-}
-
-.combo-box.search-field:focused .arrow,
-.combo-box.search-field:hover .arrow {
-    -fx-background-color: -text-primary;
-}
-
-.combo-box-popup .list-view {
-    -fx-background-color: -bg-card;
-    -fx-border-color: -border-subtle;
-    -fx-border-radius: 8;
-}
-
-.combo-box-popup .list-view .list-cell {
-    -fx-text-fill: -text-primary;
-    -fx-background-color: -bg-card;
-    -fx-padding: 8 14;
-}
-
-.combo-box-popup .list-view .list-cell:filled:hover,
-.combo-box-popup .list-view .list-cell:filled:selected {
-    -fx-background-color: -accent;
-    -fx-text-fill: white;
 }
 
 .form-label {
@@ -200,7 +192,112 @@
     -fx-font-size: 12px;
 }
 
-/* ===== BOTÕES ===== */
+/* --- TextArea (observações, descrições longas)
+       TextArea é internamente um ScrollPane com viewport + content.
+       Cada uma dessas camadas precisa de fundo explícito, senão o
+       branco padrão do JavaFX aparece nas bordas/cantos arredondados. --- */
+.form-textarea {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-primary;
+    -fx-background-radius: 8;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+    -fx-background-insets: 0;
+}
+.form-textarea .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+.form-textarea .viewport {
+    -fx-background-color: -bg-card;
+}
+.form-textarea .content {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 8;
+}
+.form-textarea .corner {
+    -fx-background-color: -bg-card;
+}
+.form-textarea .text-area-prompt-text,
+.form-textarea .text {
+    -fx-fill: -text-primary;
+}
+.form-textarea:focused {
+    -fx-border-color: -accent;
+}
+.form-textarea:focused .content {
+    -fx-background-color: -bg-card;
+}
+
+
+/* ═══════════════ 7. COMBOBOX (não-editável e editável/pesquisável) ═══════════════ */
+
+/* --- Modo não-editável: célula que mostra o valor selecionado --- */
+.combo-box.search-field .list-cell,
+.combo-box.form-input .list-cell {
+    -fx-text-fill: -text-primary;
+    -fx-background-color: transparent;
+}
+.combo-box.search-field .list-cell:empty,
+.combo-box.form-input .list-cell:empty {
+    -fx-text-fill: -text-muted;
+}
+
+/* --- Modo editável (AutoCompleteComboBox): o editor é um TextField
+       de verdade e precisa ser estilizado à parte, senão o texto
+       digitado fica com baixo contraste até o hover. --- */
+.combo-box.search-field > .text-field,
+.combo-box.form-input > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-padding: 0;
+    -fx-highlight-fill: -accent-soft;
+    -fx-highlight-text-fill: -text-primary;
+}
+
+/* --- Botão/seta de abrir o dropdown --- */
+.combo-box.search-field, .combo-box.form-input {
+    -fx-mark-color: -text-muted;
+}
+.combo-box.search-field .arrow-button,
+.combo-box.form-input .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 10 0 0;
+}
+.combo-box.search-field .arrow,
+.combo-box.form-input .arrow {
+    -fx-background-color: -text-muted;
+}
+.combo-box.search-field:hover .arrow,
+.combo-box.search-field:focused .arrow,
+.combo-box.form-input:hover .arrow,
+.combo-box.form-input:focused .arrow {
+    -fx-background-color: -accent;
+}
+
+/* --- Popup/dropdown da lista de opções --- */
+.combo-box-popup .list-view {
+    -fx-background-color: -bg-card;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+}
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: -text-primary;
+    -fx-background-color: -bg-card;
+    -fx-padding: 8 14;
+}
+.combo-box-popup .list-view .list-cell:filled:hover,
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: white;
+}
+
+
+/* ═══════════════ 8. BOTÕES ═══════════════ */
+
+/* --- Ação primária (Salvar, Novo Item, Aplicar Ajuste) --- */
 .btn-primary {
     -fx-background-color: -accent;
     -fx-text-fill: white;
@@ -211,6 +308,7 @@
 }
 .btn-primary:hover { -fx-background-color: -accent-hover; }
 
+/* --- Ação secundária (Cancelar, Fechar) --- */
 .btn-secondary {
     -fx-background-color: -bg-card;
     -fx-text-fill: -text-primary;
@@ -221,6 +319,7 @@
     -fx-cursor: hand;
 }
 
+/* --- Botões pequenos dentro de linhas de tabela --- */
 .btn-table-action {
     -fx-background-color: -bg-card;
     -fx-text-fill: -text-secondary;
@@ -231,21 +330,76 @@
 }
 .btn-table-danger:hover { -fx-background-color: -danger; -fx-text-fill: white; }
 
-/* ===== TABELA ===== */
+.btn-table-delete {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-cursor: hand;
+    -fx-padding: 4 8;
+    -fx-font-size: 13px;
+}
+.btn-table-delete:hover {
+    -fx-text-fill: #c0392b;
+    -fx-underline: true;
+}
+
+/* --- Botão de alternar Ativo/Inativo (Categoria, Serviço) --- */
+.btn-table-toggle-on {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -danger;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+.btn-table-toggle-off {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -success;
+    -fx-background-radius: 6;
+    -fx-padding: 4 10;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+
+/* ═══════════════ 9. TABELAS (TableView) ═══════════════ */
 .modern-table {
     -fx-background-color: transparent;
     -fx-border-color: -border-subtle;
     -fx-border-radius: 12;
 }
+
+/* --- Cabeçalho: barra de fundo + cada célula de coluna + o "filler"
+       (espaço vazio à direita da última coluna). As três camadas
+       precisam ser estilizadas separadamente, senão a célula de
+       coluna (que fica por cima da barra) aparece clara/default. --- */
+.modern-table .column-header,
+.modern-table .filler {
+    -fx-background-color: -bg-sidebar;
+}
+.modern-table .column-header {
+    -fx-border-color: transparent -border-subtle transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
 .modern-table .column-header-background {
     -fx-background-color: -bg-sidebar;
     -fx-background-radius: 12 12 0 0;
+}
+.modern-table .column-header,
+.modern-table .filler {
+    -fx-background-color: -bg-sidebar;
+}
+.modern-table .column-header {
+    -fx-border-color: transparent -border-subtle transparent transparent;
+    -fx-border-width: 0 1 0 0;
 }
 .modern-table .column-header .label {
     -fx-text-fill: -text-secondary;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
 }
+
+/* --- Linhas e células --- */
 .modern-table .table-row-cell {
     -fx-background-color: -bg-card;
     -fx-table-cell-border-color: -border-subtle;
@@ -260,12 +414,187 @@
     -fx-padding: 10 14;
 }
 
-.card-value-warning {
+
+/* ═══════════════ 10. CHECKBOX (seleção em massa nas tabelas) ═══════════════ */
+
+/* --- Quadrado do checkbox, estado padrão (não marcado) --- */
+.table-view .check-box > .box,
+.check-box > .box {
+    -fx-background-color: -bg-card;
+    -fx-border-color: -text-muted;
+    -fx-border-width: 1.5;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 1px;
+}
+
+/* --- Símbolo de "check": a forma (shape) sempre existe, mas fica
+       transparente até o estado :selected pintar de branco. Isso é
+       o que garante que o check só aparece quando o usuário marca. --- */
+.table-view .check-box > .box > .mark,
+.check-box > .box > .mark {
+    -fx-background-color: transparent;
+    -fx-shape: "M9 16.2l-3.5-3.5c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4.2 4.2c.4.4 1 .4 1.4 0L20.3 7.7c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0L9 16.2z";
+}
+
+/* --- Estado marcado --- */
+.table-view .check-box:selected > .box,
+.check-box:selected > .box {
+    -fx-background-color: -accent;
+    -fx-border-color: -accent;
+}
+.table-view .check-box:selected > .box > .mark,
+.check-box:selected > .box > .mark {
+    -fx-background-color: white;
+}
+
+
+/* ═══════════════ 11. BADGES DE STATUS (Ativo/Inativo) ═══════════════ */
+.badge {
+    -fx-padding: 4 12;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.badge-active {
+    -fx-background-color: #1e3a2e;
+    -fx-text-fill: -success;
+}
+.badge-inactive {
+    -fx-background-color: #3a1e1e;
+    -fx-text-fill: -danger;
+}
+
+/* --- Badge de situação de estoque (Normal/Baixo/Zerado) --- */
+.badge-normal {
+    -fx-background-color: -bg-card-hover;
+    -fx-text-fill: -text-secondary;
+}
+.badge-baixo {
+    -fx-background-color: #3a2e14;
     -fx-text-fill: -warning;
-    -fx-font-size: 28px;
+}
+.badge-zerado {
+    -fx-background-color: #3a1e1e;
+    -fx-text-fill: -danger;
+}
+
+
+/* ═══════════════ 12. CHIPS E INDICADORES AUXILIARES ═══════════════ */
+
+/* --- Chip de categoria na tabela de Serviços --- */
+.chip {
+    -fx-background-color: -accent-soft;
+    -fx-text-fill: -accent;
+    -fx-padding: 4 12;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.chip-neutral {
+    -fx-background-color: -bg-card-hover;
+    -fx-text-fill: -text-secondary;
+    -fx-padding: 4 12;
+    -fx-background-radius: 20;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
+/* --- Indicador "Em uso" / "Livre" (Categoria) --- */
+.dot-indicator {
+    -fx-min-width: 8; -fx-min-height: 8;
+    -fx-max-width: 8; -fx-max-height: 8;
+    -fx-background-radius: 50%;
+}
+.dot-em-uso { -fx-background-color: -accent; }
+.dot-livre { -fx-background-color: -text-muted; }
+
+
+/* ═══════════════ 13. FILTRO SEGMENTADO (Todos/Ativos/Inativos etc.) ═══════════════ */
+.segmented-control {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 8;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+    -fx-padding: 3;
+    -fx-spacing: 2;
+}
+.segmented-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 7 16;
+    -fx-cursor: hand;
+}
+.segmented-button:hover {
+    -fx-text-fill: -text-primary;
+}
+.segmented-button:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: white;
+}
+
+
+/* ═══════════════ 14. ABAS (TabPane — Catálogo de Serviços, Configurações Avançadas) ═══════════════ */
+.tab-pane {
+    -fx-background-color: -bg-app;
+    -fx-tab-min-width: 140px;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: transparent;
+}
+.tab-pane .tab {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 10 20;
+}
+.tab-pane .tab-label {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+.tab-pane .tab:selected .tab-label {
+    -fx-text-fill: -accent;
+}
+.tab-pane .tab:selected .focus-indicator {
+    -fx-border-width: 0;
+}
+.tab-pane .tab:selected {
+    -fx-border-color: -accent;
+    -fx-border-width: 0 0 2 0;
+}
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-alignment: CENTER;
+}
+
+
+/* ═══════════════ 15. ESTADO VAZIO (tabela sem resultados) ═══════════════ */
+.empty-state-icon {
+    -fx-font-size: 40px;
+    -fx-text-fill: -text-muted;
+}
+.empty-state-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+.empty-state-subtitle {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 12px;
+}
+
+
+/* ═══════════════ 16. CONTADOR DE RESULTADOS ("N resultado(s)") ═══════════════ */
+.results-count {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+
+/* ═══════════════ 17. MODAIS (formulários e Configurações Avançadas) ═══════════════ */
 .modal-container {
     -fx-background-color: -bg-app;
 }

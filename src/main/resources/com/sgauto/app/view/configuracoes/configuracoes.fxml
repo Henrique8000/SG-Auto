@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.ConfiguracoesController" spacing="20">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoModo"/>
+    </fx:define>
+
+    <Label text="Fechamento de Caixa" styleClass="sidebar-section-label"/>
+
+    <VBox styleClass="config-option" spacing="6">
+        <RadioButton fx:id="radioObrigatoria" text="Conferência obrigatória"
+                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
+        <Label text="O operador precisa informar o valor contado na gaveta antes de conseguir fechar o caixa."
+               styleClass="config-option-desc" wrapText="true"/>
+    </VBox>
+
+    <VBox styleClass="config-option" spacing="6">
+        <RadioButton fx:id="radioOpcional" text="Conferência opcional"
+                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
+        <Label text="O sistema oferece a contagem, mas o caixa pode ser fechado sem informar o valor."
+               styleClass="config-option-desc" wrapText="true"/>
+    </VBox>
+
+    <VBox styleClass="config-option" spacing="6">
+        <RadioButton fx:id="radioSemConferencia" text="Sem conferência"
+                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
+        <Label text="O caixa fecha automaticamente com o valor calculado pelo sistema, sem contagem física."
+               styleClass="config-option-desc" wrapText="true"/>
+    </VBox>
+
+    <Label fx:id="lblMensagem" styleClass="results-count" managed="false" visible="false"/>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>

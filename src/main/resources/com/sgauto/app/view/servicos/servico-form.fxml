@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.servicos.ServicoFormController"
+      styleClass="modal-container" spacing="14" prefWidth="480">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTituloModal" text="Novo Serviço" styleClass="page-title"/>
+
+    <Label text="IDENTIFICAÇÃO" styleClass="sidebar-section-label"/>
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Código" styleClass="form-label"/>
+            <TextField fx:id="txtCodigo" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Categoria" styleClass="form-label"/>
+            <ComboBox fx:id="cmbCategoria" styleClass="form-input" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="4">
+        <Label text="Nome" styleClass="form-label"/>
+        <TextField fx:id="txtNome" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Descrição" styleClass="form-label"/>
+        <TextArea fx:id="txtDescricao" styleClass="form-textarea" prefRowCount="2" wrapText="true"/>
+    </VBox>
+
+    <Label text="CONDIÇÕES COMERCIAIS" styleClass="sidebar-section-label"/>
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Valor (R\$)" styleClass="form-label"/>
+            <TextField fx:id="txtValor" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Comissão (%)" styleClass="form-label"/>
+            <TextField fx:id="txtComissao" styleClass="form-input"/>
+        </VBox>
+    </HBox>
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Tempo Estimado (min)" styleClass="form-label"/>
+            <TextField fx:id="txtTempoEstimado" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Garantia (dias)" styleClass="form-label"/>
+            <TextField fx:id="txtGarantiaDias" styleClass="form-input"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="4">
+        <Label text="Observações Técnicas" styleClass="form-label"/>
+        <TextArea fx:id="txtObservacoes" styleClass="form-textarea" prefRowCount="2" wrapText="true"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>

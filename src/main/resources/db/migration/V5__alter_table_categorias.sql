@@ -1,0 +1,1 @@
+ALTER TABLE t_categoria ALTER COLUMN categoria_tipo SET DEFAULT 'GERAL';

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.EstoqueBaixoModalController"
+      styleClass="modal-container" spacing="16" prefWidth="720" prefHeight="480">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Peças com Estoque Baixo" styleClass="page-title"/>
+    <Label fx:id="lblSubtitulo" styleClass="page-subtitle"/>
+
+    <TableView fx:id="tabelaEstoqueBaixo" styleClass="modern-table" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colCodigo" text="Código" prefWidth="90"/>
+            <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="220"/>
+            <TableColumn fx:id="colModelo" text="Modelo" prefWidth="110"/>
+            <TableColumn fx:id="colAtual" text="Estoque Atual" prefWidth="110"/>
+            <TableColumn fx:id="colMinimo" text="Estoque Mínimo" prefWidth="120"/>
+            <TableColumn fx:id="colSituacao" text="Situação" prefWidth="100"/>
+            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="110"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+        </columnResizePolicy>
+    </TableView>
+
+    <HBox alignment="CENTER_RIGHT">
+        <Button text="Fechar" styleClass="btn-secondary" onAction="#fechar"/>
+    </HBox>
+</VBox>

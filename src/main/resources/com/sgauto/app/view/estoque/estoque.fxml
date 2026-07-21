@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.estoque.EstoqueController">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoStatus"/>
+    </fx:define>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL DE ITENS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalItens" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ESTOQUE BAIXO" styleClass="card-title"/>
+                    <HBox styleClass="box-estoque-baixo" alignment="CENTER_LEFT">
+                        <Label fx:id="lblEstoqueBaixo" text="0" styleClass="card-value-warning"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button text="Ver itens" styleClass="btn-secondary" onAction="#abrirModalEstoqueBaixo"/>
+                    </HBox>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="VALOR EM ESTOQUE" styleClass="card-title"/>
+                    <Label fx:id="lblValorEstoque" text="R\$ 0,00" styleClass="card-value-accent"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por código ou descrição..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nova Peça" styleClass="btn-primary" onAction="#abrirModalNovaPeca"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox styleClass="segmented-control">
+                    <ToggleButton fx:id="btnStatusTodos" text="Todos" styleClass="segmented-button" toggleGroup="$grupoStatus" selected="true"/>
+                    <ToggleButton fx:id="btnStatusNormal" text="Normal" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                    <ToggleButton fx:id="btnStatusBaixo" text="Baixo" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                    <ToggleButton fx:id="btnStatusZerado" text="Zerado" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                </HBox>
+
+                <ComboBox fx:id="cmbFiltroModelo" promptText="Todos os modelos" styleClass="search-field"/>
+                <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Configurações Avançadas" styleClass="btn-primary" onAction="#abrirModalAvancadas"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaPecas" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="80"/>
+                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="230"/>
+                    <TableColumn fx:id="colModelo" text="Modelo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrecoCusto" text="Preço Custo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrecoVenda" text="Preço Venda" prefWidth="100"/>
+                    <TableColumn fx:id="colEstoque" text="Estoque" prefWidth="90"/>
+                    <TableColumn fx:id="colSituacao" text="Situação" prefWidth="40"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="210"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhuma peça encontrada" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou cadastre uma nova peça" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sgauto.app.controller.PecaFormController"
+      fx:controller="com.sgauto.app.controller.estoque.PecaFormController"
       styleClass="modal-container" spacing="16" prefWidth="420">
 
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
@@ -24,7 +24,7 @@
 
     <VBox spacing="4">
         <Label text="Modelo" styleClass="form-label"/>
-        <TextField fx:id="txtModelo" styleClass="form-input" promptText="Deixe em branco para usar 'Geral'"/>
+        <ComboBox fx:id="cmbModelo" styleClass="search-field"/>
     </VBox>
 
     <HBox spacing="12">

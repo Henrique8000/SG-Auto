@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.servicos.ServicoTabController">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoStatus"/>
+    </fx:define>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL DE SERVIÇOS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalServicos" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="SERVIÇOS ATIVOS" styleClass="card-title"/>
+                    <Label fx:id="lblServicosAtivos" text="0" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="VALOR MÉDIO" styleClass="card-title"/>
+                    <Label fx:id="lblValorMedio" text="R\$ 0,00" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por código ou nome..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Novo Serviço" styleClass="btn-primary" onAction="#abrirModalNovoServico"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox styleClass="segmented-control">
+                    <ToggleButton fx:id="btnStatusTodos" text="Todos" styleClass="segmented-button" toggleGroup="$grupoStatus" selected="true"/>
+                    <ToggleButton fx:id="btnStatusAtivos" text="Ativos" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                    <ToggleButton fx:id="btnStatusInativos" text="Inativos" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                </HBox>
+
+                <ComboBox fx:id="cmbFiltroCategoria" promptText="Todas as categorias" styleClass="search-field"/>
+                <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Configurações Avançadas" styleClass="btn-primary" onAction="#abrirModalAvancadas"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaServicos" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colCodigo" text="Código" prefWidth="30"/>
+                    <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
+                    <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="100"/>
+                    <TableColumn fx:id="colValor" text="Valor" prefWidth="70"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="30"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="230"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhum serviço encontrado" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou cadastre um novo serviço" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>
