@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.caixa.HistoricoCaixaController">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <Label text="Histórico de Fechamentos" styleClass="page-title"/>
+            <Label text="Consulte os caixas já fechados" styleClass="page-subtitle"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBuscaId" promptText="Buscar por ID..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <DatePicker fx:id="dpDataInicio" promptText="Data inicial"/>
+                <DatePicker fx:id="dpDataFim" promptText="Data final"/>
+                <ComboBox fx:id="cmbModoConferencia" promptText="Todos os modos" styleClass="search-field"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Limpar Filtros" styleClass="btn-secondary" onAction="#limparFiltros"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaHistorico" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colAbertura" text="Abertura" prefWidth="140"/>
+                    <TableColumn fx:id="colFechamento" text="Fechamento" prefWidth="140"/>
+                    <TableColumn fx:id="colUsuarioFechamento" text="Fechado por" prefWidth="120"/>
+                    <TableColumn fx:id="colValorEsperado" text="Esperado" prefWidth="100"/>
+                    <TableColumn fx:id="colValorContado" text="Contado" prefWidth="100"/>
+                    <TableColumn fx:id="colDiferenca" text="Diferença" prefWidth="100"/>
+                    <TableColumn fx:id="colModo" text="Conferência" prefWidth="120"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="110"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhum fechamento encontrado" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros de busca" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

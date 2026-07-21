@@ -7,6 +7,10 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.sgauto.app.controller.caixa.CaixaController">
 
+    <fx:define>
+        <ToggleGroup fx:id="grupoTipo"/>
+    </fx:define>
+
     <top>
         <VBox spacing="16">
             <padding><Insets bottom="20"/></padding>
@@ -34,35 +38,56 @@
             </HBox>
 
             <HBox spacing="12" alignment="CENTER_LEFT">
-                <Label fx:id="lblContagem" styleClass="results-count"/>
-                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtBusca" promptText="Buscar por descrição ou placa..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
                 <Button text="+ Nova Movimentação" styleClass="btn-secondary" onAction="#abrirModalMovimentacao"/>
                 <Button text="Fechar Caixa" styleClass="btn-primary" onAction="#abrirModalFechamento"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox styleClass="segmented-control">
+                    <ToggleButton fx:id="btnFiltroTodos" text="Todos" styleClass="segmented-button" toggleGroup="$grupoTipo" selected="true"/>
+                    <ToggleButton fx:id="btnFiltroEntrada" text="Entrada" styleClass="segmented-button" toggleGroup="$grupoTipo"/>
+                    <ToggleButton fx:id="btnFiltroSaida" text="Saída" styleClass="segmented-button" toggleGroup="$grupoTipo"/>
+                </HBox>
+
+                <ComboBox fx:id="cmbFiltroOrigem" promptText="Todas as origens" styleClass="search-field"/>
+                <ComboBox fx:id="cmbFiltroFormaPagamento" promptText="Todas as formas" styleClass="search-field"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
             </HBox>
         </VBox>
     </top>
 
     <center>
-        <TableView fx:id="tabelaMovimentacoes" styleClass="modern-table">
-            <columns>
-                <TableColumn fx:id="colData" text="Data/Hora" prefWidth="140"/>
-                <TableColumn fx:id="colTipo" text="Tipo" prefWidth="90"/>
-                <TableColumn fx:id="colOrigem" text="Origem" prefWidth="130"/>
-                <TableColumn fx:id="colFormaPagamento" text="Pagamento" prefWidth="110"/>
-                <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
-                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="240"/>
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
-            </columnResizePolicy>
-        </TableView>
+        <StackPane>
+            <TableView fx:id="tabelaMovimentacoes" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colData" text="Data/Hora" prefWidth="140"/>
+                    <TableColumn fx:id="colTipo" text="Tipo" prefWidth="90"/>
+                    <TableColumn fx:id="colOrigem" text="Origem" prefWidth="130"/>
+                    <TableColumn fx:id="colFormaPagamento" text="Pagamento" prefWidth="110"/>
+                    <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
+                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="240"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhuma movimentação encontrada" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros de busca" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
     </center>
 
     <bottom>
         <HBox alignment="CENTER_RIGHT">
             <padding><Insets top="16"/></padding>
             <Region HBox.hgrow="ALWAYS"/>
-            <Button text="Histórico - Fechamentos" styleClass="btn-secondary" onAction="#abrirModalFechamento"/>
+            <Button text="Histórico - Fechamentos" styleClass="btn-secondary" onAction="#abrirModalHistorico"/>
         </HBox>
     </bottom>
 </BorderPane>

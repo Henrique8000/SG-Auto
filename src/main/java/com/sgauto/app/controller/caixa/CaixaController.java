@@ -147,6 +147,22 @@ public class CaixaController {
         }
     }
 
+    @FXML
+    private void abrirModalHistorico() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/historico-caixa.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent root = loader.load();
+
+            Stage modal = com.sgauto.app.util.ModalUtil.abrir(root, "Histórico de Fechamentos",
+                    tabelaMovimentacoes.getScene().getWindow());
+            modal.showAndWait();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao abrir histórico de caixa", e);
+        }
+    }
+
     private String formatarMoeda(BigDecimal valor) {
         return String.format("R$ %,.2f", valor);
     }

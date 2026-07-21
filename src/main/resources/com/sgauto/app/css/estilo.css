@@ -677,3 +677,64 @@
     -fx-text-fill: -text-secondary;
     -fx-font-size: 12px;
 }
+
+/* ═══════════════ 19. DATEPICKER (filtros por período) ═══════════════ */
+.date-picker {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 8;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 8;
+    -fx-max-width: infinity;
+}
+.date-picker:focused {
+    -fx-border-color: -accent;
+}
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-padding: 10 0 10 14;
+}
+.date-picker > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 10 0 0;
+}
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: -text-muted;
+}
+.date-picker:hover > .arrow-button > .arrow,
+.date-picker:focused > .arrow-button > .arrow {
+    -fx-background-color: -accent;
+}
+
+.date-picker-popup {
+    -fx-background-color: -bg-card;
+    -fx-border-color: -border-subtle;
+}
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: -bg-sidebar;
+}
+.date-picker-popup .label {
+    -fx-text-fill: -text-primary;
+}
+.date-picker-popup .spinner .button {
+    -fx-background-color: transparent;
+}
+.date-picker-popup > .calendar-grid {
+    -fx-background-color: -bg-card;
+}
+.date-picker-popup .day-cell {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-secondary;
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: -bg-card-hover;
+    -fx-text-fill: -text-primary;
+}
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: -accent;
+    -fx-text-fill: white;
+}
+.date-picker-popup .today {
+    -fx-border-color: -accent;
+}
