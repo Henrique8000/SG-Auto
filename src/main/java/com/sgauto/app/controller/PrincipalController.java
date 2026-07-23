@@ -142,7 +142,7 @@ public class PrincipalController {
         Label label = new Label(texto);
         label.getStyleClass().add("placeholder-text");
         box.getChildren().add(label);
-        VBox.setVgrow(box, javafx.scene.layout.Priority.ALWAYS);
+        VBox.setVgrow(box, Priority.ALWAYS);
         return box;
     }
 }
