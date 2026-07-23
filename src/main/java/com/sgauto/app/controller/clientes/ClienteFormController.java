@@ -1,7 +1,9 @@
 package com.sgauto.app.controller.clientes;
 
-import com.sgauto.app.controller.clientes.ClientesController.ClienteRow;
-import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.model.Cliente;
+import com.sgauto.app.model.ClientePF;
+import com.sgauto.app.model.ClientePJ;
+import com.sgauto.app.service.ClienteService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,8 +33,14 @@ public class ClienteFormController {
     @FXML private Label lblErro;
     @FXML private Button btnSalvar;
 
-    private ClienteRow clienteEmEdicao;
+    private final ClienteService clienteService;
+
+    private Cliente clienteEmEdicao;
     private Runnable aoSalvar;
+
+    public ClienteFormController(ClienteService clienteService) {
+        this.clienteService = clienteService;
+    }
 
     @FXML
     public void initialize() {
@@ -47,21 +55,33 @@ public class ClienteFormController {
         ajustarCamposPorTipo();
     }
 
-    public void configurar(ClienteRow clienteExistente, Runnable aoSalvar) {
+    public void configurar(Cliente clienteExistente, Runnable aoSalvar) {
         this.clienteEmEdicao = clienteExistente;
         this.aoSalvar = aoSalvar;
 
         if (clienteExistente != null) {
             lblTituloModal.setText("Editar Cliente");
 
-            boolean ehPJ = "PJ".equals(clienteExistente.tipo());
+            boolean ehPJ = clienteExistente instanceof ClientePJ;
             btnTipoPJ.setSelected(ehPJ);
             btnTipoPF.setSelected(!ehPJ);
 
-            txtNome.setText(clienteExistente.nome());
-            txtDocumento.setText(clienteExistente.documento());
-            txtCelular.setText(clienteExistente.celular());
-            txtEmail.setText(clienteExistente.email());
+            // O tipo (discriminador) não pode mudar depois de criado
+            btnTipoPF.setDisable(true);
+            btnTipoPJ.setDisable(true);
+
+            txtNome.setText(clienteExistente.getNome());
+            txtDocumento.setText(clienteExistente.getDocumento() == null
+                    ? "" : clienteExistente.getDocumentoFormatado());
+            txtCelular.setText(clienteExistente.getCelular());
+            txtTelefone.setText(clienteExistente.getTelefone());
+            txtEmail.setText(clienteExistente.getEmail());
+
+            if (clienteExistente instanceof ClientePJ pj) {
+                txtNomeFantasia.setText(pj.getNomeFantasia());
+            }
+
+            ajustarCamposPorTipo();
         }
     }
 
@@ -70,7 +90,7 @@ public class ClienteFormController {
 
         lblNome.setText(ehPJ ? "Razão social" : "Nome completo");
         lblDocumento.setText(ehPJ ? "CNPJ" : "CPF");
-        txtDocumento.setPromptText(ehPJ ? "Somente números (14 dígitos)" : "Somente números (11 dígitos)");
+        txtDocumento.setPromptText(ehPJ ? "14 caracteres, sem pontuação" : "Somente números (11 dígitos)");
 
         boxNomeFantasia.setVisible(ehPJ);
         boxNomeFantasia.setManaged(ehPJ);
@@ -78,30 +98,50 @@ public class ClienteFormController {
 
     @FXML
     private void salvar() {
-        String nome = txtNome.getText() == null ? "" : txtNome.getText().trim();
-        String documento = txtDocumento.getText() == null ? "" : txtDocumento.getText().replaceAll("\\D", "");
-        boolean ehPJ = btnTipoPJ.isSelected();
+        esconderErro();
 
-        if (nome.isEmpty()) {
-            mostrarErro(ehPJ ? "Razão social é obrigatória." : "Nome é obrigatório.");
+        String celular = somenteDigitos(txtCelular.getText());
+        String telefone = somenteDigitos(txtTelefone.getText());
+
+        if (celular != null && (celular.length() < 10 || celular.length() > 11)) {
+            mostrarErro("Celular deve ter 10 ou 11 dígitos (DDD + número).");
+            return;
+        }
+        if (telefone != null && telefone.length() > 10) {
+            mostrarErro("Telefone fixo deve ter no máximo 10 dígitos (DDD + número).");
             return;
         }
 
-        if (!documento.isEmpty()) {
-            int tamanhoEsperado = ehPJ ? 14 : 11;
-            if (documento.length() != tamanhoEsperado) {
-                mostrarErro((ehPJ ? "CNPJ" : "CPF") + " deve ter " + tamanhoEsperado + " dígitos.");
-                return;
+        boolean ehPJ = btnTipoPJ.isSelected();
+
+        try {
+            if (clienteEmEdicao == null) {
+                Cliente novo = ehPJ
+                        ? new ClientePJ(texto(txtNome), texto(txtDocumento), celular, telefone,
+                        texto(txtEmail), null, true, texto(txtNomeFantasia), null)
+                        : new ClientePF(texto(txtNome), texto(txtDocumento), celular, telefone,
+                        texto(txtEmail), null, true, null, null);
+                clienteService.cadastrar(novo);
+            } else {
+                clienteEmEdicao.setNome(texto(txtNome));
+                clienteEmEdicao.setDocumento(texto(txtDocumento));
+                clienteEmEdicao.setCelular(celular);
+                clienteEmEdicao.setTelefone(telefone);
+                clienteEmEdicao.setEmail(texto(txtEmail));
+                if (clienteEmEdicao instanceof ClientePJ pj) {
+                    pj.setNomeFantasia(texto(txtNomeFantasia));
+                }
+                clienteService.atualizar(clienteEmEdicao);
             }
-        }
 
-        // TODO: montar ClientePF/ClientePJ e chamar ClienteService.cadastrar / atualizar
-        //  Por enquanto o formulário só valida e fecha o front-end
+            if (aoSalvar != null) {
+                aoSalvar.run();
+            }
+            fecharModal();
 
-        if (aoSalvar != null) {
-            aoSalvar.run();
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            mostrarErro(e.getMessage());
         }
-        fecharModal();
     }
 
     @FXML
@@ -109,11 +149,28 @@ public class ClienteFormController {
         fecharModal();
     }
 
+    private String texto(TextField campo) {
+        String valor = campo.getText();
+        return valor == null || valor.trim().isEmpty() ? null : valor.trim();
+    }
+
+    private String somenteDigitos(String valor) {
+        if (valor == null) {
+            return null;
+        }
+        String digitos = valor.replaceAll("\\D", "");
+        return digitos.isEmpty() ? null : digitos;
+    }
+
     private void mostrarErro(String mensagem) {
         lblErro.setText(mensagem);
         lblErro.setVisible(true);
         lblErro.setManaged(true);
+    }
 
+    private void esconderErro() {
+        lblErro.setVisible(false);
+        lblErro.setManaged(false);
     }
 
     private void fecharModal() {
