@@ -91,7 +91,7 @@ public class PrincipalController {
 
     @FXML
     private void irParaPatioAtual() {
-        mostrarTela("Pátio Atual", "Pátio atual da oficina", montarPlaceholder("Tela de Pátio Atual em construção"));
+        mostrarTela("Pátio", "Pátio atual da oficina", montarPlaceholder("Tela de Pátio em construção"));
     }
 
     @FXML
