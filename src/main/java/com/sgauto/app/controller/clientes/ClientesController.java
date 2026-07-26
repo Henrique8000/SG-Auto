@@ -25,6 +25,7 @@ import java.util.List;
 @Component
 public class ClientesController {
 
+    @FXML private ComboBox<String> cmbFiltroStatus;
     @FXML private Label lblTotalClientes;
     @FXML private Label lblTotalPF;
     @FXML private Label lblTotalPJ;
@@ -124,6 +125,11 @@ public class ClientesController {
 
         txtBusca.textProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
         cmbFiltroTipo.valueProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
+
+        cmbFiltroStatus.setItems(FXCollections.observableArrayList(
+                "Todos os status", "Ativos", "Inativos"));
+        cmbFiltroStatus.getSelectionModel().selectFirst();
+        cmbFiltroStatus.valueProperty().addListener((obs, antigo, novo) -> aplicarFiltros());
     }
 
     private void carregarDados() {
@@ -138,6 +144,7 @@ public class ClientesController {
         String termo = txtBusca.getText() == null ? "" : txtBusca.getText().toLowerCase();
         String termoDigitos = termo.replaceAll("\\D", "");
         String tipoSelecionado = cmbFiltroTipo.getValue();
+        String statusSelecionado = cmbFiltroStatus.getValue();
 
         List<Cliente> filtrados = todosClientes.stream()
                 .filter(c -> termo.isBlank()
@@ -148,6 +155,10 @@ public class ClientesController {
                         || tipoSelecionado.equals("Todos os tipos")
                         || (tipoSelecionado.equals("Pessoa Física") && c instanceof ClientePF)
                         || (tipoSelecionado.equals("Pessoa Jurídica") && c instanceof ClientePJ))
+                .filter(c -> statusSelecionado == null
+                        || statusSelecionado.equals("Todos os status")
+                        || (statusSelecionado.equals("Ativos") && Boolean.TRUE.equals(c.getAtivo()))
+                        || (statusSelecionado.equals("Inativos") && Boolean.FALSE.equals(c.getAtivo())))
                 .toList();
 
         clientes.setAll(filtrados);
