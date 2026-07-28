@@ -6,7 +6,7 @@ CREATE TABLE t_estadia_patio (
                                  estadia_ordem_servico_id BIGINT,            -- soft reference; nulo = entrada avulsa
                                  estadia_placa VARCHAR(10),                  -- redundância proposital, ver nota abaixo
 
-                                 estadia_tarifa_id BIGINT NOT NULL REFERENCES t_tarifa_patio(id),
+                                 estadia_tarifa_id BIGINT NOT NULL REFERENCES t_tabela_preco_patio(id),
                                  estadia_motivo_id BIGINT NOT NULL REFERENCES t_motivo_estadia(id),
 
                                  estadia_data_entrada TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

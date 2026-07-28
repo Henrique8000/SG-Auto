@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.FuncionarioController">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoRemovido"/>
+    </fx:define>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL DE FUNCIONÁRIOS" styleClass="card-title"/>
+                    <Label fx:id="lblTotal" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ATIVOS" styleClass="card-title"/>
+                    <Label fx:id="lblAtivos" text="0" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="APTOS PARA O.S." styleClass="card-title"/>
+                    <Label fx:id="lblAptosOs" text="0" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por nome, matrícula ou CPF..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Novo Funcionário" styleClass="btn-primary" onAction="#abrirModalNovoFuncionario"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox styleClass="segmented-control">
+                    <ToggleButton fx:id="btnAtivos" text="Ativos no sistema" styleClass="segmented-button" toggleGroup="$grupoRemovido" selected="true"/>
+                    <ToggleButton fx:id="btnRemovidos" text="Removidos" styleClass="segmented-button" toggleGroup="$grupoRemovido"/>
+                </HBox>
+
+                <ComboBox fx:id="cmbFiltroStatus" promptText="Todos os status" styleClass="search-field"/>
+                <ComboBox fx:id="cmbFiltroCargo" promptText="Todos os cargos" styleClass="search-field"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+                <Button text="Opções Avançadas" styleClass="btn-primary" onAction="#abrirModalAvancadas"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaFuncionarios" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colMatricula" text="Matrícula" prefWidth="90"/>
+                    <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
+                    <TableColumn fx:id="colCargo" text="Cargo" prefWidth="150"/>
+                    <TableColumn fx:id="colContrato" text="Contrato" prefWidth="110"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="110"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="220"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhum funcionário encontrado" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou cadastre um novo funcionário" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

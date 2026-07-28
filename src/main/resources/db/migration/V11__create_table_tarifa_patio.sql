@@ -7,5 +7,5 @@ CREATE TABLE t_tabela_preco_patio (
                                 tpreco_ativo BOOLEAN NOT NULL DEFAULT TRUE,
                                 tpreco_data_criacao TIMESTAMP,
 
-                                CONSTRAINT chk_tarifa_categoria CHECK (tarifa_categoria IN ('MOTO', 'PASSEIO', 'SUV_CAMINHONETE', 'PESADO', 'OUTROS'))
+                                CONSTRAINT chk_tpreco_categoria CHECK (tpreco_categoria IN ('MOTO', 'PASSEIO', 'SUV_CAMINHONETE', 'PESADO', 'OUTROS'))
 );
