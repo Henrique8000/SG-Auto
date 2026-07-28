@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.veiculos.VeiculosController">
+
+    <top>
+        <VBox spacing="20">
+            <padding><Insets top="0" right="0" bottom="20" left="0"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL DE VEÍCULOS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalVeiculos" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ATIVOS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalAtivos" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="MODELOS DISTINTOS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalModelos" text="0" styleClass="card-value-accent"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por placa, modelo ou dono..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbFiltroModelo" promptText="Todos os modelos" styleClass="search-field"/>
+                <ComboBox fx:id="cmbFiltroStatus" promptText="Todos os status" styleClass="search-field"/>
+                <Button text="+ Novo Veículo" styleClass="btn-primary" onAction="#abrirModalNovoVeiculo"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabelaVeiculos" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colPlaca" text="Placa" prefWidth="90"/>
+                <TableColumn fx:id="colMarca" text="Marca" prefWidth="110"/>
+                <TableColumn fx:id="colModelo" text="Modelo" prefWidth="140"/>
+                <TableColumn fx:id="colAno" text="Ano" prefWidth="60"/>
+                <TableColumn fx:id="colKm" text="KM" prefWidth="90"/>
+                <TableColumn fx:id="colDono" text="Dono" prefWidth="200"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+                <TableColumn fx:id="colAcoes" text="Ações" prefWidth="220"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+</BorderPane>

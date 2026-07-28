@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.veiculos.VeiculoFormController"
+      styleClass="modal-container" spacing="16" prefWidth="440">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTituloModal" text="Novo Veículo" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Dono do veículo" styleClass="form-label"/>
+        <ComboBox fx:id="cmbCliente" styleClass="search-field" maxWidth="Infinity"/>
+    </VBox>
+
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Placa" styleClass="form-label"/>
+            <TextField fx:id="txtPlaca" styleClass="form-input" promptText="ABC1D23"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Ano" styleClass="form-label"/>
+            <TextField fx:id="txtAno" styleClass="form-input" promptText="Ex: 2020"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="4">
+        <Label text="Marca" styleClass="form-label"/>
+        <TextField fx:id="txtMarca" styleClass="form-input" promptText="Ex: Volkswagen"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Modelo" styleClass="form-label"/>
+        <ComboBox fx:id="cmbModelo" styleClass="search-field" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Quilometragem (opcional)" styleClass="form-label"/>
+        <TextField fx:id="txtKm" styleClass="form-input" promptText="Somente números"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>
