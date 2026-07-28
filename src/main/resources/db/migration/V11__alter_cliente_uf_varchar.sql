@@ -1,0 +1,1 @@
+ALTER TABLE t_cliente ALTER COLUMN cliente_uf TYPE VARCHAR(2);
