@@ -13,13 +13,16 @@ public class ModalUtil {
     private static final String CSS_PATH = "/com/sgauto/app/css/estilo.css";
 
     public static Stage abrir(Parent root, String titulo) {
-        return abrir(root, titulo, null);
+        return abrir(root, titulo, null, false);
     }
 
     public static Stage abrir(Parent root, String titulo, Window owner) {
+        return abrir(root, titulo, owner, false);
+    }
+
+    public static Stage abrir(Parent root, String titulo, Window owner, boolean fs) {
         Scene scene = new Scene(root);
 
-        // Verificação de segurança para evitar NullPointerException caso o CSS não seja encontrado
         URL cssUrl = ModalUtil.class.getResource(CSS_PATH);
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
@@ -38,12 +41,17 @@ public class ModalUtil {
             modal.initOwner(owner);
         }
 
-        // Registra os escutadores para monitorar mudanças dinâmicas na estrutura
+        if (fs) {
+            modal.setMaximized(true);
+        }
+
         registrarEscutadoresDeLayout(scene, modal, owner);
 
         modal.setOnShown(event -> {
-            modal.sizeToScene();
-            recentralizar(modal, owner);
+            if (!fs) {
+                modal.sizeToScene();
+                recentralizar(modal, owner);
+            }
         });
 
         return modal;
@@ -52,7 +60,6 @@ public class ModalUtil {
     private static void registrarEscutadoresDeLayout(Scene scene, Stage modal, Window owner) {
         adicionarEscutadorNoRoot(scene.getRoot(), scene, modal, owner);
 
-        // Caso o painel raiz seja trocado completamente (ex: troca de tela PF para PJ via setRoot)
         scene.rootProperty().addListener((obs, oldRoot, newRoot) -> {
             if (newRoot != null) {
                 adicionarEscutadorNoRoot(newRoot, scene, modal, owner);
@@ -62,7 +69,6 @@ public class ModalUtil {
     }
 
     private static void adicionarEscutadorNoRoot(Parent root, Scene scene, Stage modal, Window owner) {
-        // Monitora requisições de layout geradas por novos componentes ou mudança de visibilidade
         root.needsLayoutProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal) {
                 ajustarTamanho(modal, owner, scene, root);
@@ -71,16 +77,18 @@ public class ModalUtil {
     }
 
     private static void ajustarTamanho(Stage modal, Window owner, Scene scene, Parent root) {
-        // Empurra o redimensionamento para após a conclusão do cálculo do layout pelo JavaFX
         Platform.runLater(() -> {
             if (!modal.isShowing()) {
+                return;
+            }
+
+            if (modal.isFullScreen() || modal.isMaximized()) {
                 return;
             }
 
             double prefWidth = root.prefWidth(-1);
             double prefHeight = root.prefHeight(prefWidth);
 
-            // Redimensiona apenas se o tamanho preferido do conteúdo mudou em relação ao tamanho da cena
             if (Math.abs(scene.getWidth() - prefWidth) > 1 || Math.abs(scene.getHeight() - prefHeight) > 1) {
                 modal.sizeToScene();
                 recentralizar(modal, owner);

@@ -5,11 +5,13 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.sgauto.app.controller.FuncionarioController">
+            fx:controller="com.sgauto.app.controller.funcionario.FuncionarioController">
 
     <fx:define>
         <ToggleGroup fx:id="grupoRemovido"/>
     </fx:define>
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
 
     <top>
         <VBox spacing="16">
@@ -28,10 +30,14 @@
                     <Label text="APTOS PARA O.S." styleClass="card-title"/>
                     <Label fx:id="lblAptosOs" text="0" styleClass="card-value"/>
                 </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="CNH VENCIDA/VENCENDO (30d)" styleClass="card-title"/>
+                    <Label fx:id="lblCnhAlerta" text="0" styleClass="card-value-warning"/>
+                </VBox>
             </HBox>
 
             <HBox spacing="12" alignment="CENTER_LEFT">
-                <TextField fx:id="txtBusca" promptText="Buscar por nome, matrícula ou CPF..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtBusca" promptText="Buscar por nome, matrícula, CPF, celular ou e-mail..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
                 <Button text="+ Novo Funcionário" styleClass="btn-primary" onAction="#abrirModalNovoFuncionario"/>
             </HBox>
 
@@ -43,10 +49,19 @@
 
                 <ComboBox fx:id="cmbFiltroStatus" promptText="Todos os status" styleClass="search-field"/>
                 <ComboBox fx:id="cmbFiltroCargo" promptText="Todos os cargos" styleClass="search-field"/>
+                <ComboBox fx:id="cmbFiltroContrato" promptText="Todos os contratos" styleClass="search-field"/>
+                <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Opções Avançadas" styleClass="btn-primary" onAction="#abrirModalAvancadas"/>
+            </HBox>
+
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <CheckBox fx:id="chkSomenteAptosOs" text="Somente disponíveis para O.S."/>
+                <CheckBox fx:id="chkSomenteCnhVencida" text="Somente CNH vencida"/>
 
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="lblContagem" styleClass="results-count"/>
-                <Button text="Opções Avançadas" styleClass="btn-primary" onAction="#abrirModalAvancadas"/>
             </HBox>
         </VBox>
     </top>
@@ -55,12 +70,14 @@
         <StackPane>
             <TableView fx:id="tabelaFuncionarios" styleClass="modern-table">
                 <columns>
-                    <TableColumn fx:id="colMatricula" text="Matrícula" prefWidth="90"/>
-                    <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
-                    <TableColumn fx:id="colCargo" text="Cargo" prefWidth="150"/>
-                    <TableColumn fx:id="colContrato" text="Contrato" prefWidth="110"/>
-                    <TableColumn fx:id="colStatus" text="Status" prefWidth="110"/>
-                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="220"/>
+                    <TableColumn fx:id="colMatricula" text="Matrícula" prefWidth="80"/>
+                    <TableColumn fx:id="colNome" text="Nome" prefWidth="190"/>
+                    <TableColumn fx:id="colCargo" text="Cargo" prefWidth="130"/>
+                    <TableColumn fx:id="colContrato" text="Contrato" prefWidth="100"/>
+                    <TableColumn fx:id="colCelular" text="Celular" prefWidth="110"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                    <TableColumn fx:id="colApto" text="O.S." prefWidth="70"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="230"/>
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>

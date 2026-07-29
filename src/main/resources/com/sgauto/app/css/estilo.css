@@ -128,11 +128,17 @@
 .card {
     -fx-background-color: -bg-card;
     -fx-background-radius: 6;
-    -fx-padding: 20 24;
+    -fx-padding: 18 24;
     -fx-spacing: 8;
     -fx-border-color: -border-subtle;
     -fx-border-radius: 6;
     -fx-border-width: 1;
+
+    /* ── Padronização Rígida de Dimensões ── */
+    -fx-min-height: 96px;
+    -fx-pref-height: 96px;
+    -fx-max-height: 96px;
+    -fx-alignment: CENTER_LEFT;
 }
 
 .card-title {
@@ -397,7 +403,19 @@
     -fx-padding: 11 14;
 }
 
-/* ═══════════════ 10. CHECKBOX ═══════════════ */
+/* ── Texto e layout geral do CheckBox ── */
+.check-box {
+    -fx-text-fill: -text-primary;  /* Força a cor clara (Cinza Papiro) no texto */
+    -fx-font-size: 13px;
+    -fx-cursor: hand;              /* Muda o cursor para mãozinha ao passar por cima */
+}
+
+/* Hover no texto do CheckBox */
+.check-box:hover {
+    -fx-text-fill: -text-white;    /* Fica ligeiramente mais brilhante no hover */
+}
+
+/* ── Caixinha (Quadrado) ── */
 .table-view .check-box > .box,
 .check-box > .box {
     -fx-background-color: -bg-input;
@@ -408,20 +426,28 @@
     -fx-padding: 1px;
 }
 
+/* Hover na caixinha (Clareia a borda ao passar o mouse para dar feedback visual) */
+.check-box:hover > .box {
+    -fx-border-color: -text-secondary;
+}
+
+/* ── Ícone de Check (Visto) ── */
 .table-view .check-box > .box > .mark,
 .check-box > .box > .mark {
     -fx-background-color: transparent;
     -fx-shape: "M9 16.2l-3.5-3.5c-.4-.4-1-.4-1.4 0-.4.4-.4 1 0 1.4l4.2 4.2c.4.4 1 .4 1.4 0L20.3 7.7c.4-.4.4-1 0-1.4-.4-.4-1-.4-1.4 0L9 16.2z";
 }
 
+/* ── Estado Selecionado (Marcado) ── */
 .table-view .check-box:selected > .box,
 .check-box:selected > .box {
     -fx-background-color: -accent;
     -fx-border-color: -accent;
 }
+
 .table-view .check-box:selected > .box > .mark,
 .check-box:selected > .box > .mark {
-    -fx-background-color: #121212; /* Check escuro sobre fundo ocre */
+    -fx-background-color: #121212; /* Check escuro com excelente contraste sobre o ocre */
 }
 
 /* ═══════════════ 11. BADGES DE STATUS ═══════════════ */
@@ -603,4 +629,118 @@ ScrollPane.modal-container {
 }
 .modal-container .scroll-bar:vertical .track {
     -fx-background-color: transparent;
+}
+
+/* ═══════════════ 19. DATE PICKER (Conceito Titânio & Ocre) ═══════════════ */
+
+/* Remove bordas extras e fundo branco do campo interno do DatePicker */
+.date-picker.form-input > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: -text-primary;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+
+/* Botão do ícone de calendário */
+.date-picker.form-input .arrow-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+.date-picker.form-input .arrow-button .arrow {
+    -fx-background-color: -text-muted;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+.date-picker.form-input:hover .arrow-button .arrow,
+.date-picker.form-input:focused .arrow-button .arrow {
+    -fx-background-color: -accent;
+}
+
+/* ── Popup do Calendário (Força o fundo escuro na raiz) ── */
+.date-picker-popup {
+    -fx-background-color: -bg-card;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 2;
+}
+
+/* Barra superior (Mês e Ano) */
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #151515;
+    -fx-padding: 8 8 10 8;
+    -fx-background-radius: 4 4 0 0;
+}
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: -text-primary;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* Botões de mês anterior/próximo no popup */
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+    -fx-background-color: -text-secondary;
+}
+.date-picker-popup .spinner .button:hover .left-arrow,
+.date-picker-popup .spinner .button:hover .right-arrow {
+    -fx-background-color: -accent;
+}
+
+/* ── Grade de Dias (O segredo para tirar o fundo branco) ── */
+.date-picker-popup .calendar-grid {
+    -fx-background-color: -bg-card;
+    -fx-padding: 6;
+}
+
+/* Dias da Semana (Dom, Seg, Ter...) */
+.date-picker-popup .calendar-grid .day-name-cell,
+.date-picker-popup .calendar-grid .week-number-cell {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-muted;
+    -fx-font-weight: bold;
+    -fx-font-size: 11px;
+    -fx-padding: 6 4;
+}
+
+/* Células dos Dias do Mês (Força cor de fundo escura e texto claro) */
+.date-picker-popup .calendar-grid .day-cell {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-background-radius: 4;
+    -fx-padding: 6 8;
+    -fx-cursor: hand;
+}
+
+/* Dias de outros meses (cinza bem apagado para não confundir) */
+.date-picker-popup .calendar-grid .previous-month,
+.date-picker-popup .calendar-grid .next-month {
+    -fx-background-color: -bg-card;
+    -fx-text-fill: #4c4c4c;
+}
+
+/* Hover no dia */
+.date-picker-popup .calendar-grid .day-cell:hover {
+    -fx-background-color: -bg-card-hover;
+    -fx-text-fill: -text-white;
+}
+
+/* Dia Atual (Hoje - Borda ocre sutil) */
+.date-picker-popup .calendar-grid .today {
+    -fx-background-color: -bg-card;
+    -fx-border-color: -accent;
+    -fx-border-radius: 4;
+    -fx-border-width: 1;
+}
+
+/* Dia Selecionado (Fundo ocre sólido com texto preto) */
+.date-picker-popup .calendar-grid .selected,
+.date-picker-popup .calendar-grid .selected:hover {
+    -fx-background-color: -accent;
+    -fx-text-fill: #121212;
+    -fx-font-weight: bold;
 }

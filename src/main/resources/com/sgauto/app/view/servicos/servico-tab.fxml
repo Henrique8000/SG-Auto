@@ -16,17 +16,19 @@
             <padding><Insets bottom="20"/></padding>
 
             <HBox spacing="16">
-                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <Label text="TOTAL DE SERVIÇOS" styleClass="card-title"/>
                     <Label fx:id="lblTotalServicos" text="0" styleClass="card-value"/>
                 </VBox>
-                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <Label text="SERVIÇOS ATIVOS" styleClass="card-title"/>
                     <Label fx:id="lblServicosAtivos" text="0" styleClass="card-value-accent"/>
                 </VBox>
-                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
                     <Label text="VALOR MÉDIO" styleClass="card-title"/>
-                    <Label fx:id="lblValorMedio" text="R\$ 0,00" styleClass="card-value"/>
+                    <Label fx:id="lblValorMedio" text="R$ 0,00" styleClass="card-value"/>
                 </VBox>
             </HBox>
 
