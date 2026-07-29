@@ -26,6 +26,8 @@ public class FuncionarioService {
          return funcionarioRepository.findAll();
     }
 
+    public List<Funcionario> listarDisponiveisOS() {return funcionarioRepository.findByExibeEmOsTrueAndStatusAndRemovidoEmIsNull(StatusFuncionario.ATIVO);}
+
     public List<Funcionario> listarNaoRemovidos() {
         return funcionarioRepository.findByRemovidoEmIsNull();
     }
@@ -146,6 +148,8 @@ public class FuncionarioService {
         if (func.getRemovidoEm() != null)
             throw new IllegalStateException("Não é possível excluir um funcionário já excluído");
 
+
+        func.setStatus(StatusFuncionario.INATIVO);
         func.setRemovidoEm(OffsetDateTime.now());
 
         funcionarioRepository.save(func);
@@ -162,6 +166,7 @@ public class FuncionarioService {
         if (func.getRemovidoEm() == null)
             throw new IllegalStateException("Não é possível cancelar exclusão de um funcionário não deletado");
 
+        func.setStatus(StatusFuncionario.ATIVO);
         func.setRemovidoEm(null);
 
         funcionarioRepository.save(func);

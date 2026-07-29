@@ -48,7 +48,6 @@ CREATE TABLE t_funcionario (
 
     -- Situação (Enum + CHECK) e Padrão Ativo (Boolean)
                                funcionario_status                  VARCHAR(20)     NOT NULL DEFAULT 'ATIVO',
-                               funcionario_ativo                   BOOLEAN         NOT NULL DEFAULT TRUE,
 
                                funcionario_foto_url                VARCHAR(255),
                                funcionario_observacoes             TEXT,
@@ -102,21 +101,23 @@ CREATE TABLE t_funcionario (
 -- Índices
 -- ---------------------------------------------------------------------
 
--- Índice para a consulta mais crítica do sistema: preencher combos na tela de O.S.
-CREATE INDEX idx_funcionario_combo_os ON t_funcionario (funcionario_cargo, funcionario_status)
-    WHERE funcionario_ativo = TRUE AND funcionario_exibe_em_os = TRUE;
+CREATE INDEX idx_funcionario_combo_os
+    ON t_funcionario (funcionario_cargo, funcionario_status)
+    WHERE funcionario_status = 'ATIVO'
+      AND funcionario_exibe_em_os = TRUE
+      AND funcionario_removido_em IS NULL;
 
 CREATE INDEX idx_funcionario_nome ON t_funcionario (funcionario_nome_completo);
 
 -- E-mail único somente entre registros ativos
 CREATE UNIQUE INDEX uq_funcionario_email_ativo
     ON t_funcionario (funcionario_email)
-    WHERE funcionario_email IS NOT NULL AND funcionario_ativo = TRUE;
+    WHERE funcionario_email IS NOT NULL
+      AND funcionario_status NOT IN ('INATIVO', 'DEMITIDO');
 
 -- ---------------------------------------------------------------------
 -- Comentários
 -- ---------------------------------------------------------------------
 COMMENT ON TABLE  t_funcionario IS 'Funcionários do centro automotivo (gestão de RH e alocação operacional em O.S.)';
-COMMENT ON COLUMN t_funcionario.funcionario_ativo IS 'Padrão booleano de exclusão lógica (substitui o soft delete por timestamp)';
 COMMENT ON COLUMN t_funcionario.funcionario_exibe_em_os IS 'Controla se o funcionário aparece para seleção técnica na abertura de Ordem de Serviço';
 COMMENT ON COLUMN t_funcionario.funcionario_custo_hora IS 'Custo hora interno para futuros cálculos de margem de lucro real por Ordem de Serviço';

@@ -26,13 +26,13 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, Long> 
 
     List<Funcionario> findByCargo(CargoFuncionario cargo);
 
-    List<Funcionario> findByCargoAndStatus(String cargo, String status);
+    List<Funcionario> findByCargoAndStatus(CargoFuncionario cargo, StatusFuncionario status);
 
     List<Funcionario> findByIdIn(List<Long> ids);
 
     List<Funcionario> findByRemovidoEmIsNull();
 
-    List<Funcionario> findByStatusAndRemovidoEmIsNull(String status);
+    List<Funcionario> findByStatusAndRemovidoEmIsNull(StatusFuncionario status);
 
     List<Funcionario> findByExibeEmOsTrueAndStatusAndRemovidoEmIsNull(StatusFuncionario status);
 

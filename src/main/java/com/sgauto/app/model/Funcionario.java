@@ -154,10 +154,6 @@ public class Funcionario {
     @Column(name = "funcionario_status", nullable = false, length = 20)
     private StatusFuncionario status = StatusFuncionario.ATIVO;
 
-    @NotNull
-    @Column(name = "funcionario_ativo", nullable = false)
-    private Boolean ativo = true;
-
     @Size(max = 255)
     @Column(name = "funcionario_foto_url", length = 255)
     private String fotoUrl;
@@ -194,7 +190,6 @@ public class Funcionario {
 
     public boolean isAptoParaOrdemServico() {
         return this.removidoEm == null
-                && Boolean.TRUE.equals(this.ativo)
                 && Boolean.TRUE.equals(this.exibeEmOs)
                 && this.status == StatusFuncionario.ATIVO;
     }
@@ -297,9 +292,6 @@ public class Funcionario {
 
     public StatusFuncionario getStatus() { return status; }
     public void setStatus(StatusFuncionario status) { this.status = status; }
-
-    public Boolean getAtivo() { return ativo; }
-    public void setAtivo(Boolean ativo) { this.ativo = ativo; }
 
     public String getFotoUrl() { return fotoUrl; }
     public void setFotoUrl(String fotoUrl) { this.fotoUrl = fotoUrl; }
