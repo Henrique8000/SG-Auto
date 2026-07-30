@@ -74,7 +74,15 @@ public class PrincipalController {
 
     @FXML
     private void irParaVeiculos() {
-        mostrarTela("Veículos", "Cadastro e visualização de Veículos", montarPlaceholder("Tela de Veículos em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/veiculos/veiculos.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Veículos", "Cadastro e visualização de Veículos", tela);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Veículos", e);
+        }
     }
 
     @FXML
@@ -84,7 +92,8 @@ public class PrincipalController {
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Catálogo de Serviços", e);
         }
     }
@@ -113,7 +122,8 @@ public class PrincipalController {
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Estoque", "Peças e controle de estoque", tela);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Estoque", e);
         }
     }
@@ -125,7 +135,8 @@ public class PrincipalController {
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Caixa", e);
         }
     }
@@ -137,7 +148,8 @@ public class PrincipalController {
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Configurações", "Preferências do sistema", tela);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Configurações", e);
         }
     }
@@ -154,7 +166,7 @@ public class PrincipalController {
         Label label = new Label(texto);
         label.getStyleClass().add("placeholder-text");
         box.getChildren().add(label);
-        VBox.setVgrow(box, javafx.scene.layout.Priority.ALWAYS);
+        VBox.setVgrow(box, Priority.ALWAYS);
         return box;
     }
 }
