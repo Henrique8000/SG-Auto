@@ -3,6 +3,7 @@ package com.sgauto.app.service;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.ClientePF;
 import com.sgauto.app.model.ClientePJ;
+import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +14,11 @@ import java.util.List;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
+    private final VeiculoRepository veiculoRepository;
 
-    public ClienteService(ClienteRepository clienteRepository) {
+    public ClienteService(ClienteRepository clienteRepository, VeiculoRepository veiculoRepository) {
         this.clienteRepository = clienteRepository;
+        this.veiculoRepository = veiculoRepository;
     }
 
     @Transactional
@@ -74,9 +77,9 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public boolean estaEmUso(Long clienteId) {
-        // TODO: quando os módulos de Veículo e Ordem de Serviço existirem,
-        //  trocar por veiculoRepository.existsByClienteId(clienteId) || ordemServicoRepository.existsByClienteId(clienteId)
-        return false;
+        // TODO: quando o módulo de Ordem de Serviço existir, adicionar
+        //  || ordemServicoRepository.existsByClienteId(clienteId)
+        return veiculoRepository.existsByClienteId(clienteId);
     }
 
     @Transactional(readOnly = true)
