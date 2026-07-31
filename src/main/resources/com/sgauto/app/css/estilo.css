@@ -744,3 +744,21 @@ ScrollPane.modal-container {
     -fx-text-fill: #121212;
     -fx-font-weight: bold;
 }
+
+/* ═══════════════ 21. BADGES DE STATUS DA O.S. ═══════════════ */
+.badge-os-aberta { -fx-background-color: -bg-card-hover; -fx-text-fill: -text-secondary; }
+.badge-os-orcamento { -fx-background-color: #3a2e14; -fx-text-fill: -warning; }
+.badge-os-execucao { -fx-background-color: -accent-soft; -fx-text-fill: -accent; }
+.badge-os-aguardando { -fx-background-color: #3a2e14; -fx-text-fill: -warning; }
+.badge-os-concluida { -fx-background-color: #1e3a2e; -fx-text-fill: -success; }
+.badge-os-finalizada { -fx-background-color: #1e3a2e; -fx-text-fill: -success; }
+.badge-os-cancelada { -fx-background-color: #3a1e1e; -fx-text-fill: -danger; }
+
+.os-header-card {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 12;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 4;
+}

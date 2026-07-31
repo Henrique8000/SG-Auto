@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.os.OsItensPecaTabController">
+
+    <padding><Insets top="16"/></padding>
+
+    <top>
+        <HBox alignment="CENTER_RIGHT">
+            <padding><Insets bottom="12"/></padding>
+            <Button text="+ Adicionar Peça" styleClass="btn-primary" onAction="#abrirModalAdicionar"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colDescricao" text="Peça" prefWidth="260"/>
+                <TableColumn fx:id="colQuantidade" text="Qtd" prefWidth="70"/>
+                <TableColumn fx:id="colValorUnitario" text="Valor Unit." prefWidth="110"/>
+                <TableColumn fx:id="colValorTotal" text="Total" prefWidth="110"/>
+                <TableColumn fx:id="colAcoes" text="Ações" prefWidth="100"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT">
+            <padding><Insets top="12"/></padding>
+            <Label text="Total em peças: " styleClass="form-label"/>
+            <Label fx:id="lblTotalPecas" text="R\$ 0,00" styleClass="selecionados-count"/>
+        </HBox>
+    </bottom>
+</BorderPane>

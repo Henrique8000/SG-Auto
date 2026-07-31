@@ -1,11 +1,8 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.model.Categoria;
 import com.sgauto.app.model.Modelo;
-import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ModeloRepository;
 import com.sgauto.app.repository.PecaRepository;
-import com.sgauto.app.repository.ServicoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

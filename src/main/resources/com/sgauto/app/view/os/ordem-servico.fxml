@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.os.OrdemServicoController">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ABERTAS" styleClass="card-title"/>
+                    <Label fx:id="lblAbertas" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="EM EXECUÇÃO" styleClass="card-title"/>
+                    <Label fx:id="lblEmExecucao" text="0" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ATRASADAS" styleClass="card-title"/>
+                    <Label fx:id="lblAtrasadas" text="0" styleClass="card-value-warning"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="FATURAMENTO DO MÊS" styleClass="card-title"/>
+                    <Label fx:id="lblFaturamentoMes" text="R\$ 0,00" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TICKET MÉDIO DO MÊS" styleClass="card-title"/>
+                    <Label fx:id="lblTicketMedio" text="R\$ 0,00" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por nº da O.S., cliente ou placa..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nova O.S." styleClass="btn-primary" onAction="#abrirModalNovaOs"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <ComboBox fx:id="cmbFiltroStatus" promptText="Todos os status" styleClass="search-field"/>
+                <DatePicker fx:id="dpDataInicio" promptText="Abertura de"/>
+                <DatePicker fx:id="dpDataFim" promptText="Abertura até"/>
+                <CheckBox fx:id="chkSomenteAtrasadas" text="Somente atrasadas"/>
+                <CheckBox fx:id="chkSomenteNoPatio" text="No Pátio"/>
+                <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaOs" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colId" text="Nº" prefWidth="60"/>
+                    <TableColumn fx:id="colCliente" text="Cliente" prefWidth="180"/>
+                    <TableColumn fx:id="colPlaca" text="Placa" prefWidth="90"/>
+                    <TableColumn fx:id="colAbertura" text="Abertura" prefWidth="120"/>
+                    <TableColumn fx:id="colPrevisao" text="Previsão" prefWidth="120"/>
+                    <TableColumn fx:id="colValorTotal" text="Valor Total" prefWidth="110"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="140"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="120"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhuma O.S. encontrada" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou abra uma nova O.S." styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

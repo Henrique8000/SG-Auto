@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.os.NovaOsModalController"
+      styleClass="modal-container" spacing="16" prefWidth="480">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Nova Ordem de Serviço" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Cliente" styleClass="form-label"/>
+        <ComboBox fx:id="cmbCliente" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Veículo" styleClass="form-label"/>
+        <ComboBox fx:id="cmbVeiculo" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Funcionário Responsável" styleClass="form-label"/>
+        <ComboBox fx:id="cmbFuncionario" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Sintomas Relatados" styleClass="form-label"/>
+        <TextArea fx:id="txtSintomas" styleClass="form-textarea" prefRowCount="3" wrapText="true"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Previsão de Entrega (opcional)" styleClass="form-label"/>
+        <DatePicker fx:id="dpDataPrevisao" maxWidth="Infinity"/>
+    </VBox>
+
+    <CheckBox fx:id="chkFicarNoPatio" text="Veículo ficará no Pátio"/>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnCriar" text="Criar O.S." styleClass="btn-primary" onAction="#criar"/>
+    </HBox>
+</VBox>
