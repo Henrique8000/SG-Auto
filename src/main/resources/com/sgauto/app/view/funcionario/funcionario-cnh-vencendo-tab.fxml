@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.FuncionarioCnhVencendoController">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <top>
+        <VBox spacing="14">
+            <padding><Insets bottom="16"/></padding>
+            <Label text="Funcionários com CNH vencendo" styleClass="page-subtitle"/>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Mostrar CNHs que vencem em até:" styleClass="form-label"/>
+                <ComboBox fx:id="cmbPeriodo" styleClass="search-field"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabela" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colNome" text="Nome" prefWidth="220"/>
+                    <TableColumn fx:id="colCargo" text="Cargo" prefWidth="150"/>
+                    <TableColumn fx:id="colCategoria" text="Categoria CNH" prefWidth="110"/>
+                    <TableColumn fx:id="colValidade" text="Validade" prefWidth="110"/>
+                    <TableColumn fx:id="colSituacao" text="Situação" prefWidth="120"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="✅" styleClass="empty-state-icon"/>
+                <Label text="Nenhuma CNH vencendo nesse período" styleClass="empty-state-title"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

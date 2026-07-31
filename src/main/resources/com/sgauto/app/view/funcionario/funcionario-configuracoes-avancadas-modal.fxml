@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+         tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane" prefWidth="800" prefHeight="560">
+    <tabs>
+        <Tab text="CNH a Vencer">
+            <content>
+                <fx:include source="funcionario-cnh-vencendo-tab.fxml"/>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

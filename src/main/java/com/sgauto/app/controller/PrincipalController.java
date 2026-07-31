@@ -99,8 +99,20 @@ public class PrincipalController {
     }
 
     @FXML
+    private void irParaFuncionarios() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Funcionários", "Cadastro e gestão de funcionários", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Funcionários", e);
+        }
+    }
+
+    @FXML
     private void irParaPatioAtual() {
-        mostrarTela("Pátio Atual", "Pátio atual da oficina", montarPlaceholder("Tela de Pátio Atual em construção"));
+        mostrarTela("Pátio", "Pátio atual da oficina", montarPlaceholder("Tela de Pátio em construção"));
     }
 
     @FXML

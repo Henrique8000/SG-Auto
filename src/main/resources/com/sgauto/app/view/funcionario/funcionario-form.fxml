@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.funcionario.FuncionarioFormController"
+            fitToWidth="true" styleClass="modal-container" prefWidth="560" prefHeight="640">
+
+    <VBox spacing="14" styleClass="modal-container">
+        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+        <Label fx:id="lblTituloModal" text="Novo Funcionário" styleClass="page-title"/>
+
+        <Label text="IDENTIFICAÇÃO" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Matrícula" styleClass="form-label"/>
+                <TextField fx:id="txtMatricula" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="CPF" styleClass="form-label"/>
+                <TextField fx:id="txtCpf" styleClass="form-input" promptText="Somente números (11 dígitos)"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4">
+            <Label text="Nome completo" styleClass="form-label"/>
+            <TextField fx:id="txtNomeCompleto" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Nome social (opcional)" styleClass="form-label"/>
+            <TextField fx:id="txtNomeSocial" styleClass="form-input"/>
+        </VBox>
+
+        <Label text="DADOS PESSOAIS" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="RG (opcional)" styleClass="form-label"/>
+                <TextField fx:id="txtRg" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Data de Nascimento (opcional)" styleClass="form-label"/>
+                <DatePicker fx:id="dpDataNascimento" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Gênero (opcional)" styleClass="form-label"/>
+                <TextField fx:id="txtGenero" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+
+        <Label text="CONTATO" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Celular" styleClass="form-label"/>
+                <TextField fx:id="txtCelular" styleClass="form-input" promptText="DDD + número"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Telefone fixo (opcional)" styleClass="form-label"/>
+                <TextField fx:id="txtTelefoneFixo" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+        <VBox spacing="4">
+            <Label text="E-mail (opcional)" styleClass="form-label"/>
+            <TextField fx:id="txtEmail" styleClass="form-input"/>
+        </VBox>
+
+        <Label text="ENDEREÇO (opcional)" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="CEP" styleClass="form-label"/>
+                <TextField fx:id="txtCep" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Estado (UF)" styleClass="form-label"/>
+                <TextField fx:id="txtEstado" styleClass="form-input" promptText="Ex: SP"/>
+            </VBox>
+        </HBox>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Logradouro" styleClass="form-label"/>
+                <TextField fx:id="txtLogradouro" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Número" styleClass="form-label"/>
+                <TextField fx:id="txtNumero" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Complemento" styleClass="form-label"/>
+                <TextField fx:id="txtComplemento" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Bairro" styleClass="form-label"/>
+                <TextField fx:id="txtBairro" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Cidade" styleClass="form-label"/>
+                <TextField fx:id="txtCidade" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+
+        <Label text="DADOS PROFISSIONAIS" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Cargo" styleClass="form-label"/>
+                <ComboBox fx:id="cmbCargo" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Tipo de Contrato" styleClass="form-label"/>
+                <ComboBox fx:id="cmbTipoContrato" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4">
+            <Label text="Especialidade (opcional)" styleClass="form-label"/>
+            <TextField fx:id="txtEspecialidade" styleClass="form-input" promptText="Ex: Motor e câmbio, Elétrica automotiva"/>
+        </VBox>
+
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Data de Admissão" styleClass="form-label"/>
+                <DatePicker fx:id="dpDataAdmissao" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Data de Demissão (opcional)" styleClass="form-label"/>
+                <DatePicker fx:id="dpDataDemissao" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Status" styleClass="form-label"/>
+                <ComboBox fx:id="cmbStatus" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Carga Horária Semanal" styleClass="form-label"/>
+                <TextField fx:id="txtCargaHoraria" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+
+        <CheckBox fx:id="chkExibeEmOs" text="Disponível para atribuição em Ordens de Serviço"/>
+
+        <Label text="REMUNERAÇÃO" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Salário Base (opcional)" styleClass="form-label"/>
+                <TextField fx:id="txtSalarioBase" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Custo/Hora (opcional)" styleClass="form-label"/>
+                <TextField fx:id="txtCustoHora" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Comissão (%)" styleClass="form-label"/>
+                <TextField fx:id="txtComissaoPercentual" styleClass="form-input"/>
+            </VBox>
+        </HBox>
+
+        <Label text="CNH (opcional)" styleClass="sidebar-section-label"/>
+        <HBox spacing="12">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Número da CNH" styleClass="form-label"/>
+                <TextField fx:id="txtNumeroCnh" styleClass="form-input"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Categoria" styleClass="form-label"/>
+                <TextField fx:id="txtCategoriaCnh" styleClass="form-input" promptText="Ex: AB"/>
+            </VBox>
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Validade" styleClass="form-label"/>
+                <DatePicker fx:id="dpValidadeCnh" styleClass="form-input" maxWidth="Infinity"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="4">
+            <Label text="URL da Foto (opcional)" styleClass="form-label"/>
+            <TextField fx:id="txtFotoUrl" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Observações" styleClass="form-label"/>
+            <TextArea fx:id="txtObservacoes" styleClass="form-textarea" prefRowCount="2" wrapText="true"/>
+        </VBox>
+
+        <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+            <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+        </HBox>
+    </VBox>
+</ScrollPane>
