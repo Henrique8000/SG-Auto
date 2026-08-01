@@ -91,4 +91,6 @@ public class OsAdicionarPecaModalController {
     private void fecharModal() {
         ((Stage) btnConfirmar.getScene().getWindow()).close();
     }
+
+
 }

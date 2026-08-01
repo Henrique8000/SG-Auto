@@ -34,7 +34,7 @@
 
     <VBox spacing="4">
         <Label text="Previsão de Entrega (opcional)" styleClass="form-label"/>
-        <DatePicker fx:id="dpDataPrevisao" maxWidth="Infinity"/>
+        <DatePicker fx:id="dpDataPrevisao" styleClass="form-input" maxWidth="Infinity"/>
     </VBox>
 
     <CheckBox fx:id="chkFicarNoPatio" text="Veículo ficará no Pátio"/>

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class OsItensPecaTabController {
@@ -68,12 +69,12 @@ public class OsItensPecaTabController {
     public void configurar(Long osId, Runnable aoAlterar) {
         this.osId = osId;
         this.aoAlterar = aoAlterar;
-        carregarDados();
+        atualizar();
     }
 
-    private void carregarDados() {
-        var os = ordemServicoService.buscarPorId(osId);
-        itens.setAll(os.getPecas());
+    public void atualizar() {
+        List<OsPeca> pecas = ordemServicoService.listarPecasDaOs(osId);
+        itens.setAll(pecas);
 
         BigDecimal total = itens.stream().map(OsPeca::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
         lblTotalPecas.setText(formatarMoeda(total));
@@ -82,19 +83,12 @@ public class OsItensPecaTabController {
     @FXML
     private void abrirModalAdicionar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os-adicionar-peca-modal.fxml"));
-            loader.setControllerFactory(param -> {
-                try {
-                    return org.springframework.beans.factory.config.AutowireCapableBeanFactory.class
-                            .cast(null); // placeholder, substituído abaixo
-                } catch (Exception e) { return null; }
-            });
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/os-adicionar-peca-modal.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
             OsAdicionarPecaModalController controller = loader.getController();
             controller.configurar(osId, () -> {
-                carregarDados();
                 if (aoAlterar != null) aoAlterar.run();
             });
 
@@ -115,7 +109,6 @@ public class OsItensPecaTabController {
         confirmacao.showAndWait().ifPresent(botao -> {
             if (botao == ButtonType.OK) {
                 ordemServicoService.removerPeca(osId, osPeca.getId());
-                carregarDados();
                 if (aoAlterar != null) aoAlterar.run();
             }
         });

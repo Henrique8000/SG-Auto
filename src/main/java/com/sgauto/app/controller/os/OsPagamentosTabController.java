@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 public class OsPagamentosTabController {
@@ -55,12 +56,12 @@ public class OsPagamentosTabController {
     public void configurar(Long osId, Runnable aoAlterar) {
         this.osId = osId;
         this.aoAlterar = aoAlterar;
-        carregarDados();
+        atualizar();
     }
 
-    private void carregarDados() {
-        var os = ordemServicoService.buscarPorId(osId);
-        pagamentos.setAll(os.getPagamentos());
+    public void atualizar() {
+        List<OsPagamento> lista = ordemServicoService.listarPagamentosDaOs(osId);
+        pagamentos.setAll(lista);
 
         BigDecimal totalPago = pagamentos.stream().map(OsPagamento::getValorPago).reduce(BigDecimal.ZERO, BigDecimal::add);
         lblTotalPago.setText(formatarMoeda(totalPago));
@@ -72,13 +73,12 @@ public class OsPagamentosTabController {
     @FXML
     private void abrirModalPagamento() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os-registrar-pagamento-modal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/os-registrar-pagamento-modal.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
             OsRegistrarPagamentoModalController controller = loader.getController();
             controller.configurar(osId, () -> {
-                carregarDados();
                 if (aoAlterar != null) aoAlterar.run();
             });
 

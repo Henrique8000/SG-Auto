@@ -60,26 +60,34 @@ public class OrdemServicoDetalheController {
 
     private void recarregar() {
         carregarDados();
+        tabPecasController.atualizar();
+        tabServicosController.atualizar();
+        tabPagamentosController.atualizar();
         if (aoFechar != null) aoFechar.run();
     }
 
     private void carregarDados() {
-        OrdemServico os = ordemServicoService.buscarPorId(osId);
+        try {
+            OrdemServico os = ordemServicoService.buscarComDetalhesCompletos(osId);
 
-        lblCliente.setText(os.getCliente() != null ? os.getCliente().getNome() : "-");
-        lblVeiculo.setText(os.getVeiculo() != null ? "Placa: " + os.getVeiculo().getPlaca() : "-");
-        lblFuncionario.setText("Responsável: " + (os.getFuncionario() != null ? os.getFuncionario().getNomeExibicao() : "-"));
-        lblDataAbertura.setText("Aberta em: " + os.getDataAbertura().format(FMT));
-        lblDataPrevisao.setText(os.getDataPrevisao() != null ? "Previsão: " + os.getDataPrevisao().format(FMT) : "Sem previsão definida");
-        lblSintomas.setText(os.getSintomasRelatados() != null ? "Sintomas: " + os.getSintomasRelatados() : "");
+            lblCliente.setText(os.getCliente() != null ? os.getCliente().getNome() : "-");
+            lblVeiculo.setText(os.getVeiculo() != null ? "Placa: " + os.getVeiculo().getPlaca() : "-");
+            lblFuncionario.setText("Responsável: " + (os.getFuncionario() != null ? os.getFuncionario().getNomeExibicao() : "-"));
+            lblDataAbertura.setText("Aberta em: " + os.getDataAbertura().format(FMT));
+            lblDataPrevisao.setText(os.getDataPrevisao() != null ? "Previsão: " + os.getDataPrevisao().format(FMT) : "Sem previsão definida");
+            lblSintomas.setText(os.getSintomasRelatados() != null ? "Sintomas: " + os.getSintomasRelatados() : "");
 
-        lblStatusAtual.setText(descreverStatus(os.getStatus()));
-        lblStatusAtual.getStyleClass().setAll("badge", classeParaStatus(os.getStatus()));
+            lblStatusAtual.setText(descreverStatus(os.getStatus()));
+            lblStatusAtual.getStyleClass().setAll("badge", classeParaStatus(os.getStatus()));
 
-        BigDecimal saldo = ordemServicoService.calcularSaldoDevedor(osId);
-        lblSaldoDevedor.setText("Saldo devedor: R$ " + String.format("%,.2f", saldo));
+            BigDecimal saldo = ordemServicoService.calcularSaldoDevedor(osId);
+            lblSaldoDevedor.setText("Saldo devedor: R$ " + String.format("%,.2f", saldo));
 
-        configurarComboStatus(os.getStatus());
+            configurarComboStatus(os.getStatus());
+        } catch (RuntimeException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro ao carregar O.S. #" + osId,
+                    e.getMessage() != null ? e.getMessage() : "Erro inesperado ao carregar os dados.");
+        }
     }
 
     private void configurarComboStatus(StatusOS statusAtual) {

@@ -183,22 +183,24 @@ public class OrdemServicoController {
     }
 
     private void aplicarFiltros() {
-        String termo = txtBusca.getText() == null ? "" : txtBusca.getText().toLowerCase();
+        String termo = txtBusca.getText() == null ? "" : txtBusca.getText().trim().toLowerCase();
         String statusSelecionado = cmbFiltroStatus.getValue();
         LocalDate dataInicio = dpDataInicio.getValue();
         LocalDate dataFim = dpDataFim.getValue();
         boolean somenteAtrasadas = chkSomenteAtrasadas.isSelected();
         boolean somenteNoPatio = chkSomenteNoPatio.isSelected();
 
+        boolean termoNumerico = termo.matches("\\d+");
+
         List<OrdemServico> filtradas = todasOs.stream()
                 .filter(os -> termo.isBlank()
-                        || String.valueOf(os.getId()).contains(termo)
-                        || (os.getCliente() != null && os.getCliente().getNome().toLowerCase().contains(termo))
-                        || (os.getVeiculo() != null && os.getVeiculo().getPlaca().toLowerCase().contains(termo)))
+                        || (termoNumerico && String.valueOf(os.getId()).equals(termo))
+                        || (!termoNumerico && os.getCliente() != null && os.getCliente().getNome().toLowerCase().contains(termo))
+                        || (!termoNumerico && os.getVeiculo() != null && os.getVeiculo().getPlaca().toLowerCase().contains(termo)))
                 .filter(os -> statusSelecionado == null || statusSelecionado.equals("Todos os status")
                         || statusSelecionado.equals(descreverStatus(os.getStatus())))
-                .filter(os -> dataInicio == null || !os.getDataAbertura().toLocalDate().isBefore(dataInicio))
-                .filter(os -> dataFim == null || !os.getDataAbertura().toLocalDate().isAfter(dataFim))
+                .filter(os -> dataInicio == null || (os.getDataAbertura() != null && !os.getDataAbertura().toLocalDate().isBefore(dataInicio)))
+                .filter(os -> dataFim == null || (os.getDataAbertura() != null && !os.getDataAbertura().toLocalDate().isAfter(dataFim)))
                 .filter(os -> !somenteAtrasadas || estaAtrasada(os))
                 .filter(os -> !somenteNoPatio || os.isFicarNoPatio())
                 .sorted(obterComparador())
@@ -222,7 +224,7 @@ public class OrdemServicoController {
         if (ORD_MAIOR_VALOR.equals(ordem)) return Comparator.comparing(OrdemServico::getValorTotalOs).reversed();
         if (ORD_PREVISAO.equals(ordem)) return Comparator.comparing(
                 os -> os.getDataPrevisao() != null ? os.getDataPrevisao() : LocalDateTime.MAX);
-        return Comparator.comparing(OrdemServico::getDataAbertura).reversed();
+        return Comparator.comparing((OrdemServico os) -> os.getDataAbertura() != null ? os.getDataAbertura() : LocalDateTime.MIN).reversed();
     }
 
     private void atualizarEstadoVazio(boolean vazio) {
@@ -235,7 +237,7 @@ public class OrdemServicoController {
     @FXML
     private void abrirModalNovaOs() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/nova-os-modal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/nova-os-modal.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
@@ -259,7 +261,7 @@ public class OrdemServicoController {
 
     private void abrirDetalhePorId(Long osId) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/ordem-servico-detalhe-modal.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/ordem-servico-detalhe-modal.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
@@ -271,8 +273,19 @@ public class OrdemServicoController {
 
             carregarDados();
         } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir detalhes da O.S.", e);
+            mostrarErro("Erro ao abrir tela", "Não foi possível carregar o formulário de detalhes da O.S.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            mostrarErro("Erro ao abrir O.S. #" + osId, e.getMessage() != null ? e.getMessage() : "Erro inesperado.");
         }
+    }
+
+    private void mostrarErro(String titulo, String mensagem) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensagem);
+        alert.showAndWait();
     }
 
     private String formatarMoeda(BigDecimal valor) {

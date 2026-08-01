@@ -1,7 +1,9 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.OrigemMovimentacao;
 import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.*;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.OrdemServico.OsPagamento;
@@ -12,6 +14,7 @@ import com.sgauto.app.repository.OrdemServico.OsPagamentoRepository;
 import com.sgauto.app.repository.OrdemServico.OsPecaRepository;
 import com.sgauto.app.repository.OrdemServico.OsServicoRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
@@ -33,6 +36,7 @@ public class OrdemServicoService {
     private final PecaRepository pecaRepository;
     private final ServicoRepository servicoRepository;
     private final EstoqueService estoqueService;
+    private final CaixaService caixaService;
 
     // CONSTRUTOR MANUAL (Substitui o @RequiredArgsConstructor do Lombok)
     // O Spring injeta automaticamente as dependências aqui.
@@ -45,7 +49,8 @@ public class OrdemServicoService {
                                FuncionarioRepository funcionarioRepository,
                                PecaRepository pecaRepository,
                                ServicoRepository servicoRepository,
-                               EstoqueService estoqueService) {
+                               EstoqueService estoqueService,
+                               CaixaService caixaService) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.osPecaRepository = osPecaRepository;
         this.osServicoRepository = osServicoRepository;
@@ -56,12 +61,12 @@ public class OrdemServicoService {
         this.pecaRepository = pecaRepository;
         this.servicoRepository = servicoRepository;
         this.estoqueService = estoqueService;
+        this.caixaService = caixaService;
     }
 
     List<StatusOS> status = List.of(
-            StatusOS.ABERTA,
-            StatusOS.EM_EXECUCAO,
-            StatusOS.AGUARDANDO,
+            StatusOS.CANCELADA,
+            StatusOS.FINALIZADA,
             StatusOS.VERIFICANDO_ORCAMENTO
     );
 
@@ -81,7 +86,6 @@ public class OrdemServicoService {
         if(jaTemPlacaAtiva) {
             throw new IllegalArgumentException("Não é possível abrir uma OS para esta placa, pois ela já tem uma OS ativa.");
         }
-
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado com o ID informado." + clienteId));
@@ -188,6 +192,9 @@ public class OrdemServicoService {
 
         OrdemServico os = buscarPorId(osId);
 
+        if(os.getStatus() == StatusOS.CANCELADA || os.getStatus() == StatusOS.FINALIZADA)
+            throw new IllegalArgumentException("Não é possível registrar pagamento em uma O.S. 'CANCELADA' ou 'FINALIZADA'");
+
         BigDecimal jaPago = osPagamentoRepository.somarPagamentosPorOsId(osId);
         BigDecimal saldoDevedor = os.getValorTotalOs().subtract(jaPago);
 
@@ -195,7 +202,6 @@ public class OrdemServicoService {
             throw new IllegalArgumentException("O valor informado (R$ " + valor + ") excede o saldo devedor (R$ " + saldoDevedor + ").");
         }
 
-        // Substituição do @Builder
         OsPagamento pagamento = new OsPagamento();
         pagamento.setOrdemServico(os);
         pagamento.setFormaPagamento(formaPagamento);
@@ -203,6 +209,21 @@ public class OrdemServicoService {
 
         pagamento = osPagamentoRepository.save(pagamento);
         os.getPagamentos().add(pagamento);
+
+        Long clienteId = os.getCliente() != null ? os.getCliente().getId() : null;
+        String placa = os.getVeiculo() != null ? os.getVeiculo().getPlaca() : null;
+        String descricao = "Pagamento O.S. #" + os.getId();
+
+        CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
+                TipoMovimentacao.ENTRADA,
+                OrigemMovimentacao.OS_PAGAMENTO,
+                formaPagamento,
+                valor,
+                descricao,
+                clienteId,
+                placa
+        );
+        movimentacao.setReferenciaId(pagamento.getId());
 
         return pagamento;
     }
@@ -411,7 +432,7 @@ public class OrdemServicoService {
 
     @Transactional(readOnly = true)
     public List<OrdemServico> listarTodas() {
-        return ordemServicoRepository.findAll();
+        return ordemServicoRepository.findAllComClienteEVeiculo();
     }
 
     @Transactional(readOnly = true)
@@ -431,5 +452,32 @@ public class OrdemServicoService {
         BigDecimal jaPago = osPagamentoRepository.somarPagamentosPorOsId(osId);
         if (jaPago == null) jaPago = BigDecimal.ZERO; // Garantia contra retornos nulos
         return os.getValorTotalOs().subtract(jaPago);
+    }
+
+    @Transactional(readOnly = true)
+    public OrdemServico buscarComDetalhesCompletos(Long id) {
+        OrdemServico os = ordemServicoRepository.findByIdDetalhado(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ordem de serviço não encontrada. ID: " + id));
+
+        Hibernate.initialize(os.getPecas());
+        Hibernate.initialize(os.getServicos());
+        Hibernate.initialize(os.getPagamentos());
+
+        return os;
+    }
+
+    @Transactional(readOnly = true)
+    public List<OsPeca> listarPecasDaOs(Long osId) {
+        return osPecaRepository.findByOrdemServicoIdComPeca(osId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OsServico> listarServicosDaOs(Long osId) {
+        return osServicoRepository.findByOrdemServicoIdComServico(osId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OsPagamento> listarPagamentosDaOs(Long osId) {
+        return osPagamentoRepository.findByOrdemServicoIdOrderByDataPagamentoDesc(osId);
     }
 }

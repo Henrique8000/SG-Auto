@@ -43,8 +43,8 @@
 
             <HBox spacing="12" alignment="CENTER_LEFT">
                 <ComboBox fx:id="cmbFiltroStatus" promptText="Todos os status" styleClass="search-field"/>
-                <DatePicker fx:id="dpDataInicio" promptText="Abertura de"/>
-                <DatePicker fx:id="dpDataFim" promptText="Abertura até"/>
+                <DatePicker fx:id="dpDataInicio" styleClass="form-input" promptText="Abertura de"/>
+                <DatePicker fx:id="dpDataFim" styleClass="form-input" promptText="Abertura até"/>
                 <CheckBox fx:id="chkSomenteAtrasadas" text="Somente atrasadas"/>
                 <CheckBox fx:id="chkSomenteNoPatio" text="No Pátio"/>
                 <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>

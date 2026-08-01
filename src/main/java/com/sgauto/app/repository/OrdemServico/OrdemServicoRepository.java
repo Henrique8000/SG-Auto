@@ -37,4 +37,13 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
     Long countByStatusAndDataConclusaoBetween(StatusOS status, LocalDateTime inicio, LocalDateTime fim);
 
     List<OrdemServico> findByStatus(StatusOS status);
+
+    @Query("SELECT os FROM OrdemServico os " +
+            "JOIN FETCH os.cliente " +
+            "JOIN FETCH os.veiculo " +
+            "ORDER BY os.dataAbertura DESC")
+    List<OrdemServico> findAllComClienteEVeiculo();
+
+    @Query("SELECT os FROM OrdemServico os JOIN FETCH os.cliente JOIN FETCH os.veiculo JOIN FETCH os.funcionario WHERE os.id = :id")
+    Optional<OrdemServico> findByIdDetalhado(@Param("id") Long id);
 }

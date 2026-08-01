@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 public class OsItensServicoTabController {
@@ -68,12 +69,12 @@ public class OsItensServicoTabController {
     public void configurar(Long osId, Runnable aoAlterar) {
         this.osId = osId;
         this.aoAlterar = aoAlterar;
-        carregarDados();
+        atualizar();
     }
 
-    private void carregarDados() {
-        var os = ordemServicoService.buscarPorId(osId);
-        itens.setAll(os.getServicos());
+    public void atualizar() {
+        List<OsServico> servicos = ordemServicoService.listarServicosDaOs(osId);
+        itens.setAll(servicos);
 
         BigDecimal total = itens.stream().map(OsServico::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
         lblTotalServicos.setText(formatarMoeda(total));
@@ -82,19 +83,12 @@ public class OsItensServicoTabController {
     @FXML
     private void abrirModalAdicionar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os-adicionar-servico-modal.fxml"));
-            loader.setControllerFactory(param -> {
-                try {
-                    return org.springframework.beans.factory.config.AutowireCapableBeanFactory.class
-                            .cast(null); // placeholder, será gerenciado pelo Spring no contexto real
-                } catch (Exception e) { return null; }
-            });
-
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/os-adicionar-servico-modal.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
             OsAdicionarServicoModalController controller = loader.getController();
             controller.configurar(osId, () -> {
-                carregarDados();
                 if (aoAlterar != null) aoAlterar.run();
             });
 
@@ -115,7 +109,6 @@ public class OsItensServicoTabController {
         confirmacao.showAndWait().ifPresent(botao -> {
             if (botao == ButtonType.OK) {
                 ordemServicoService.removerServico(osId, osServico.getId());
-                carregarDados();
                 if (aoAlterar != null) aoAlterar.run();
             }
         });
