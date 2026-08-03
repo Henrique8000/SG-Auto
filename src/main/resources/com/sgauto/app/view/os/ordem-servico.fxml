@@ -26,14 +26,6 @@
                     <Label text="ATRASADAS" styleClass="card-title"/>
                     <Label fx:id="lblAtrasadas" text="0" styleClass="card-value-warning"/>
                 </VBox>
-                <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                    <Label text="FATURAMENTO DO MÊS" styleClass="card-title"/>
-                    <Label fx:id="lblFaturamentoMes" text="R\$ 0,00" styleClass="card-value"/>
-                </VBox>
-                <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                    <Label text="TICKET MÉDIO DO MÊS" styleClass="card-title"/>
-                    <Label fx:id="lblTicketMedio" text="R\$ 0,00" styleClass="card-value"/>
-                </VBox>
             </HBox>
 
             <HBox spacing="12" alignment="CENTER_LEFT">
