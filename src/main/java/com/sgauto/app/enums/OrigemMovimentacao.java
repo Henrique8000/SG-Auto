@@ -6,4 +6,5 @@ public enum OrigemMovimentacao {
     AVULSO,
     SANGRIA,
     SUPRIMENTO,
+    OS_PAGAMENTO
 }

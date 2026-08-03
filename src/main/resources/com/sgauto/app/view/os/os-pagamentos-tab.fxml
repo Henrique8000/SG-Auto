@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.os.OsPagamentosTabController">
+
+    <padding><Insets top="16"/></padding>
+
+    <top>
+        <HBox alignment="CENTER_RIGHT">
+            <padding><Insets bottom="12"/></padding>
+            <Button text="+ Registrar Pagamento" styleClass="btn-primary" onAction="#abrirModalPagamento"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colData" text="Data" prefWidth="150"/>
+                <TableColumn fx:id="colForma" text="Forma" prefWidth="120"/>
+                <TableColumn fx:id="colValor" text="Valor" prefWidth="120"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <bottom>
+        <VBox spacing="4">
+            <padding><Insets top="12"/></padding>
+            <HBox alignment="CENTER_RIGHT">
+                <Label text="Total pago: " styleClass="form-label"/>
+                <Label fx:id="lblTotalPago" text="R\$ 0,00" styleClass="selecionados-count"/>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT">
+                <Label text="Saldo devedor: " styleClass="form-label"/>
+                <Label fx:id="lblSaldo" text="R\$ 0,00" styleClass="card-value-warning"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

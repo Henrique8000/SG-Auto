@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.os.OrdemServicoDetalheController"
+            prefWidth="920" prefHeight="640">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <top>
+        <VBox spacing="14">
+            <padding><Insets bottom="16"/></padding>
+
+            <VBox styleClass="os-header-card">
+                <HBox spacing="24" alignment="CENTER_LEFT">
+                    <VBox HBox.hgrow="ALWAYS">
+                        <Label fx:id="lblCliente" text="Cliente" styleClass="page-title"/>
+                        <Label fx:id="lblVeiculo" text="Veículo" styleClass="page-subtitle"/>
+                    </VBox>
+                    <Label fx:id="lblStatusAtual" text="Status" styleClass="badge badge-os-aberta"/>
+                </HBox>
+                <HBox spacing="24">
+                    <Label fx:id="lblFuncionario" styleClass="results-count"/>
+                    <Label fx:id="lblDataAbertura" styleClass="results-count"/>
+                    <Label fx:id="lblDataPrevisao" styleClass="results-count"/>
+                </HBox>
+                <Label fx:id="lblSintomas" wrapText="true" styleClass="page-subtitle"/>
+            </VBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="Alterar status para:" styleClass="form-label"/>
+                <ComboBox fx:id="cmbNovoStatus" styleClass="search-field"/>
+                <Button text="Aplicar" styleClass="btn-secondary" onAction="#alterarStatus"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblSaldoDevedor" styleClass="selecionados-count"/>
+                <Button text="Cancelar O.S." styleClass="btn-table-toggle-on" onAction="#cancelarOs"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane">
+            <tabs>
+                <Tab text="Peças">
+                    <content>
+                        <fx:include fx:id="tabPecas" source="os-itens-peca-tab.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Serviços">
+                    <content>
+                        <fx:include fx:id="tabServicos" source="os-itens-servico-tab.fxml"/>
+                    </content>
+                </Tab>
+                <Tab text="Pagamentos">
+                    <content>
+                        <fx:include fx:id="tabPagamentos" source="os-pagamentos-tab.fxml"/>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>

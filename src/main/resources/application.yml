@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sgauto
     username: postgres
-    password: 1234567
+    password: admin
 
   jpa:
     hibernate:

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.os.OsRegistrarPagamentoModalController"
+      styleClass="modal-container" spacing="16" prefWidth="380">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Registrar Pagamento" styleClass="page-title"/>
+    <Label fx:id="lblSaldoAtual" styleClass="page-subtitle"/>
+
+    <VBox spacing="4">
+        <Label text="Forma de Pagamento" styleClass="form-label"/>
+        <ComboBox fx:id="cmbForma" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Valor (R\$)" styleClass="form-label"/>
+        <TextField fx:id="txtValor" styleClass="form-input"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Registrar" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

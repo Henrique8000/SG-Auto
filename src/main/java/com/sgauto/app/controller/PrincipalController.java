@@ -56,7 +56,15 @@ public class PrincipalController {
 
     @FXML
     private void irParaOrdens() {
-        mostrarTela("Ordens de Serviço", "Acompanhe e gerencie as O.S. em andamento", montarPlaceholder("Tela de Ordens de Serviço em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/ordem-servico.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Ordem de Serviços", "Cadastro e histórico de ordens de serviço", tela);
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de OS", e);
+        }
     }
 
     @FXML

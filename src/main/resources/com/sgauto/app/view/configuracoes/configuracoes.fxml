@@ -11,7 +11,8 @@
         <ToggleGroup fx:id="grupoModo"/>
     </fx:define>
 
-    <Label text="Fechamento de Caixa" styleClass="sidebar-section-label"/>
+    <!-- Título atualizado com a classe correta -->
+    <Label text="Fechamento de Caixa" styleClass="page-subtitle-caixa"/>
 
     <VBox styleClass="config-option" spacing="6">
         <RadioButton fx:id="radioObrigatoria" text="Conferência obrigatória"
