@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.patio.PatioAtualTabController">
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label text="VEÍCULOS NO PÁTIO" styleClass="card-title"/>
+                    <Label fx:id="lblQuantidadeNoPatio" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label text="VALOR ESTIMADO EM ABERTO" styleClass="card-title"/>
+                    <Label fx:id="lblValorEstimado" text="R$ 0,00" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS" maxWidth="Infinity">
+                    <Label text="TEMPO MÉDIO NO PÁTIO" styleClass="card-title"/>
+                    <Label fx:id="lblTempoMedio" text="0h" styleClass="card-value"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por placa ou cliente..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Entrada Manual" styleClass="btn-primary" onAction="#abrirModalEntradaManual"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <ComboBox fx:id="cmbFiltroMotivo" promptText="Todos os motivos" styleClass="search-field"/>
+                <ComboBox fx:id="cmbOrdenar" promptText="Ordenar por" styleClass="search-field"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaPatio" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colPlaca" text="Placa" prefWidth="90"/>
+                    <TableColumn fx:id="colCliente" text="Cliente" prefWidth="170"/>
+                    <TableColumn fx:id="colOs" text="O.S." prefWidth="60"/>
+                    <TableColumn fx:id="colMotivo" text="Motivo" prefWidth="140"/>
+                    <TableColumn fx:id="colEntrada" text="Entrada" prefWidth="130"/>
+                    <TableColumn fx:id="colTempo" text="Tempo no pátio" prefWidth="110"/>
+                    <TableColumn fx:id="colLocalizacao" text="Localização" prefWidth="110"/>
+                    <TableColumn fx:id="colValorEstimado" text="Valor estimado" prefWidth="110"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="200"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🅿" styleClass="empty-state-icon"/>
+                <Label text="Nenhum veículo no pátio" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou registre uma nova entrada" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="12" alignment="CENTER" BorderPane.alignment="CENTER">
+            <padding><Insets top="16"/></padding>
+            <Button fx:id="btnPaginaAnterior" text="◀ Anterior" styleClass="btn-secondary" onAction="#irPaginaAnterior"/>
+            <Label fx:id="lblPaginaAtual" styleClass="results-count" text="Página 1 de 1"/>
+            <Button fx:id="btnProximaPagina" text="Próxima ▶" styleClass="btn-secondary" onAction="#irProximaPagina"/>
+        </HBox>
+    </bottom>
+</BorderPane>

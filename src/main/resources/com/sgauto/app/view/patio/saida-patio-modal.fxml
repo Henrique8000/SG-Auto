@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.patio.SaidaPatioModalController"
+      styleClass="modal-container" spacing="14" prefWidth="420">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Dar Saída do Pátio" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Placa" styleClass="form-label"/>
+        <Label fx:id="lblPlaca" styleClass="card-value"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Cliente" styleClass="form-label"/>
+        <Label fx:id="lblCliente"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Entrada" styleClass="form-label"/>
+        <Label fx:id="lblEntrada"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Valor devido" styleClass="form-label"/>
+        <Label fx:id="lblValorDevido" styleClass="card-value-accent"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Forma de Pagamento" styleClass="form-label"/>
+        <ComboBox fx:id="cmbFormaPagamento" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Confirmar Saída" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

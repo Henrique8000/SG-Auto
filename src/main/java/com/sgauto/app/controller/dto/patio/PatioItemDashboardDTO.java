@@ -10,6 +10,7 @@ public class PatioItemDashboardDTO {
     private final Long estadiaId;
     private final String placa;
     private final String clienteNome;
+    private final String motivoNome;
     private final Long ordemServicoId;
     private final LocalDateTime dataEntrada;
     private final LocalDateTime dataSaida;
@@ -17,12 +18,13 @@ public class PatioItemDashboardDTO {
     private final BigDecimal valorEstimadoOuFinal;
     private final String localizacao;
 
-    public PatioItemDashboardDTO(Long estadiaId, String placa, String clienteNome, Long ordemServicoId,
-                                 LocalDateTime dataEntrada, LocalDateTime dataSaida, StatusEstadiaPatio status,
-                                 BigDecimal valorEstimadoOuFinal, String localizacao) {
+    public PatioItemDashboardDTO(Long estadiaId, String placa, String clienteNome, String motivoNome,
+                                 Long ordemServicoId, LocalDateTime dataEntrada, LocalDateTime dataSaida,
+                                 StatusEstadiaPatio status, BigDecimal valorEstimadoOuFinal, String localizacao) {
         this.estadiaId = estadiaId;
         this.placa = placa;
         this.clienteNome = clienteNome;
+        this.motivoNome = motivoNome;
         this.ordemServicoId = ordemServicoId;
         this.dataEntrada = dataEntrada;
         this.dataSaida = dataSaida;
@@ -34,6 +36,7 @@ public class PatioItemDashboardDTO {
     public Long getEstadiaId() { return estadiaId; }
     public String getPlaca() { return placa; }
     public String getClienteNome() { return clienteNome; }
+    public String getMotivoNome() { return motivoNome; }
     public Long getOrdemServicoId() { return ordemServicoId; }
     public LocalDateTime getDataEntrada() { return dataEntrada; }
     public LocalDateTime getDataSaida() { return dataSaida; }

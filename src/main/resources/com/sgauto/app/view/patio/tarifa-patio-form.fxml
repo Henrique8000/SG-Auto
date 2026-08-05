@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.patio.TarifaPatioFormController"
+      styleClass="modal-container" spacing="16" prefWidth="420">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTituloModal" text="Nova Tarifa" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Descrição" styleClass="form-label"/>
+        <TextField fx:id="txtDescricao" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Categoria" styleClass="form-label"/>
+        <ComboBox fx:id="cmbCategoria" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <HBox spacing="12">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Valor da Diária (R$)" styleClass="form-label"/>
+            <TextField fx:id="txtValorDiaria" styleClass="form-input"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Dias de Carência" styleClass="form-label"/>
+            <TextField fx:id="txtDiasCarencia" styleClass="form-input"/>
+        </VBox>
+    </HBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>

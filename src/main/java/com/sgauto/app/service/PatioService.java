@@ -1,5 +1,6 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.controller.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.controller.dto.patio.PatioResumoDashboardDTO;
 import com.sgauto.app.enums.FormaPagamento;
@@ -17,8 +18,11 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
+import com.sgauto.app.repository.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,9 @@ public class PatioService {
 
     public PatioService(EstadiaPatioRepository estadiaPatioRepository,
                         TabelaPrecoPatioRepository tabelaPrecoPatioRepository,
-                        MotivoEstadiaRepository motivoEstadiaRepository, ClienteRepository clienteRepository, VeiculoRepository veiculoRepository, OrdemServicoRepository ordemServicoRepository, CaixaService caixaService) {
+                        MotivoEstadiaRepository motivoEstadiaRepository, ClienteRepository clienteRepository,
+                        VeiculoRepository veiculoRepository, OrdemServicoRepository ordemServicoRepository,
+                        CaixaService caixaService) {
         this.estadiaPatioRepository = estadiaPatioRepository;
         this.tabelaPrecoPatioRepository = tabelaPrecoPatioRepository;
         this.motivoEstadiaRepository = motivoEstadiaRepository;
@@ -80,43 +86,36 @@ public class PatioService {
         TabelaPrecoPatio tarifaOs = tabelaPrecoPatioRepository.findByDescricao(DESCRICAO_TARIFA_PADRAO_OS)
                 .orElseThrow(() -> new IllegalStateException("Tarifa padrão de O.S. não encontrada. Verifique as migrations."));
 
-        EstadiaPatio novaEstadia = new EstadiaPatio(
-                veiculo,
-                cliente,
-                ordemServico,
-                veiculo.getPlaca(),
-                tarifaOs,
-                motivoOs,
-                null
-        );
+        EstadiaPatio novaEstadia = new EstadiaPatio(veiculo, cliente, ordemServico, veiculo.getPlaca(), tarifaOs, motivoOs, null);
 
         return estadiaPatioRepository.save(novaEstadia);
     }
 
     @Transactional
-    public EstadiaPatio registrarEntradaManual(Long clienteId, Long veiculoId, Long ordemServicoId, Long tarifaId, Long motivoId, String localizacao) {
+    public EstadiaPatio registrarEntradaManual(Long clienteId, Long veiculoId, Long ordemServicoId,
+                                               Long tarifaId, Long motivoId, String localizacao) {
         if (clienteId == null || tarifaId == null || motivoId == null || localizacao == null || veiculoId == null) {
             throw new IllegalArgumentException("Foram identificados campos nulos ao tentar gerar uma estadia manual no pátio.");
         }
 
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. Cliente de ID" + clienteId + " não localizado"));
+                .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. Cliente de ID " + clienteId + " não localizado."));
         Veiculo veiculo = veiculoRepository.findById(veiculoId)
-                .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. Veículo de ID" + veiculoId + " não localizado"));
+                .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. Veículo de ID " + veiculoId + " não localizado."));
+
+
+        if (veiculo.getCliente() == null || !veiculo.getCliente().getId().equals(cliente.getId())) {
+            throw new IllegalArgumentException("O veículo de id " + veiculoId + " não pertence ao cliente de id " + clienteId + ".");
+        }
 
         OrdemServico os = null;
-
-        if(ordemServicoId != null){
+        if (ordemServicoId != null) {
             os = ordemServicoRepository.findById(ordemServicoId)
-                    .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. O.S. de ID" + ordemServicoId + " não localizada"));
-
-            if (veiculo.getCliente() == null || !veiculo.getCliente().getId().equals(cliente.getId())) {
-                throw new IllegalStateException("Inconsistência: o veículo da O.S. de id " + os.getId() + " não pertence ao cliente da mesma O.S.");
-            }
+                    .orElseThrow(() -> new IllegalArgumentException("Não foi possível dar entrada manual. O.S. de ID " + ordemServicoId + " não localizada."));
         }
 
         if (estadiaPatioRepository.existsByVeiculoIdAndStatus(veiculo.getId(), StatusEstadiaPatio.NO_PATIO)) {
-            throw new IllegalStateException("Já existe uma estadia em aberto no pátio para este veículo");
+            throw new IllegalStateException("Já existe uma estadia em aberto no pátio para este veículo.");
         }
 
         TabelaPrecoPatio tarifa = tabelaPrecoPatioRepository.findById(tarifaId)
@@ -125,15 +124,7 @@ public class PatioService {
         MotivoEstadia motivo = motivoEstadiaRepository.findById(motivoId)
                 .orElseThrow(() -> new IllegalArgumentException("Motivo de id " + motivoId + " não localizado."));
 
-        EstadiaPatio novaEstadiaManual = new EstadiaPatio(
-                veiculo,
-                cliente,
-                os,
-                veiculo.getPlaca(),
-                tarifa,
-                motivo,
-                localizacao
-        );
+        EstadiaPatio novaEstadiaManual = new EstadiaPatio(veiculo, cliente, os, veiculo.getPlaca(), tarifa, motivo, localizacao);
 
         return estadiaPatioRepository.save(novaEstadiaManual);
     }
@@ -164,14 +155,8 @@ public class PatioService {
         Long clienteId = es.getCliente() != null ? es.getCliente().getId() : null;
 
         CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
-                TipoMovimentacao.ENTRADA,
-                OrigemMovimentacao.PATIO,
-                formaPagamentoFinal,
-                valorTotal,
-                descricao,
-                clienteId,
-                es.getPlaca()
-        );
+                TipoMovimentacao.ENTRADA, OrigemMovimentacao.PATIO, formaPagamentoFinal,
+                valorTotal, descricao, clienteId, es.getPlaca());
         movimentacao.setReferenciaId(es.getId());
 
         es.setValorTotal(valorTotal);
@@ -201,16 +186,19 @@ public class PatioService {
         return valorDiaria.multiply(BigDecimal.valueOf(diasCobrados));
     }
 
-    @Transactional(readOnly = true)
-    public List<EstadiaPatio> listarVeiculosNoPatio() {
-        return estadiaPatioRepository.findByStatus(StatusEstadiaPatio.NO_PATIO);
+    @Transactional
+    public EstadiaPatio atualizarLocalizacao(Long estadiaId, String novaLocalizacao) {
+        EstadiaPatio es = estadiaPatioRepository.findById(estadiaId)
+                .orElseThrow(() -> new IllegalArgumentException("Estadia de ID " + estadiaId + " não localizada."));
+        es.setLocalizacao(novaLocalizacao);
+        return estadiaPatioRepository.save(es);
     }
 
     @Transactional(readOnly = true)
-    public List<EstadiaPatio> listarMovimentacoesFinalizadas() {
-        return estadiaPatioRepository.findByStatus(StatusEstadiaPatio.FINALIZADO);
+    public boolean possuiEstadiaAberta(Long ordemServicoId) {
+        if (ordemServicoId == null) return false;
+        return estadiaPatioRepository.findByOrdemServicoIdAndStatus(ordemServicoId, StatusEstadiaPatio.NO_PATIO).isPresent();
     }
-
 
     @Transactional(readOnly = true)
     public EstadiaPatio buscarEstadiaPorOrdemServico(Long ordemServicoId) {
@@ -222,18 +210,18 @@ public class PatioService {
     }
 
     @Transactional(readOnly = true)
+    public PatioItemDashboardDTO buscarItemPorId(Long estadiaId) {
+        EstadiaPatio es = estadiaPatioRepository.findById(estadiaId)
+                .orElseThrow(() -> new IllegalArgumentException("Estadia de ID " + estadiaId + " não localizada."));
+        return montarItemDashboard(es);
+    }
+
+    @Transactional(readOnly = true)
     public List<PatioItemDashboardDTO> listarHistoricoPorOrdemServico(Long ordemServicoId) {
         if (ordemServicoId == null)
             throw new IllegalArgumentException("O ID da O.S. é obrigatório para buscar o histórico de estadias.");
 
         return estadiaPatioRepository.findByOrdemServicoIdOrderByDataEntradaDesc(ordemServicoId).stream()
-                .map(this::montarItemDashboard)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<PatioItemDashboardDTO> listarItensDashboard() {
-        return estadiaPatioRepository.findByStatus(StatusEstadiaPatio.NO_PATIO).stream()
                 .map(this::montarItemDashboard)
                 .toList();
     }
@@ -254,6 +242,22 @@ public class PatioService {
         return new PatioResumoDashboardDTO(abertas.size(), valorTotalEstimado, tempoMedioHoras);
     }
 
+    @Transactional(readOnly = true)
+    public Page<PatioItemDashboardDTO> listarPatioAtualPaginado(PatioFiltroDTO filtro, Pageable pageable) {
+        filtro.setStatus(StatusEstadiaPatio.NO_PATIO);
+        return estadiaPatioRepository.findAll(EstadiaPatioSpecifications.comFiltro(filtro), pageable)
+                .map(this::montarItemDashboard);
+    }
+
+    /**
+     * Histórico paginado — mostra tudo (aberto e finalizado), filtro de status é opcional.
+     */
+    @Transactional(readOnly = true)
+    public Page<PatioItemDashboardDTO> listarHistoricoPaginado(PatioFiltroDTO filtro, Pageable pageable) {
+        return estadiaPatioRepository.findAll(EstadiaPatioSpecifications.comFiltro(filtro), pageable)
+                .map(this::montarItemDashboard);
+    }
+
     private PatioItemDashboardDTO montarItemDashboard(EstadiaPatio estadia) {
         BigDecimal valor = estadia.getStatus() == StatusEstadiaPatio.NO_PATIO
                 ? calcularValorEstadia(estadia)
@@ -263,6 +267,7 @@ public class PatioService {
                 estadia.getId(),
                 estadia.getPlaca(),
                 estadia.getCliente().getNome(),
+                estadia.getMotivo() != null ? estadia.getMotivo().getNome() : null,
                 estadia.getOrdemServico() != null ? estadia.getOrdemServico().getId() : null,
                 estadia.getDataEntrada(),
                 estadia.getDataSaida(),
@@ -271,5 +276,4 @@ public class PatioService {
                 estadia.getLocalizacao()
         );
     }
-
 }
