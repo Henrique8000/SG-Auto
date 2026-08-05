@@ -66,7 +66,6 @@ public class CaixaService {
     public BigDecimal calcularValorEsperado(Long caixaId) {
         Caixa caixa = caixaRepository.findById(caixaId)
                 .orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + caixaId));
-
         List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixa.getId());
 
         BigDecimal entradasDinheiro = movimentacoes.stream()
