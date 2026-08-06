@@ -79,7 +79,7 @@ public class NovaOsModalController {
         Long clienteId = mapaClientes.get(nomeCliente);
         if (clienteId == null) return;
 
-        List<Veiculo> veiculos = veiculoService.listarPorCliente(clienteId); // ajuste o nome do método conforme seu VeiculoService
+        List<Veiculo> veiculos = veiculoService.listarPorCliente(clienteId);
         mapaVeiculos = veiculos.stream().collect(Collectors.toMap(Veiculo::getPlaca, Veiculo::getId, (a, b) -> a));
         cmbVeiculo.setItems(FXCollections.observableArrayList(mapaVeiculos.keySet()));
     }

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.patio.TarifaPatioTabController">
+
+    <fx:define>
+        <ToggleGroup fx:id="grupoStatus"/>
+    </fx:define>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="20"/></padding>
+
+            <HBox spacing="16">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TOTAL DE TARIFAS" styleClass="card-title"/>
+                    <Label fx:id="lblTotalTarifas" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ATIVAS" styleClass="card-title"/>
+                    <Label fx:id="lblTarifasAtivas" text="0" styleClass="card-value-accent"/>
+                </VBox>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por descrição..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <Button text="+ Nova Tarifa" styleClass="btn-primary" onAction="#abrirModalNovaTarifa"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <HBox styleClass="segmented-control">
+                    <ToggleButton fx:id="btnStatusTodos" text="Todas" styleClass="segmented-button" toggleGroup="$grupoStatus" selected="true"/>
+                    <ToggleButton fx:id="btnStatusAtivas" text="Ativas" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                    <ToggleButton fx:id="btnStatusInativas" text="Inativas" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+                </HBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblContagem" styleClass="results-count"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <TableView fx:id="tabelaTarifas" styleClass="modern-table">
+                <columns>
+                    <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="240"/>
+                    <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="140"/>
+                    <TableColumn fx:id="colValorDiaria" text="Valor Diária" prefWidth="100"/>
+                    <TableColumn fx:id="colCarencia" text="Carência (dias)" prefWidth="110"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+                    <TableColumn fx:id="colAcoes" text="Ações" prefWidth="210"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <VBox fx:id="painelVazio" alignment="CENTER" spacing="8" visible="false" managed="false">
+                <Label text="🔍" styleClass="empty-state-icon"/>
+                <Label text="Nenhuma tarifa encontrada" styleClass="empty-state-title"/>
+                <Label text="Tente ajustar os filtros ou cadastre uma nova tarifa" styleClass="empty-state-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,1 @@
+ALTER TABLE t_estadia_patio ALTER COLUMN estadia_ordem_servico_id DROP NOT NULL;

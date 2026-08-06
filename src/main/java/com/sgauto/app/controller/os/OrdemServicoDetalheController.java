@@ -1,10 +1,17 @@
 package com.sgauto.app.controller.os;
 
+import com.sgauto.app.controller.patio.SaidaPatioModalController;
+import com.sgauto.app.enums.StatusEstadiaPatio;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
+import com.sgauto.app.model.patio.EstadiaPatio;
+import com.sgauto.app.repository.patio.EstadiaPatioRepository;
 import com.sgauto.app.service.OrdemServicoService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import java.math.BigDecimal;
@@ -12,8 +19,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +45,7 @@ public class OrdemServicoDetalheController {
     @FXML private OsPagamentosTabController tabPagamentosController;
 
     private final OrdemServicoService ordemServicoService;
+    private final EstadiaPatioRepository estadiaPatioRepository;
     private final ApplicationContext applicationContext;
     private Long osId;
     private Runnable aoFechar;
@@ -42,9 +53,10 @@ public class OrdemServicoDetalheController {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public OrdemServicoDetalheController(OrdemServicoService ordemServicoService, ApplicationContext applicationContext) {
+    public OrdemServicoDetalheController(OrdemServicoService ordemServicoService,EstadiaPatioRepository estadiaPatioRepository, ApplicationContext applicationContext) {
         this.ordemServicoService = ordemServicoService;
         this.applicationContext = applicationContext;
+        this.estadiaPatioRepository = estadiaPatioRepository;
     }
 
     public void configurar(Long osId, Runnable aoFechar) {
@@ -115,7 +127,28 @@ public class OrdemServicoDetalheController {
 
         try {
             ordemServicoService.alterarStatus(osId, novoStatus);
+            if (novoStatus == StatusOS.CONCLUIDA || novoStatus == StatusOS.FINALIZADA) {
+
+                Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
+                        .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
+
+                if (estadiaOpt.isPresent()) {
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmacao.setTitle("Veículo no Pátio");
+                    confirmacao.setHeaderText("O.S. Encerrada com veículo no pátio");
+                    confirmacao.setContentText("O veículo desta O.S. ainda consta no pátio da oficina.\n" +
+                            "Deseja registrar a saída do veículo agora?");
+
+                    Optional<ButtonType> resposta = confirmacao.showAndWait();
+
+                    if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
+                        abrirModalSaidaPatio(estadiaOpt.get());
+                    }
+                }
+            }
+
             recarregar();
+
         } catch (IllegalStateException | IllegalArgumentException e) {
             mostrarAlerta(Alert.AlertType.WARNING, "Não foi possível alterar o status", e.getMessage());
         }
@@ -170,5 +203,28 @@ public class OrdemServicoDetalheController {
         alerta.setHeaderText(null);
         alerta.setContentText(mensagem);
         alerta.showAndWait();
+    }
+
+    private void abrirModalSaidaPatio(EstadiaPatio estadia) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/saida-patio-modal.fxml"));
+
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent root = loader.load();
+
+            SaidaPatioModalController controller = loader.getController();
+
+            controller.configurar(estadia.getId(), () -> recarregar());
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Registrar Saída do Veículo");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela do pátio.");
+            e.printStackTrace();
+        }
     }
 }

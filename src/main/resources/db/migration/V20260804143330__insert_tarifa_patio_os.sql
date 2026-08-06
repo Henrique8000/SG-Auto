@@ -1,0 +1,2 @@
+INSERT INTO t_tabela_preco_patio (tpreco_descricao, tpreco_categoria, tpreco_valor_diaria, tpreco_dias_carencia, tpreco_ativo)
+VALUES ('Tarifa Padrão - Ordem de Serviço (sem cobrança)', 'OUTROS', 0, 0, TRUE);

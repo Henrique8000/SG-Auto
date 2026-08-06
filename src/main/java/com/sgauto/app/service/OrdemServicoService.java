@@ -35,6 +35,7 @@ public class OrdemServicoService {
     private final FuncionarioRepository funcionarioRepository;
     private final PecaRepository pecaRepository;
     private final ServicoRepository servicoRepository;
+    private final PatioService patioService;
     private final EstoqueService estoqueService;
     private final CaixaService caixaService;
 
@@ -50,7 +51,7 @@ public class OrdemServicoService {
                                PecaRepository pecaRepository,
                                ServicoRepository servicoRepository,
                                EstoqueService estoqueService,
-                               CaixaService caixaService) {
+                               CaixaService caixaService, PatioService patioService) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.osPecaRepository = osPecaRepository;
         this.osServicoRepository = osServicoRepository;
@@ -62,6 +63,7 @@ public class OrdemServicoService {
         this.servicoRepository = servicoRepository;
         this.estoqueService = estoqueService;
         this.caixaService = caixaService;
+        this.patioService = patioService;
     }
 
     List<StatusOS> status = List.of(
@@ -96,7 +98,6 @@ public class OrdemServicoService {
         Funcionario funcionario = funcionarioRepository.findById(funcionarioId)
                 .orElseThrow(() -> new RuntimeException("Funcionário responsável não encontrado." + funcionarioId));
 
-        // Substituição do @Builder pela instanciação via Construtor vazio + Setters
         OrdemServico novaOs = new OrdemServico();
         novaOs.setCliente(cliente);
         novaOs.setVeiculo(veiculo);
@@ -104,9 +105,14 @@ public class OrdemServicoService {
         novaOs.setSintomasRelatados(sintomasRelatados);
         novaOs.setDataPrevisao(dataPrevisao);
         novaOs.setFicarNoPatio(ficarNoPatio);
-        // dataAbertura e as listas já são inicializadas direto na classe
 
-        return ordemServicoRepository.save(novaOs);
+        OrdemServico osSalva = ordemServicoRepository.save(novaOs);
+
+        if (ficarNoPatio) {
+            patioService.registrarEntradaViaOrdemServico(osSalva);
+        }
+
+        return osSalva;
     }
 
     @Transactional

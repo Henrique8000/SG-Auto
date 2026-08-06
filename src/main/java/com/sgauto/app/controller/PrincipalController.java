@@ -120,7 +120,14 @@ public class PrincipalController {
 
     @FXML
     private void irParaPatioAtual() {
-        mostrarTela("Pátio", "Pátio atual da oficina", montarPlaceholder("Tela de Pátio em construção"));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/catalogo-patio.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela("Pátio", "Veículos no pátio, tarifas e motivos de estadia", tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Pátio", e);
+        }
     }
 
     @FXML

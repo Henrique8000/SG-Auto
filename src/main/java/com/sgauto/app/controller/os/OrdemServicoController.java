@@ -3,6 +3,7 @@ package com.sgauto.app.controller.os;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.service.OrdemServicoService;
+import com.sgauto.app.service.PatioService;
 import com.sgauto.app.util.ModalUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -53,6 +54,7 @@ public class OrdemServicoController {
     @FXML private VBox painelVazio;
 
     private final OrdemServicoService ordemServicoService;
+    private final PatioService patioService;
     private final ApplicationContext applicationContext;
     private final ObservableList<OrdemServico> osExibidas = FXCollections.observableArrayList();
 
@@ -64,8 +66,9 @@ public class OrdemServicoController {
     private static final String ORD_MAIOR_VALOR = "Maior valor";
     private static final String ORD_PREVISAO = "Previsão mais próxima";
 
-    public OrdemServicoController(OrdemServicoService ordemServicoService, ApplicationContext applicationContext) {
+    public OrdemServicoController(OrdemServicoService ordemServicoService, PatioService patioService, ApplicationContext applicationContext) {
         this.ordemServicoService = ordemServicoService;
+        this.patioService = patioService;
         this.applicationContext = applicationContext;
     }
 
@@ -202,7 +205,7 @@ public class OrdemServicoController {
                 .filter(os -> dataInicio == null || (os.getDataAbertura() != null && !os.getDataAbertura().toLocalDate().isBefore(dataInicio)))
                 .filter(os -> dataFim == null || (os.getDataAbertura() != null && !os.getDataAbertura().toLocalDate().isAfter(dataFim)))
                 .filter(os -> !somenteAtrasadas || estaAtrasada(os))
-                .filter(os -> !somenteNoPatio || os.isFicarNoPatio())
+                .filter(os -> !somenteNoPatio || patioService.possuiEstadiaAberta(os.getId()))
                 .sorted(obterComparador())
                 .toList();
 

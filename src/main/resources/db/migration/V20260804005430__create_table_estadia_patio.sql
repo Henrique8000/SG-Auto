@@ -1,10 +1,10 @@
 CREATE TABLE t_estadia_patio (
                                  id BIGSERIAL PRIMARY KEY,
 
-                                 estadia_veiculo_id BIGINT NOT NULL,         -- soft reference (t_veiculo ainda não existe)
-                                 estadia_cliente_id BIGINT NOT NULL,         -- soft reference (t_cliente ainda não existe/confirmado)
-                                 estadia_ordem_servico_id BIGINT,            -- soft reference; nulo = entrada avulsa
-                                 estadia_placa VARCHAR(10),                  -- redundância proposital, ver nota abaixo
+                                 estadia_veiculo_id BIGINT NOT NULL REFERENCES t_veiculo(id),
+                                 estadia_cliente_id BIGINT NOT NULL REFERENCES t_cliente(id),
+                                 estadia_ordem_servico_id BIGINT REFERENCES t_ordem_servico(id),
+                                 estadia_placa VARCHAR(10),
 
                                  estadia_tarifa_id BIGINT NOT NULL REFERENCES t_tabela_preco_patio(id),
                                  estadia_motivo_id BIGINT NOT NULL REFERENCES t_motivo_estadia(id),
@@ -12,7 +12,7 @@ CREATE TABLE t_estadia_patio (
                                  estadia_data_entrada TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                  estadia_data_saida TIMESTAMP,
 
-                                 estadia_localizacao VARCHAR(50) NOT NULL,
+                                 estadia_localizacao VARCHAR(50),
                                  estadia_status VARCHAR(20) NOT NULL DEFAULT 'NO_PATIO',
                                  estadia_valor_total NUMERIC(10,2),
 
