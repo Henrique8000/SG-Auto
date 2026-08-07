@@ -180,7 +180,7 @@ public class PatioService {
         LocalDateTime dataReferencia = estadia.getDataSaida() != null ? estadia.getDataSaida() : LocalDateTime.now();
 
         Duration duracao = Duration.between(dataEntrada, dataReferencia);
-        long diarias = (long) Math.ceil(duracao.toHours() / 24.0);
+        long diarias = (long) Math.ceil(duracao.toMinutes() / 1440.0);
         long diasCobrados = Math.max(0, diarias - diasCarencia);
 
         return valorDiaria.multiply(BigDecimal.valueOf(diasCobrados));

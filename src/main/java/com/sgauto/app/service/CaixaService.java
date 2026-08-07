@@ -9,15 +9,11 @@ import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.ConfiguracaoCaixa;
 import com.sgauto.app.repository.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.CaixaRepository;
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.classfile.instruction.ThrowInstruction;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CaixaService {
@@ -74,7 +70,7 @@ public class CaixaService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal saidasDinheiro = movimentacoes.stream()
-                .filter(m -> m.getTipo() == TipoMovimentacao.SAIDA)
+                .filter(m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getFormaPagamento() == FormaPagamento.DINHEIRO)
                 .map(CaixaMovimentacao::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

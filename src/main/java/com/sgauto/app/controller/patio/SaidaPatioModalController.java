@@ -30,6 +30,7 @@ public class SaidaPatioModalController {
     private final PatioService patioService;
     private Long estadiaId;
     private Runnable aoConfirmar;
+    private PatioItemDashboardDTO itemAtual;
 
     public SaidaPatioModalController(PatioService patioService) {
         this.patioService = patioService;
@@ -39,21 +40,40 @@ public class SaidaPatioModalController {
         this.estadiaId = estadiaId;
         this.aoConfirmar = aoConfirmar;
 
-        PatioItemDashboardDTO item = patioService.buscarItemPorId(estadiaId);
-        lblPlaca.setText(item.getPlaca());
-        lblCliente.setText(item.getClienteNome());
-        lblEntrada.setText(item.getDataEntrada().format(FORMATO_DATA));
-        lblValorDevido.setText(formatarMoeda(item.getValorEstimadoOuFinal()));
-
-        boolean semCobranca = item.getValorEstimadoOuFinal().compareTo(BigDecimal.ZERO) == 0;
         cmbFormaPagamento.setItems(FXCollections.observableArrayList(
                 FormaPagamento.DINHEIRO, FormaPagamento.DEBITO, FormaPagamento.CREDITO, FormaPagamento.PIX, FormaPagamento.OUTROS));
+
+        atualizarValor();
+    }
+
+    private void atualizarValor() {
+        itemAtual = patioService.buscarItemPorId(estadiaId);
+
+        lblPlaca.setText(itemAtual.getPlaca());
+        lblCliente.setText(itemAtual.getClienteNome());
+        lblEntrada.setText(itemAtual.getDataEntrada().format(FORMATO_DATA));
+        lblValorDevido.setText(formatarMoeda(itemAtual.getValorEstimadoOuFinal()));
+
+        boolean semCobranca = itemAtual.getValorEstimadoOuFinal().compareTo(BigDecimal.ZERO) == 0;
         cmbFormaPagamento.setDisable(semCobranca);
         cmbFormaPagamento.setPromptText(semCobranca ? "Isento — sem cobrança" : "Selecione a forma de pagamento");
+        if (semCobranca) cmbFormaPagamento.setValue(null);
     }
 
     @FXML
     private void confirmar() {
+        BigDecimal valorAntesDeConfirmar = itemAtual.getValorEstimadoOuFinal();
+        atualizarValor();
+
+        boolean virouCobrancaAgora = valorAntesDeConfirmar.compareTo(BigDecimal.ZERO) == 0
+                && itemAtual.getValorEstimadoOuFinal().compareTo(BigDecimal.ZERO) != 0;
+
+        if (virouCobrancaAgora) {
+            mostrarErro("O valor da estadia mudou desde que esta tela foi aberta (agora é "
+                    + formatarMoeda(itemAtual.getValorEstimadoOuFinal()) + "). Selecione a forma de pagamento e confirme novamente.");
+            return;
+        }
+
         try {
             patioService.registrarSaida(estadiaId, cmbFormaPagamento.getValue());
             aoConfirmar.run();

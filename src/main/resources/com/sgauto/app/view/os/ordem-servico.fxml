@@ -14,28 +14,26 @@
             <padding><Insets bottom="20"/></padding>
 
             <HBox spacing="16">
-                <HBox spacing="16">
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="ABERTAS" styleClass="card-title"/>
-                        <Label fx:id="lblAbertas" text="0" styleClass="card-value"/>
-                    </VBox>
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="EM EXECUÇÃO" styleClass="card-title"/>
-                        <Label fx:id="lblEmExecucao" text="0" styleClass="card-value-accent"/>
-                    </VBox>
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="ATRASADAS" styleClass="card-title"/>
-                        <Label fx:id="lblAtrasadas" text="0" styleClass="card-value-warning"/>
-                    </VBox>
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="FATURAMENTO MÊS" styleClass="card-title"/>
-                        <Label fx:id="lblFaturamentoMes" text="R$ 0,00" styleClass="card-value"/>
-                    </VBox>
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="TICKET MÉDIO" styleClass="card-title"/>
-                        <Label fx:id="lblTicketMedio" text="R$ 0,00" styleClass="card-value"/>
-                    </VBox>
-                </HBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ABERTAS" styleClass="card-title"/>
+                    <Label fx:id="lblAbertas" text="0" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="EM EXECUÇÃO" styleClass="card-title"/>
+                    <Label fx:id="lblEmExecucao" text="0" styleClass="card-value-accent"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="ATRASADAS" styleClass="card-title"/>
+                    <Label fx:id="lblAtrasadas" text="0" styleClass="card-value-warning"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="FATURAMENTO MÊS" styleClass="card-title"/>
+                    <Label fx:id="lblFaturamentoMes" text="R$ 0,00" styleClass="card-value"/>
+                </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <Label text="TICKET MÉDIO" styleClass="card-title"/>
+                    <Label fx:id="lblTicketMedio" text="R$ 0,00" styleClass="card-value"/>
+                </VBox>
             </HBox>
 
             <HBox spacing="12" alignment="CENTER_LEFT">

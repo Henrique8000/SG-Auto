@@ -397,11 +397,6 @@ public class OrdemServicoService {
      */
 
     @Transactional(readOnly = true)
-    public List<OrdemServico> listarVeiculosNoPatio() {
-        return ordemServicoRepository.findByFicarNoPatioTrue();
-    }
-
-    @Transactional(readOnly = true)
     public List<OrdemServico> listarOsAtrasadas() {
         List<StatusOS> statusEncerrados = List.of(StatusOS.CONCLUIDA, StatusOS.FINALIZADA, StatusOS.CANCELADA);
         return ordemServicoRepository.findByStatusNotInAndDataPrevisaoBefore(statusEncerrados, LocalDateTime.now());
