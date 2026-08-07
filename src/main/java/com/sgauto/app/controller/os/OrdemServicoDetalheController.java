@@ -128,7 +128,7 @@ public class OrdemServicoDetalheController {
 
         try {
             ordemServicoService.alterarStatus(osId, novoStatus);
-            if (novoStatus == StatusOS.CONCLUIDA || novoStatus == StatusOS.FINALIZADA) {
+            if (novoStatus == StatusOS.CONCLUIDA || novoStatus == StatusOS.FINALIZADA || novoStatus == StatusOS.CANCELADA ) {
 
                 Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
                         .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
