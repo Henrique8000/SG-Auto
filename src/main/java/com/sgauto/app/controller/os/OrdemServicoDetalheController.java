@@ -7,6 +7,7 @@ import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
 import com.sgauto.app.service.OrdemServicoService;
+import com.sgauto.app.util.ModalUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -163,7 +164,23 @@ public class OrdemServicoDetalheController {
 
         confirmacao.showAndWait().ifPresent(botao -> {
             if (botao == ButtonType.OK) {
-                try {
+                try{
+                            Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
+                                    .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
+
+                            if (estadiaOpt.isPresent()) {
+                                Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+                                c.setTitle("Veículo no Pátio");
+                                c.setHeaderText("O.S. cancelada com veículo no pátio");
+                                c.setContentText("O veículo desta O.S. ainda consta no pátio da oficina.\n" +
+                                        "Deseja registrar a saída do veículo agora?");
+
+                                Optional<ButtonType> resposta = c.showAndWait();
+
+                                if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
+                                    abrirModalSaidaPatio(estadiaOpt.get());
+                                }
+                            }
                     ordemServicoService.cancelarOS(osId);
                     recarregar();
                 } catch (IllegalStateException e) {
@@ -216,10 +233,7 @@ public class OrdemServicoDetalheController {
 
             controller.configurar(estadia.getId(), () -> recarregar());
 
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setTitle("Registrar Saída do Veículo");
-            stage.setScene(new Scene(root));
+            Stage stage = ModalUtil.abrir(root, "Registrar Saída do Veículo", lblCliente.getScene().getWindow());
             stage.showAndWait();
 
         } catch (Exception e) {

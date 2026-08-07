@@ -4,6 +4,7 @@ import com.sgauto.app.model.Peca;
 import com.sgauto.app.service.EstoqueService;
 import com.sgauto.app.service.ModeloService;
 import com.sgauto.app.util.AutoCompleteComboBox;
+import com.sgauto.app.util.NumeroUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -71,8 +72,8 @@ public class PecaFormController {
             String codigo = txtCodigo.getText().trim();
             String descricao = txtDescricao.getText().trim();
             String modelo = cmbModelo.getValue() != null ? cmbModelo.getValue().toString().trim() : "Geral";
-            BigDecimal precoCusto = new BigDecimal(txtPrecoCusto.getText().trim());
-            BigDecimal precoVenda = new BigDecimal(txtPrecoVenda.getText().trim());
+            BigDecimal precoCusto = NumeroUtil.parseValorMonetario(txtPrecoCusto.getText());
+            BigDecimal precoVenda = NumeroUtil.parseValorMonetario(txtPrecoVenda.getText());
             int quantidade = Integer.parseInt(txtQuantidade.getText().trim());
             int estoqueMinimo = Integer.parseInt(txtEstoqueMinimo.getText().trim());
 

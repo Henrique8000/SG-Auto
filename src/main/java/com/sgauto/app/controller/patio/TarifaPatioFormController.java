@@ -3,6 +3,7 @@ package com.sgauto.app.controller.patio;
 import com.sgauto.app.enums.CategoriaVeiculoPatio;
 import com.sgauto.app.model.patio.TabelaPrecoPatio;
 import com.sgauto.app.service.TabelaPrecoPatioService;
+import com.sgauto.app.util.NumeroUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -67,7 +68,7 @@ public class TarifaPatioFormController {
         try {
             String descricao = txtDescricao.getText().trim();
             CategoriaVeiculoPatio categoria = CATEGORIAS.get(cmbCategoria.getValue());
-            BigDecimal valorDiaria = new BigDecimal(txtValorDiaria.getText().trim());
+            BigDecimal valorDiaria = NumeroUtil.parseValorMonetario(txtValorDiaria.getText());
             int diasCarencia = Integer.parseInt(txtDiasCarencia.getText().trim());
 
             if (tarifaEmEdicao == null) {
