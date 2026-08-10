@@ -79,6 +79,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.18.2</version>
         </dependency>
+
+        <!-- Spring Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
     </dependencies>
 
 
