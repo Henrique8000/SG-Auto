@@ -18,7 +18,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
-import com.sgauto.app.repository.patio.EstadiaPatioSpecifications;
+import com.sgauto.app.repository.specifications.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
 import org.springframework.data.domain.Page;
@@ -249,9 +249,7 @@ public class PatioService {
                 .map(this::montarItemDashboard);
     }
 
-    /**
-     * Histórico paginado — mostra tudo (aberto e finalizado), filtro de status é opcional.
-     */
+
     @Transactional(readOnly = true)
     public Page<PatioItemDashboardDTO> listarHistoricoPaginado(PatioFiltroDTO filtro, Pageable pageable) {
         return estadiaPatioRepository.findAll(EstadiaPatioSpecifications.comFiltro(filtro), pageable)

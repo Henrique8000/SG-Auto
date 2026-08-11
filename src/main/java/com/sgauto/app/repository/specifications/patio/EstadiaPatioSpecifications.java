@@ -1,4 +1,4 @@
-package com.sgauto.app.repository.patio;
+package com.sgauto.app.repository.specifications.patio;
 
 import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.enums.StatusEstadiaPatio;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.sgauto.app.controller.usuario.login.TrocaSenhaObrigatoriaController"
+           styleClass="root">
+
+    <VBox alignment="CENTER" maxWidth="450" maxHeight="-Infinity" spacing="32" styleClass="auth-card">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+
+        <VBox alignment="CENTER" spacing="8">
+            <Label text="Atualização de Segurança" styleClass="auth-title"/>
+            <Label text="Como este é seu primeiro acesso (ou sua senha foi redefinida), você precisa criar uma nova senha definitiva."
+                   styleClass="page-subtitle" wrapText="true" textAlignment="CENTER"/>
+        </VBox>
+
+        <VBox spacing="16">
+            <VBox spacing="6">
+                <Label text="SENHA ATUAL (TEMPORÁRIA)" styleClass="form-label"/>
+                <PasswordField fx:id="txtSenhaAtual" promptText="Digite a senha que você acabou de usar" styleClass="form-input"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="NOVA SENHA" styleClass="form-label"/>
+                <PasswordField fx:id="txtNovaSenha" promptText="Mínimo de 6 caracteres" styleClass="form-input"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <Label text="CONFIRMAR NOVA SENHA" styleClass="form-label"/>
+                <PasswordField fx:id="txtConfirmarSenha" promptText="Repita a nova senha" styleClass="form-input"/>
+            </VBox>
+        </VBox>
+
+        <Label fx:id="lblMensagemErro" styleClass="form-error" wrapText="true"
+               visible="false" managed="false" alignment="CENTER" textAlignment="CENTER"/>
+
+        <Button fx:id="btnSalvar" text="Salvar e Acessar o Sistema" styleClass="btn-primary"
+                maxWidth="Infinity" onAction="#salvarNovaSenha"/>
+
+    </VBox>
+</StackPane>

@@ -1,11 +1,16 @@
 package com.sgauto.app.service.usuario;
 
+import com.sgauto.app.controller.dto.usuario.FiltroPerfilAcessoDTO;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Permissao;
+import com.sgauto.app.repository.specifications.usuario.PerfilAcessoSpecification;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.PermissaoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +41,12 @@ public class PerfilAcessoService {
     @Transactional(readOnly = true)
     public List<PerfilAcesso> listarAtivos() {
         return perfilAcessoRepository.findByAtivoTrue();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PerfilAcesso> buscar(FiltroPerfilAcessoDTO filtro, Pageable pageable) {
+        Specification<PerfilAcesso> spec = PerfilAcessoSpecification.comFiltro(filtro.termo(), filtro.ativo());
+        return perfilAcessoRepository.findAll(spec, pageable);
     }
 
     @Transactional

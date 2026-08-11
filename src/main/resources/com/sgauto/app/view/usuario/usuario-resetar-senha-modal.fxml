@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.usuario.UsuarioResetarSenhaModalController"
+      styleClass="modal-container" spacing="16" prefWidth="380">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label text="Redefinir Senha" styleClass="page-title"/>
+    <Label fx:id="lblUsuario" styleClass="page-subtitle"/>
+
+    <VBox spacing="4">
+        <Label text="Nova Senha Temporária" styleClass="form-label"/>
+        <PasswordField fx:id="txtNovaSenha" styleClass="form-input"/>
+    </VBox>
+
+    <Label text="O usuário será obrigado a trocar a senha no próximo login." styleClass="results-count" wrapText="true"/>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnConfirmar" text="Redefinir" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+</VBox>

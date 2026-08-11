@@ -12,7 +12,7 @@ CREATE TABLE t_usuario (
                            usuario_ativo BOOLEAN NOT NULL DEFAULT TRUE,
                            usuario_deve_trocar_senha BOOLEAN NOT NULL DEFAULT TRUE,
 
-                           usuario_tentativas_falhas SMALLINT NOT NULL DEFAULT 0,
+                           usuario_tentativas_falhas INTEGER NOT NULL DEFAULT 0,
                            usuario_bloqueado_ate TIMESTAMP,
 
                            usuario_ultimo_login TIMESTAMP,

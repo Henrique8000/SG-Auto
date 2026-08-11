@@ -21,14 +21,29 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/principal.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/login/login.fxml"));
         loader.setControllerFactory(springContext::getBean);
 
         Parent root = loader.load();
-        stage.setScene(new Scene(root));
-        stage.setTitle("SGAuto");
+        Scene scene = new Scene(root, 600, 500);
+
+        java.net.URL cssUrl = getClass().getResource("/com/sgauto/app/css/estilo.css");
+        if (cssUrl != null) {
+            scene.getStylesheets().add(cssUrl.toExternalForm());
+        } else {
+            System.err.println("Aviso: Arquivo CSS não encontrado. Verifique o caminho!");
+        }
+
+        scene.setFill(javafx.scene.paint.Color.web("#181818"));
+
+        stage.setScene(scene);
+        stage.setTitle("SGAuto - Autenticação");
+
+        stage.setResizable(false);
+
         stage.show();
-        stage.setMaximized(true);
+
+        stage.centerOnScreen();
     }
 
     @Override

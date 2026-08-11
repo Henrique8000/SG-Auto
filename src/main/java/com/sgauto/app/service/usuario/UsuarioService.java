@@ -1,12 +1,18 @@
 package com.sgauto.app.service.usuario;
 
+import com.sgauto.app.controller.dto.usuario.FiltroUsuarioDTO;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.repository.FuncionarioRepository;
+import com.sgauto.app.repository.specifications.usuario.UsuarioSpecification;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +50,20 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public List<Usuario> listarAtivos() {
         return usuarioRepository.findByAtivoTrue();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Usuario> buscar(FiltroUsuarioDTO filtro, Pageable pageable) {
+        Specification<Usuario> spec = UsuarioSpecification.comFiltro(
+                filtro.termo(), filtro.perfilId(), filtro.ativo());
+
+        Page<Usuario> pagina = usuarioRepository.findAll(spec, pageable);
+
+        pagina.getContent().forEach(usuario -> {
+            Hibernate.initialize(usuario.getPerfil());
+        });
+
+        return pagina;
     }
 
     @Transactional

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<HBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.PaginacaoController"
+      spacing="12" alignment="CENTER_LEFT">
+    <padding><Insets top="12"/></padding>
+    <Label fx:id="lblTotalRegistros" styleClass="results-count"/>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label text="Itens por página:" styleClass="form-label"/>
+    <ComboBox fx:id="cmbTamanhoPagina" styleClass="search-field"/>
+    <Button fx:id="btnAnterior" text="⟨ Anterior" styleClass="btn-secondary" onAction="#paginaAnterior"/>
+    <Label fx:id="lblPagina" styleClass="form-label"/>
+    <Button fx:id="btnProxima" text="Próxima ⟩" styleClass="btn-secondary" onAction="#proximaPagina"/>
+</HBox>

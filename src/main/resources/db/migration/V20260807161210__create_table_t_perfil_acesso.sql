@@ -10,3 +10,6 @@ CREATE TABLE t_perfil_acesso (
 
 INSERT INTO t_perfil_acesso (perfil_nome, perfil_descricao, perfil_protegido)
 VALUES ('Administrador', 'Acesso completo ao sistema, incluindo gestão de usuários.', TRUE);
+
+INSERT INTO t_perfil_acesso (perfil_nome, perfil_descricao, perfil_protegido)
+VALUES ('Operador', 'Acesso padrão às operações rotineiras do sistema.', FALSE);
