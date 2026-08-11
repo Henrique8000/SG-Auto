@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<TabPane xmlns="http://javafx.com/javafx/17.0.12"
+         xmlns:fx="http://javafx.com/fxml/1"
+         tabClosingPolicy="UNAVAILABLE"
+         styleClass="tab-pane">
+    <tabs>
+        <Tab text="Usuários">
+            <content>
+                <fx:include source="usuario.fxml"/>
+            </content>
+        </Tab>
+        <Tab text="Perfis de Acesso">
+            <content>
+                <fx:include source="perfil-acesso.fxml"/>
+            </content>
+        </Tab>
+    </tabs>
+</TabPane>

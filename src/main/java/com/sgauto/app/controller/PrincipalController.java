@@ -176,7 +176,7 @@ public class PrincipalController {
     @FXML
     private void irParaUsuarios() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/usuario.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/catalogo-usuario.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent tela = loader.load();
             mostrarTela("Usuários", "Criação e administração de perfis do sistema", tela);

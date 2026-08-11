@@ -8,6 +8,7 @@ import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.PermissaoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,7 +47,12 @@ public class PerfilAcessoService {
     @Transactional(readOnly = true)
     public Page<PerfilAcesso> buscar(FiltroPerfilAcessoDTO filtro, Pageable pageable) {
         Specification<PerfilAcesso> spec = PerfilAcessoSpecification.comFiltro(filtro.termo(), filtro.ativo());
-        return perfilAcessoRepository.findAll(spec, pageable);
+
+        Page<PerfilAcesso> pagina = perfilAcessoRepository.findAll(spec, pageable);
+
+        pagina.getContent().forEach(perfil -> Hibernate.initialize(perfil.getPermissoes()));
+
+        return pagina;
     }
 
     @Transactional

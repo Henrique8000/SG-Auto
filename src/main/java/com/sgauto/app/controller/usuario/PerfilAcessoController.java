@@ -137,7 +137,7 @@ public class PerfilAcessoController {
 
     private void abrirModal(PerfilAcesso perfilExistente) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/perfil-acesso-form.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/perfil-acesso-form.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
             Parent root = loader.load();
 
