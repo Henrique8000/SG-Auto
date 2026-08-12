@@ -3,6 +3,7 @@ package com.sgauto.app.service.usuario;
 import com.sgauto.app.controller.dto.usuario.FiltroPerfilAcessoDTO;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Permissao;
+import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.repository.specifications.usuario.PerfilAcessoSpecification;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.PermissaoRepository;
@@ -73,6 +74,11 @@ public class PerfilAcessoService {
             throw new IllegalStateException("O perfil \"" + perfil.getNome() + "\" é protegido pelo sistema e não pode ser editado.");
         }
 
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido alterar os dados dos perfis padrões (admin e operador).");
+        }
+
         validarNome(nome, id);
 
         perfil.setNome(nome.trim());
@@ -95,6 +101,11 @@ public class PerfilAcessoService {
             throw new IllegalStateException("O perfil \"" + perfil.getNome() + "\" é protegido pelo sistema e não pode ser desativado.");
         }
 
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido desativar os dados dos perfis padrões (admin e operador).");
+        }
+
         if (usuarioRepository.countByPerfilIdAndAtivoTrue(id) > 0) {
             throw new IllegalStateException("Existem usuários ativos vinculados a este perfil. Transfira-os para outro perfil antes de desativar.");
         }
@@ -112,6 +123,11 @@ public class PerfilAcessoService {
 
         if (!usuarioRepository.findByPerfilId(id).isEmpty()) {
             throw new IllegalStateException("Existem usuários vinculados a este perfil. Não é possível excluir.");
+        }
+
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido excluir os dados dos perfis padrões (admin e operador).");
         }
 
         perfilAcessoRepository.delete(perfil);
@@ -138,5 +154,15 @@ public class PerfilAcessoService {
     private PerfilAcesso buscarOuFalhar(Long id) {
         return perfilAcessoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Perfil não encontrado: " + id));
+    }
+
+    private List<Long> buscarIdAdminEOperador(){
+        PerfilAcesso admin = perfilAcessoRepository.findByNome("Administrador").orElseThrow(() -> new IllegalArgumentException("Perfil 'Administrador' não encontrado"));
+        PerfilAcesso operador = perfilAcessoRepository.findByNome("Operador").orElseThrow(() -> new IllegalArgumentException("Perfil 'Operador' não encontrado"));
+
+        Long adminId = admin.getId();
+        Long operadorId = operador.getId();
+
+        return List.of(adminId, operadorId);
     }
 }

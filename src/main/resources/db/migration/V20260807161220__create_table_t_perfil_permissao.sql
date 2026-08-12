@@ -4,5 +4,3 @@ CREATE TABLE t_perfil_permissao (
                                     PRIMARY KEY (perfil_id, permissao_id)
 );
 
-INSERT INTO t_perfil_permissao (perfil_id, permissao_id)
-SELECT (SELECT id FROM t_perfil_acesso WHERE perfil_nome = 'Administrador'), id FROM t_permissao;

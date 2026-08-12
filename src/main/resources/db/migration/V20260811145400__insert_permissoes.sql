@@ -48,7 +48,6 @@ INSERT INTO t_permissao (permissao_chave, permissao_descricao, permissao_modulo)
 
 -- MÓDULO: FINANCEIRO E CAIXA
 ('CAIXA_VISUALIZAR', 'Visualizar status e histórico de caixas', 'Financeiro'),
-('CAIXA_ABRIR', 'Realizar a abertura do caixa do dia', 'Financeiro'),
 ('CAIXA_FECHAR', 'Realizar o fechamento e conferência de caixa', 'Financeiro'),
 ('CAIXA_MOVIMENTAR', 'Lançar suprimentos, sangrias e avulsos', 'Financeiro'),
 ('FINANCEIRO_RELATORIOS', 'Acessar relatórios de faturamento e lucros', 'Financeiro'),

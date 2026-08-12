@@ -1,7 +1,10 @@
 package com.sgauto.app.controller;
 
+import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.util.ModalUtil;
 import com.sgauto.app.util.SessaoUsuario;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -26,6 +29,7 @@ public class PrincipalController {
     @FXML private ToggleGroup menuLateral;
 
     private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     @FXML private ToggleButton btnDashboard;
     @FXML private ToggleButton btnOrdens;
@@ -36,8 +40,9 @@ public class PrincipalController {
     @FXML private ToggleButton btnCaixa;
     @FXML private ToggleButton btnConfiguracoes;
 
-    public PrincipalController(ApplicationContext applicationContext) {
+    public PrincipalController(ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -176,10 +181,19 @@ public class PrincipalController {
     @FXML
     private void irParaUsuarios() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/catalogo-usuario.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Usuários", "Criação e administração de perfis do sistema", tela);
+            if(permissaoUtil.verificar(PermissaoChave.USUARIO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/catalogo-usuario.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Usuários", "Criação e administração de perfis do sistema", tela);
+            }else{
+                Alert alerta = new Alert(Alert.AlertType.WARNING);
+                alerta.setTitle("Acesso Negado");
+                alerta.setHeaderText(null);
+                alerta.setContentText("Seu usuário não possui permissão para acessar a área de Usuários");
+                alerta.showAndWait();
+            }
+
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Usuários", e);

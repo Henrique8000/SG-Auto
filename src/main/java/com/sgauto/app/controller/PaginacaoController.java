@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 @Component
+@Scope("prototype")
 public class PaginacaoController {
 
     @FXML private Label lblTotalRegistros;

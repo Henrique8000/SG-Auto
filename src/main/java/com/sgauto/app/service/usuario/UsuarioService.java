@@ -61,6 +61,7 @@ public class UsuarioService {
 
         pagina.getContent().forEach(usuario -> {
             Hibernate.initialize(usuario.getPerfil());
+            Hibernate.initialize(usuario.getFuncionario());
         });
 
         return pagina;
@@ -94,6 +95,11 @@ public class UsuarioService {
     @Transactional
     public Usuario atualizar(Long id, String nomeExibicao, String email, Long funcionarioId, Long perfilId) {
         Usuario usuario = buscarOuFalhar(id);
+
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido alterar os dados dos usuários padrões (admin e operador).");
+        }
 
         PerfilAcesso perfil = buscarPerfilOuFalhar(perfilId);
 
@@ -170,6 +176,11 @@ public class UsuarioService {
     public void redefinirSenha(Long id, String senhaTemporaria) {
         Usuario usuario = buscarOuFalhar(id);
 
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido alterar os dados dos usuários padrões (admin e operador).");
+        }
+
         validarSenha(senhaTemporaria);
 
         usuario.setSenhaHash(passwordEncoder.encode(senhaTemporaria));
@@ -188,6 +199,11 @@ public class UsuarioService {
     @Transactional
     public void desativar(Long id) {
         Usuario usuario = buscarOuFalhar(id);
+
+        List<Long> idsProtegidos = buscarIdAdminEOperador();
+        if (idsProtegidos.contains(id)) {
+            throw new IllegalArgumentException("Não é permitido alterar os dados dos usuários padrões (admin e operador).");
+        }
 
         if (Boolean.TRUE.equals(usuario.getPerfil().getProtegido())
                 && usuarioRepository.countByPerfilIdAndAtivoTrue(usuario.getPerfil().getId()) <= 1) {
@@ -229,5 +245,15 @@ public class UsuarioService {
     private Usuario buscarOuFalhar(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado: " + id));
+    }
+
+    private List<Long> buscarIdAdminEOperador(){
+        Usuario admin = usuarioRepository.findByLogin("admin").orElseThrow(() -> new IllegalArgumentException("Usuário 'admin' não encontrado"));
+        Usuario operador = usuarioRepository.findByLogin("operador").orElseThrow(() -> new IllegalArgumentException("Usuário 'operador' não encontrado"));
+
+        Long adminId = admin.getId();
+        Long operadorId = operador.getId();
+
+        return List.of(adminId, operadorId);
     }
 }
