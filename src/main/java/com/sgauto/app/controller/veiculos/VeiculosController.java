@@ -1,9 +1,12 @@
 package com.sgauto.app.controller.veiculos;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.service.ModeloService;
 import com.sgauto.app.service.VeiculoService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -45,16 +48,18 @@ public class VeiculosController {
     private final ApplicationContext applicationContext;
     private final VeiculoService veiculoService;
     private final ModeloService modeloService;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private final ObservableList<Veiculo> veiculos = FXCollections.observableArrayList();
     private List<Veiculo> todosVeiculos = List.of();
 
     public VeiculosController(ApplicationContext applicationContext,
                               VeiculoService veiculoService,
-                              ModeloService modeloService) {
+                              ModeloService modeloService, VerificaPermissaoUtil permissaoUtil) {
         this.applicationContext = applicationContext;
         this.veiculoService = veiculoService;
         this.modeloService = modeloService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -101,9 +106,30 @@ public class VeiculosController {
             {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().add("btn-table-delete");
-                btnEditar.setOnAction(e -> abrirModal(getTableView().getItems().get(getIndex())));
-                btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.VEICULO_EDITAR)) {
+                        abrirModal(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnToggle.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.VEICULO_EDITAR)) {
+                        alternarStatus(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.VEICULO_EXCLUIR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
 
             @Override
@@ -181,7 +207,11 @@ public class VeiculosController {
 
     @FXML
     private void abrirModalNovoVeiculo() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.VEICULO_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModal(Veiculo veiculoExistente) {

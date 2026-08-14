@@ -1,12 +1,15 @@
 package com.sgauto.app.controller.funcionario;
 
 import com.sgauto.app.enums.CargoFuncionario;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.StatusFuncionario;
 import com.sgauto.app.enums.TipoContratoFuncionario;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.service.FuncionarioService;
 import com.sgauto.app.util.AutoCompleteComboBox;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,6 +60,7 @@ public class FuncionarioController {
     private final FuncionarioService funcionarioService;
     private final ApplicationContext applicationContext;
     private final ObservableList<Funcionario> funcionariosExibidos = FXCollections.observableArrayList();
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private List<Funcionario> todosFuncionarios = List.of();
     private AutoCompleteComboBox autoCompleteCargo;
@@ -66,9 +70,10 @@ public class FuncionarioController {
     private static final String ORD_ADMISSAO_RECENTE = "Admissão (mais recente)";
     private static final String ORD_ADMISSAO_ANTIGA = "Admissão (mais antiga)";
 
-    public FuncionarioController(FuncionarioService funcionarioService, ApplicationContext applicationContext) {
+    public FuncionarioController(FuncionarioService funcionarioService, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.funcionarioService = funcionarioService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -164,10 +169,32 @@ public class FuncionarioController {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().add("btn-table-action");
                 btnRestaurar.getStyleClass().add("btn-table-toggle-off");
+
                 btnPerfil.setOnAction(e -> exibirPerfil(getTableView().getItems().get(getIndex())));
-                btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
-                btnRestaurar.setOnAction(e -> restaurar(getTableView().getItems().get(getIndex())));
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EDITAR)) {
+                        abrirModalEdicao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EXCLUIR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnRestaurar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EDITAR)) {
+                        restaurar(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -268,11 +295,19 @@ public class FuncionarioController {
 
     @FXML
     private void abrirModalNovoFuncionario() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModalEdicao(Funcionario funcionario) {
-        abrirModal(funcionario);
+        if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EDITAR)) {
+            abrirModal(funcionario);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModal(Funcionario funcionarioExistente) {
@@ -350,18 +385,22 @@ public class FuncionarioController {
 
     @FXML
     private void abrirModalAvancadas() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario-configuracoes-avancadas-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_OPCOES_AVANCADAS)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario-configuracoes-avancadas-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Funcionários",
-                    tabelaFuncionarios.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Funcionários",
+                        tabelaFuncionarios.getScene().getWindow());
+                modal.showAndWait();
 
-            carregarDados();
-        } catch (java.io.IOException e) {
-            throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+                carregarDados();
+            } catch (java.io.IOException e) {
+                throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 }

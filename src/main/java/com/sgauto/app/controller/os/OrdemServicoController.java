@@ -1,10 +1,13 @@
 package com.sgauto.app.controller.os;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.service.OrdemServicoService;
 import com.sgauto.app.service.PatioService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -57,6 +60,7 @@ public class OrdemServicoController {
     private final PatioService patioService;
     private final ApplicationContext applicationContext;
     private final ObservableList<OrdemServico> osExibidas = FXCollections.observableArrayList();
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private List<OrdemServico> todasOs = List.of();
 
@@ -66,10 +70,11 @@ public class OrdemServicoController {
     private static final String ORD_MAIOR_VALOR = "Maior valor";
     private static final String ORD_PREVISAO = "Previsão mais próxima";
 
-    public OrdemServicoController(OrdemServicoService ordemServicoService, PatioService patioService, ApplicationContext applicationContext) {
+    public OrdemServicoController(OrdemServicoService ordemServicoService, PatioService patioService, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.ordemServicoService = ordemServicoService;
         this.patioService = patioService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -128,7 +133,13 @@ public class OrdemServicoController {
             private final Button btnAbrir = new Button("Abrir");
             {
                 btnAbrir.getStyleClass().add("btn-table-action");
-                btnAbrir.setOnAction(e -> abrirDetalhe(getTableView().getItems().get(getIndex())));
+                btnAbrir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.OS_VISUALIZAR)) {
+                        abrirDetalhe(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -239,22 +250,26 @@ public class OrdemServicoController {
 
     @FXML
     private void abrirModalNovaOs() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/nova-os-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.OS_CRIAR)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/nova-os-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            NovaOsModalController controller = loader.getController();
-            controller.configurar(osId -> {
-                carregarDados();
-                abrirDetalhePorId(osId);
-            });
+                NovaOsModalController controller = loader.getController();
+                controller.configurar(osId -> {
+                    carregarDados();
+                    abrirDetalhePorId(osId);
+                });
 
-            Stage modal = ModalUtil.abrir(root, "Nova Ordem de Serviço", tabelaOs.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Nova Ordem de Serviço", tabelaOs.getScene().getWindow());
+                modal.showAndWait();
 
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir nova O.S.", e);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir nova O.S.", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 

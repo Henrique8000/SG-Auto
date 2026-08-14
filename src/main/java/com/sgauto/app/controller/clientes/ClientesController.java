@@ -1,10 +1,13 @@
 package com.sgauto.app.controller.clientes;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.ClientePF;
 import com.sgauto.app.model.ClientePJ;
 import com.sgauto.app.service.ClienteService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -42,13 +45,15 @@ public class ClientesController {
 
     private final ApplicationContext applicationContext;
     private final ClienteService clienteService;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private final ObservableList<Cliente> clientes = FXCollections.observableArrayList();
     private List<Cliente> todosClientes = List.of();
 
-    public ClientesController(ApplicationContext applicationContext, ClienteService clienteService) {
+    public ClientesController(ApplicationContext applicationContext, ClienteService clienteService, VerificaPermissaoUtil permissaoUtil) {
         this.applicationContext = applicationContext;
         this.clienteService = clienteService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -67,7 +72,6 @@ public class ClientesController {
         colEmail.setCellValueFactory(data -> new SimpleStringProperty(
                 data.getValue().getEmail() == null || data.getValue().getEmail().isBlank() ? "—" : data.getValue().getEmail()));
 
-        // Status com badge (mesmo visual das outras telas)
         colStatus.setCellValueFactory(data -> new javafx.beans.property.SimpleObjectProperty<>(data.getValue().getAtivo()));
         colStatus.setCellFactory(coluna -> new TableCell<>() {
             private final Label badge = new Label();
@@ -95,9 +99,30 @@ public class ClientesController {
             {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().add("btn-table-delete");
-                btnEditar.setOnAction(e -> abrirModal(getTableView().getItems().get(getIndex())));
-                btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.CLIENTE_EDITAR)) {
+                        abrirModal(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnToggle.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.CLIENTE_EDITAR)) {
+                        alternarStatus(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.CLIENTE_EXCLUIR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
 
             @Override
@@ -172,7 +197,11 @@ public class ClientesController {
 
     @FXML
     private void abrirModalNovoCliente() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.CLIENTE_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModal(Cliente clienteExistente) {

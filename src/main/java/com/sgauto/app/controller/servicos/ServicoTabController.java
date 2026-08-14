@@ -1,10 +1,13 @@
 package com.sgauto.app.controller.servicos;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.service.CategoriaService;
 import com.sgauto.app.service.ServicoService;
 import com.sgauto.app.util.AutoCompleteComboBox;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -51,6 +54,7 @@ public class ServicoTabController {
     private final CategoriaService categoriaService;
     private final ApplicationContext applicationContext;
     private final ObservableList<Servico> servicos = FXCollections.observableArrayList();
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private static final String ORD_NOME_AZ = "Nome (A-Z)";
     private static final String ORD_NOME_ZA = "Nome (Z-A)";
@@ -59,10 +63,11 @@ public class ServicoTabController {
     private AutoCompleteComboBox autoCompleteCategoria;
 
     public ServicoTabController(ServicoService servicoService, CategoriaService categoriaService,
-                                ApplicationContext applicationContext) {
+                                ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.servicoService = servicoService;
         this.categoriaService = categoriaService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -85,18 +90,22 @@ public class ServicoTabController {
 
     @FXML
     private void abrirModalAvancadas() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/servico-configuracoes-avancadas-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/servico-configuracoes-avancadas-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Serviços",
-                    tabelaServicos.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Serviços",
+                        tabelaServicos.getScene().getWindow());
+                modal.showAndWait();
 
-            carregarDados();
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+                carregarDados();
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 
@@ -146,9 +155,30 @@ public class ServicoTabController {
             {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().add("btn-table-action");
-                btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
-                btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+                        abrirModalEdicao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnToggle.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+                        alternarStatus(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -239,7 +269,11 @@ public class ServicoTabController {
 
     @FXML
     private void abrirModalNovoServico() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModalEdicao(Servico servico) {

@@ -2,6 +2,7 @@ package com.sgauto.app.controller;
 
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
 import com.sgauto.app.util.SessaoUsuario;
 import com.sgauto.app.util.VerificaPermissaoUtil;
@@ -66,10 +67,15 @@ public class PrincipalController {
     @FXML
     private void irParaOrdens() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/ordem-servico.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Ordem de Serviços", "Cadastro e histórico de ordens de serviço", tela);
+            if(permissaoUtil.verificar(PermissaoChave.OS_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/ordem-servico.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Ordem de Serviços", "Cadastro e histórico de ordens de serviço", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de OS", e);
@@ -79,10 +85,15 @@ public class PrincipalController {
     @FXML
     private void irParaClientes() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes/clientes.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Clientes", "Cadastro e histórico de clientes", tela);
+            if(permissaoUtil.verificar(PermissaoChave.CLIENTE_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes/clientes.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Clientes", "Cadastro e histórico de clientes", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Clientes", e);
@@ -92,10 +103,15 @@ public class PrincipalController {
     @FXML
     private void irParaVeiculos() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/veiculos/veiculos.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Veículos", "Cadastro e visualização de Veículos", tela);
+            if(permissaoUtil.verificar(PermissaoChave.VEICULO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/veiculos/veiculos.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Veículos", "Cadastro e visualização de Veículos", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Veículos", e);
@@ -105,10 +121,15 @@ public class PrincipalController {
     @FXML
     private void irParaCatalogoServicos() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/catalogo-servico.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
+            if(permissaoUtil.verificar(PermissaoChave.SERVICO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/catalogo-servico.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Catálogo de Serviços", e);
@@ -118,10 +139,15 @@ public class PrincipalController {
     @FXML
     private void irParaFuncionarios() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Funcionários", "Cadastro e gestão de funcionários", tela);
+            if(permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Funcionários", "Cadastro e gestão de funcionários", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Funcionários", e);
         }
@@ -130,10 +156,15 @@ public class PrincipalController {
     @FXML
     private void irParaPatioAtual() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/catalogo-patio.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Pátio", "Veículos no pátio, tarifas e motivos de estadia", tela);
+            if(permissaoUtil.verificar(PermissaoChave.PATIO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/catalogo-patio.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Pátio", "Veículos no pátio, tarifas e motivos de estadia", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         } catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Pátio", e);
         }
@@ -142,10 +173,15 @@ public class PrincipalController {
     @FXML
     private void irParaEstoque() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/catalogo-estoque.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Estoque", "Peças e controle de estoque", tela);
+            if(permissaoUtil.verificar(PermissaoChave.PECA_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/catalogo-estoque.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Estoque", "Peças e controle de estoque", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Estoque", e);
@@ -155,10 +191,15 @@ public class PrincipalController {
     @FXML
     private void irParaCaixa() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/caixa.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
+            if(permissaoUtil.verificar(PermissaoChave.CAIXA_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/caixa.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Caixa", e);
@@ -168,10 +209,16 @@ public class PrincipalController {
     @FXML
     private void irParaConfiguracoes() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/configuracoes/configuracoes.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent tela = loader.load();
-            mostrarTela("Configurações", "Preferências do sistema", tela);
+            if(permissaoUtil.verificar(PermissaoChave.CONFIGURACOES_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/configuracoes/configuracoes.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Configurações", "Preferências do sistema", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
+
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Configurações", e);
@@ -187,11 +234,7 @@ public class PrincipalController {
                 Parent tela = loader.load();
                 mostrarTela("Usuários", "Criação e administração de perfis do sistema", tela);
             }else{
-                Alert alerta = new Alert(Alert.AlertType.WARNING);
-                alerta.setTitle("Acesso Negado");
-                alerta.setHeaderText(null);
-                alerta.setContentText("Seu usuário não possui permissão para acessar a área de Usuários");
-                alerta.showAndWait();
+                ExibirMensagemBloqueioUtil.exibir();
             }
 
         }

@@ -2,6 +2,7 @@ INSERT INTO t_permissao (permissao_chave, permissao_descricao, permissao_modulo)
 -- MÓDULO: USUÁRIOS E SEGURANÇA
 ('USUARIO_VISUALIZAR', 'Visualizar listagem e detalhes de usuários', 'Segurança'),
 ('USUARIO_CRIAR', 'Cadastrar novos usuários no sistema', 'Segurança'),
+('USUARIO_ALTERAR_SENHA', 'Solicitar alteração de senhas de usuários existentes', 'Segurança'),
 ('USUARIO_EDITAR', 'Editar dados de usuários existentes', 'Segurança'),
 ('USUARIO_EXCLUIR', 'Desativar ou excluir usuários', 'Segurança'),
 ('PERFIL_VISUALIZAR', 'Visualizar perfis de acesso', 'Segurança'),
@@ -22,12 +23,15 @@ INSERT INTO t_permissao (permissao_chave, permissao_descricao, permissao_modulo)
 ('FUNCIONARIO_CRIAR', 'Cadastrar novos funcionários', 'RH'),
 ('FUNCIONARIO_EDITAR', 'Editar dados e salários de funcionários', 'RH'),
 ('FUNCIONARIO_EXCLUIR', 'Demitir ou excluir funcionários', 'RH'),
+('FUNCIONARIO_OPCOES_AVANCADAS', 'Acessar o menu de Opções Avançadas', 'RH'),
 
 -- MÓDULO: CATÁLOGO E ESTOQUE
 ('PECA_VISUALIZAR', 'Visualizar catálogo e saldo de peças', 'Estoque'),
 ('PECA_CRIAR', 'Cadastrar novas peças no estoque', 'Estoque'),
 ('PECA_EDITAR', 'Editar informações, custos e preços de peças', 'Estoque'),
 ('PECA_EXCLUIR', 'Excluir peças do catálogo', 'Estoque'),
+('MODELOS_CRIAR', 'Criar novos modelos', 'Estoque'),
+('MODELOS_EDITAR', 'Editar modelos já existentes', 'Estoque'),
 ('SERVICO_VISUALIZAR', 'Visualizar tabela de serviços prestados', 'Estoque'),
 ('SERVICO_GERENCIAR', 'Criar, editar e remover serviços e tempos padrão', 'Estoque'),
 ('CATEGORIA_GERENCIAR', 'Gerenciar categorias e modelos de veículos/peças', 'Estoque'),
@@ -50,7 +54,7 @@ INSERT INTO t_permissao (permissao_chave, permissao_descricao, permissao_modulo)
 ('CAIXA_VISUALIZAR', 'Visualizar status e histórico de caixas', 'Financeiro'),
 ('CAIXA_FECHAR', 'Realizar o fechamento e conferência de caixa', 'Financeiro'),
 ('CAIXA_MOVIMENTAR', 'Lançar suprimentos, sangrias e avulsos', 'Financeiro'),
-('FINANCEIRO_RELATORIOS', 'Acessar relatórios de faturamento e lucros', 'Financeiro'),
+('CAIXA_FINANCEIRO_RELATORIOS', 'Acessar relatórios de faturamento e lucros', 'Financeiro'),
 
 -- MÓDULO: FINANCEIRO E CAIXA
 ('CONFIGURACOES_VISUALIZAR', 'Visualizar tela de configurações', 'Sistema'),

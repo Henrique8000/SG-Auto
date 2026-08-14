@@ -2,12 +2,15 @@ package com.sgauto.app.controller.usuario;
 
 import com.sgauto.app.controller.PaginacaoController;
 import com.sgauto.app.controller.dto.usuario.FiltroUsuarioDTO;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.service.usuario.PerfilAcessoService;
 import com.sgauto.app.service.usuario.UsuarioService;
 import com.sgauto.app.util.AutoCompleteComboBox;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,16 +51,18 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final PerfilAcessoService perfilAcessoService;
     private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
     private final ObservableList<Usuario> usuariosExibidos = FXCollections.observableArrayList();
 
     private Map<String, Long> mapaPerfisFiltro = Map.of();
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public UsuarioController(UsuarioService usuarioService, PerfilAcessoService perfilAcessoService,
-                             ApplicationContext applicationContext) {
+                             ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.usuarioService = usuarioService;
         this.perfilAcessoService = perfilAcessoService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -113,19 +118,31 @@ public class UsuarioController {
             }
         });
 
+        boolean podeEditar = permissaoUtil.verificar(PermissaoChave.USUARIO_EDITAR);
+        boolean podeAlterarSenha = permissaoUtil.verificar(PermissaoChave.USUARIO_ALTERAR_SENHA);
+        boolean podeExcluir = permissaoUtil.verificar(PermissaoChave.USUARIO_EXCLUIR);
+
         colAcoes.setCellFactory(coluna -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
             private final Button btnResetarSenha = new Button("Redefinir Senha");
             private final Button btnToggle = new Button();
             private final javafx.scene.layout.HBox container = new javafx.scene.layout.HBox(6);
+
             {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnResetarSenha.getStyleClass().add("btn-table-action");
+
+                btnEditar.setDisable(!podeEditar);
+                btnResetarSenha.setDisable(!podeAlterarSenha);
+                btnToggle.setDisable(!podeExcluir);
+
                 btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
                 btnResetarSenha.setOnAction(e -> abrirModalResetSenha(getTableView().getItems().get(getIndex())));
                 btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
+
                 container.getChildren().addAll(btnEditar, btnResetarSenha, btnToggle);
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -167,11 +184,19 @@ public class UsuarioController {
 
     @FXML
     private void abrirModalNovoUsuario() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.USUARIO_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModalEdicao(Usuario usuario) {
-        abrirModal(usuario);
+        if (permissaoUtil.verificar(PermissaoChave.USUARIO_EDITAR)) {
+            abrirModal(usuario);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModal(Usuario usuarioExistente) {
@@ -194,15 +219,19 @@ public class UsuarioController {
 
     private void abrirModalResetSenha(Usuario usuario) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/usuario-resetar-senha-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+            if (permissaoUtil.verificar(PermissaoChave.USUARIO_ALTERAR_SENHA)) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/usuario-resetar-senha-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            UsuarioResetarSenhaModalController controller = loader.getController();
-            controller.configurar(usuario, () -> carregarPagina(0));
+                UsuarioResetarSenhaModalController controller = loader.getController();
+                controller.configurar(usuario, () -> carregarPagina(0));
 
-            Stage modal = ModalUtil.abrir(root, "Redefinir Senha", tabelaUsuarios.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Redefinir Senha", tabelaUsuarios.getScene().getWindow());
+                modal.showAndWait();
+            } else {
+                ExibirMensagemBloqueioUtil.exibir();
+            }
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao abrir redefinição de senha", e);
@@ -211,12 +240,17 @@ public class UsuarioController {
 
     private void alternarStatus(Usuario usuario) {
         try {
-            if (Boolean.TRUE.equals(usuario.getAtivo())) {
-                usuarioService.desativar(usuario.getId());
+            if (permissaoUtil.verificar(PermissaoChave.USUARIO_EXCLUIR)) {
+                if (Boolean.TRUE.equals(usuario.getAtivo())) {
+                    usuarioService.desativar(usuario.getId());
+                } else {
+                    usuarioService.ativar(usuario.getId());
+                }
+                carregarPagina(0);
             } else {
-                usuarioService.ativar(usuario.getId());
+                ExibirMensagemBloqueioUtil.exibir();
             }
-            carregarPagina(0);
+
         } catch (IllegalStateException e) {
             Alert alerta = new Alert(Alert.AlertType.WARNING);
             alerta.setTitle("Não é possível alterar o status");

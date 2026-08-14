@@ -2,17 +2,19 @@
 
 <?import javafx.scene.control.*?>
 
-<TabPane xmlns="http://javafx.com/javafx/17.0.12"
+<TabPane fx:id="tabPanePrincipal"
+         xmlns="http://javafx.com/javafx/17.0.12"
          xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="com.sgauto.app.controller.usuario.CatalogoUsuarioController"
          tabClosingPolicy="UNAVAILABLE"
          styleClass="tab-pane">
     <tabs>
-        <Tab text="Usuários">
+        <Tab fx:id="tabUsuarios" text="Usuários">
             <content>
                 <fx:include source="usuario.fxml"/>
             </content>
         </Tab>
-        <Tab text="Perfis de Acesso">
+        <Tab fx:id="tabPerfis" text="Perfis de Acesso">
             <content>
                 <fx:include source="perfil-acesso.fxml"/>
             </content>

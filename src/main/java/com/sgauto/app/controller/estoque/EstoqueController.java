@@ -1,9 +1,12 @@
 package com.sgauto.app.controller.estoque;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Peca;
 import com.sgauto.app.service.EstoqueService;
 import com.sgauto.app.util.AutoCompleteComboBox;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,15 +56,17 @@ public class EstoqueController {
     private final ApplicationContext applicationContext;
     private final ObservableList<Peca> pecas = FXCollections.observableArrayList();
     private AutoCompleteComboBox autoCompleteModelo;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private static final String ORD_DESC_AZ = "Descrição (A-Z)";
     private static final String ORD_DESC_ZA = "Descrição (Z-A)";
     private static final String ORD_ESTOQUE_MENOR = "Estoque (menor primeiro)";
     private static final String ORD_ESTOQUE_MAIOR = "Estoque (maior primeiro)";
 
-    public EstoqueController(EstoqueService estoqueService, ApplicationContext applicationContext) {
+    public EstoqueController(EstoqueService estoqueService, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.estoqueService = estoqueService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -84,18 +89,22 @@ public class EstoqueController {
 
     @FXML
     private void abrirModalAvancadas() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/estoque-configuracoes-avancadas-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/estoque-configuracoes-avancadas-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Estoque",
-                    tabelaPecas.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Configurações Avançadas — Estoque",
+                        tabelaPecas.getScene().getWindow());
+                modal.showAndWait();
 
-            carregarDados();
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+                carregarDados();
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir configurações avançadas", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 
@@ -139,9 +148,30 @@ public class EstoqueController {
                 btnMovimentar.getStyleClass().add("btn-table-action");
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().addAll("btn-table-action", "btn-table-danger");
-                btnMovimentar.setOnAction(e -> abrirMovimentacao(getTableView().getItems().get(getIndex())));
-                btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
+
+                btnMovimentar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+                        abrirMovimentacao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+                        abrirModalEdicao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.PECA_EXCLUIR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -236,7 +266,11 @@ public class EstoqueController {
 
     @FXML
     private void abrirModalNovaPeca() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.PECA_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModalEdicao(Peca peca) {
