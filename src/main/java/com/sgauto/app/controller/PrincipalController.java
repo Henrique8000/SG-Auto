@@ -218,7 +218,6 @@ public class PrincipalController {
             else{
                 ExibirMensagemBloqueioUtil.exibir();
             }
-
         }
         catch (IOException e) {
             throw new RuntimeException("Erro ao carregar tela de Configurações", e);
