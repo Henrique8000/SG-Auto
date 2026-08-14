@@ -1,4 +1,4 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.configuracoes;
 
 import com.sgauto.app.enums.ModoConferencia;
 import com.sgauto.app.enums.PermissaoChave;
