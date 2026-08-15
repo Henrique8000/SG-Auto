@@ -3,10 +3,13 @@ package com.sgauto.app.controller.patio;
 import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.controller.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.controller.dto.patio.PatioResumoDashboardDTO;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.patio.MotivoEstadia;
 import com.sgauto.app.service.MotivoEstadiaService;
 import com.sgauto.app.service.PatioService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,6 +70,7 @@ public class PatioAtualTabController {
     private final PatioService patioService;
     private final MotivoEstadiaService motivoEstadiaService;
     private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
     private final ObservableList<PatioItemDashboardDTO> itens = FXCollections.observableArrayList();
 
     private Map<String, Long> mapaMotivos = Map.of();
@@ -74,10 +78,11 @@ public class PatioAtualTabController {
     private int totalPaginas = 1;
 
     public PatioAtualTabController(PatioService patioService, MotivoEstadiaService motivoEstadiaService,
-                                   ApplicationContext applicationContext) {
+                                   ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.patioService = patioService;
         this.motivoEstadiaService = motivoEstadiaService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -204,35 +209,44 @@ public class PatioAtualTabController {
 
     @FXML
     private void abrirModalEntradaManual() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/entrada-patio-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.PATIO_ENTRADA)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/entrada-patio-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            EntradaPatioModalController controller = loader.getController();
-            controller.configurar(this::recarregarTudo);
+                EntradaPatioModalController controller = loader.getController();
+                controller.configurar(this::recarregarTudo);
 
-            Stage modal = ModalUtil.abrir(root, "Nova Entrada no Pátio", tabelaPatio.getScene().getWindow());
-            modal.showAndWait();
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir entrada manual de pátio", e);
+                Stage modal = ModalUtil.abrir(root, "Nova Entrada no Pátio", tabelaPatio.getScene().getWindow());
+                modal.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir entrada manual de pátio", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 
     private void abrirModalSaida(PatioItemDashboardDTO item) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/saida-patio-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if(permissaoUtil.verificar(PermissaoChave.PATIO_SAIDA)){
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/saida-patio-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            SaidaPatioModalController controller = loader.getController();
-            controller.configurar(item.getEstadiaId(), this::recarregarTudo);
+                SaidaPatioModalController controller = loader.getController();
+                controller.configurar(item.getEstadiaId(), this::recarregarTudo);
 
-            Stage modal = ModalUtil.abrir(root, "Dar Saída — Placa " + item.getPlaca(), tabelaPatio.getScene().getWindow());
-            modal.showAndWait();
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir saída de pátio", e);
+                Stage modal = ModalUtil.abrir(root, "Dar Saída — Placa " + item.getPlaca(), tabelaPatio.getScene().getWindow());
+                modal.showAndWait();
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir saída de pátio", e);
+            }
+        }else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
+
     }
 
     private void editarLocalizacao(PatioItemDashboardDTO item) {

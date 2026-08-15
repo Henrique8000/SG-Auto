@@ -1,8 +1,11 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.configuracoes;
 
 import com.sgauto.app.enums.ModoConferencia;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.ConfiguracaoCaixa;
 import com.sgauto.app.service.ConfiguracaoCaixaService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -19,10 +22,12 @@ public class ConfiguracoesController {
     @FXML private Label lblMensagem;
 
     private final ConfiguracaoCaixaService configuracaoCaixaService;
+    private final VerificaPermissaoUtil permissaoUtil;
     private ModoConferencia modoOriginal;
 
-    public ConfiguracoesController(ConfiguracaoCaixaService configuracaoCaixaService) {
+    public ConfiguracoesController(ConfiguracaoCaixaService configuracaoCaixaService, VerificaPermissaoUtil permissaoUtil) {
         this.configuracaoCaixaService = configuracaoCaixaService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -39,6 +44,11 @@ public class ConfiguracoesController {
 
     @FXML
     private void salvar() {
+        if(!permissaoUtil.verificar(PermissaoChave.CONFIGURACOES_EDITAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         ModoConferencia modoSelecionado = obterModoSelecionado();
 
         if (modoSelecionado == modoOriginal) {

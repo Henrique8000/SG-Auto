@@ -1,8 +1,11 @@
 package com.sgauto.app.controller.estoque;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Modelo;
 import com.sgauto.app.service.ModeloService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -44,10 +47,12 @@ public class ModeloTabController {
     private final ModeloService modeloService;
     private final ApplicationContext applicationContext;
     private final ObservableList<Modelo> modelos = FXCollections.observableArrayList();
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ModeloTabController(ModeloService modeloService, ApplicationContext applicationContext) {
+    public ModeloTabController(ModeloService modeloService, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.modeloService = modeloService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -107,9 +112,30 @@ public class ModeloTabController {
             {
                 btnEditar.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().add("btn-table-action");
-                btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
-                btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
-                btnExcluir.setOnAction(e -> confirmarExclusao(getTableView().getItems().get(getIndex())));
+
+                btnEditar.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+                        abrirModalEdicao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnToggle.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+                        alternarStatus(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
+
+                btnExcluir.setOnAction(e -> {
+                    if (permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+                        confirmarExclusao(getTableView().getItems().get(getIndex()));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibir();
+                    }
+                });
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -167,7 +193,11 @@ public class ModeloTabController {
 
     @FXML
     private void abrirModalNovoModelo() {
-        abrirModal(null);
+        if (permissaoUtil.verificar(PermissaoChave.MODELOS_CRIAR)) {
+            abrirModal(null);
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
+        }
     }
 
     private void abrirModalEdicao(Modelo modelo) {

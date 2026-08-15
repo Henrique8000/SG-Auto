@@ -1,9 +1,6 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.StatusOS;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.*;
 import com.sgauto.app.model.*;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.OrdemServico.OsPagamento;
@@ -13,6 +10,7 @@ import com.sgauto.app.repository.*;
 import com.sgauto.app.repository.OrdemServico.OsPagamentoRepository;
 import com.sgauto.app.repository.OrdemServico.OsPecaRepository;
 import com.sgauto.app.repository.OrdemServico.OsServicoRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
@@ -38,6 +36,7 @@ public class OrdemServicoService {
     private final PatioService patioService;
     private final EstoqueService estoqueService;
     private final CaixaService caixaService;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     // CONSTRUTOR MANUAL (Substitui o @RequiredArgsConstructor do Lombok)
     // O Spring injeta automaticamente as dependências aqui.
@@ -51,7 +50,7 @@ public class OrdemServicoService {
                                PecaRepository pecaRepository,
                                ServicoRepository servicoRepository,
                                EstoqueService estoqueService,
-                               CaixaService caixaService, PatioService patioService) {
+                               CaixaService caixaService, PatioService patioService, VerificaPermissaoUtil permissaoUtil) {
         this.ordemServicoRepository = ordemServicoRepository;
         this.osPecaRepository = osPecaRepository;
         this.osServicoRepository = osServicoRepository;
@@ -64,6 +63,7 @@ public class OrdemServicoService {
         this.estoqueService = estoqueService;
         this.caixaService = caixaService;
         this.patioService = patioService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     List<StatusOS> status = List.of(
@@ -80,6 +80,10 @@ public class OrdemServicoService {
     public OrdemServico criarOS(Long clienteId, Long veiculoId, Long funcionarioId,
                                 String sintomasRelatados, LocalDateTime dataPrevisao,
                                 boolean ficarNoPatio) {
+        if (!permissaoUtil.verificar(PermissaoChave.OS_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para criar O.S.");
+        }
+
         if(clienteId == null || veiculoId == null || funcionarioId == null)
             throw new IllegalArgumentException("É necessário preencher todos os campos para a criação de uma OS.");
 
@@ -117,6 +121,19 @@ public class OrdemServicoService {
 
     @Transactional
     public OrdemServico alterarStatus(Long osId, StatusOS novoStatus) {
+        if (novoStatus == StatusOS.CANCELADA) {
+            cancelarOS(osId);
+            return buscarPorId(osId);
+        }
+
+        if (novoStatus == StatusOS.FINALIZADA && !permissaoUtil.verificar(PermissaoChave.OS_FINALIZAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para finalizar a O.S.");
+        } else if (novoStatus == StatusOS.CONCLUIDA && !permissaoUtil.verificar(PermissaoChave.OS_APROVAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para concluir a O.S.");
+        } else if (novoStatus != StatusOS.FINALIZADA && novoStatus != StatusOS.CONCLUIDA && !permissaoUtil.verificar(PermissaoChave.OS_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para alterar o status da O.S.");
+        }
+
         if(osId == null || novoStatus == null)
             throw new IllegalArgumentException("É necessário o envio do Id da OS e um novo Status para atualização");
 
@@ -164,6 +181,10 @@ public class OrdemServicoService {
 
     @Transactional
     public void cancelarOS(Long osId) {
+        if (!permissaoUtil.verificar(PermissaoChave.OS_CANCELAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cancelar O.S.");
+        }
+
         if(osId == null)
             throw new IllegalArgumentException("É necessário o envio do Id da OS para cancelamento.");
 
@@ -192,6 +213,10 @@ public class OrdemServicoService {
 
     @Transactional
     public OsPagamento registrarPagamento(Long osId, FormaPagamento formaPagamento, BigDecimal valor) {
+        if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar pagamento de O.S.");
+        }
+
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do pagamento deve ser maior que zero.");
         }
@@ -240,6 +265,10 @@ public class OrdemServicoService {
 
     @Transactional
     public OsPeca adicionarPeca(Long osId, Long pecaId, Integer quantidade) {
+        if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para adicionar peças na O.S.");
+        }
+
         if (quantidade == null || quantidade <= 0) {
             throw new IllegalArgumentException("A quantidade da peça deve ser maior que zero.");
         }
@@ -274,6 +303,10 @@ public class OrdemServicoService {
 
     @Transactional
     public void removerPeca(Long osId, Long osPecaId) {
+        if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para remover peças na O.S.");
+        }
+
         OrdemServico os = ordemServicoRepository.findById(osId)
                 .orElseThrow(() -> new EntityNotFoundException("OS não encontrada."));
         validarEdicao(os);
@@ -295,6 +328,10 @@ public class OrdemServicoService {
 
     @Transactional
     public OsServico adicionarServico(Long osId, Long servicoId, Integer quantidade) {
+        if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para adicionar serviços na O.S.");
+        }
+
         if (quantidade == null || quantidade <= 0) {
             throw new IllegalArgumentException("A quantidade do serviço deve ser maior que zero.");
         }
@@ -331,6 +368,10 @@ public class OrdemServicoService {
 
     @Transactional
     public void removerServico(Long osId, Long osServicoId) {
+        if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para remover serviços na O.S.");
+        }
+
         OrdemServico os = ordemServicoRepository.findById(osId)
                 .orElseThrow(() -> new EntityNotFoundException("OS não encontrada."));
         validarEdicao(os);

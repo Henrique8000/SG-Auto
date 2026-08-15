@@ -1,12 +1,14 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.enums.CampoPreco;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Modelo;
 import com.sgauto.app.model.Peca;
 import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ModeloRepository;
 import com.sgauto.app.repository.PecaRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +20,19 @@ public class EstoqueService {
 
     private final PecaRepository pecaRepository;
     private final ModeloRepository modeloRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public EstoqueService(PecaRepository pecaRepository, ModeloRepository modeloRepository) {
+    public EstoqueService(PecaRepository pecaRepository, ModeloRepository modeloRepository, VerificaPermissaoUtil permissaoUtil) {
         this.pecaRepository = pecaRepository;
         this.modeloRepository = modeloRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Peca cadastrarPeca(Peca peca) {
+        if (!permissaoUtil.verificar(PermissaoChave.PECA_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar peças.");
+        }
         verificarCampos(peca);
         peca.setModelo(normalizarModelo(peca.getModelo()));
 
@@ -38,6 +45,9 @@ public class EstoqueService {
 
     @Transactional
     public Peca atualizar(Peca peca) {
+        if (!permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para editar peças.");
+        }
         verificarCampos(peca);
         peca.setModelo(normalizarModelo(peca.getModelo()));
 
@@ -76,6 +86,9 @@ public class EstoqueService {
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.PECA_EXCLUIR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir peças.");
+        }
         pecaRepository.deleteById(id);
     }
 
@@ -100,6 +113,9 @@ public class EstoqueService {
 
     @Transactional
     public int ajustarPrecosEmMassa(List<Long> idsPecas, TipoAjustePreco tipo, BigDecimal valor, CampoPreco campo) {
+        if (!permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualização de peças em massa.");
+        }
         if (idsPecas == null || idsPecas.isEmpty()) {
             throw new IllegalArgumentException("Selecione ao menos uma peça para ajustar.");
         }

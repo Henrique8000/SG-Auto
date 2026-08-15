@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.sgauto.app.controller.usuario.login.LoginController"
+           styleClass="root">
+
+    <VBox alignment="CENTER" maxWidth="400" maxHeight="-Infinity" spacing="32" styleClass="auth-card">
+        <padding>
+            <Insets top="40" right="40" bottom="40" left="40"/>
+        </padding>
+
+        <VBox alignment="CENTER" spacing="8">
+            <HBox alignment="CENTER">
+                <Label text="SG" styleClass="auth-logo"/>
+                <Label text="Auto" styleClass="auth-logo-accent"/>
+            </HBox>
+            <Label text="Faça login para acessar o sistema" styleClass="page-subtitle"/>
+        </VBox>
+
+        <VBox spacing="16">
+            <VBox spacing="6">
+                <Label text="USUÁRIO" styleClass="form-label"/>
+                <TextField fx:id="txtLogin" promptText="Digite seu login" styleClass="form-input"/>
+            </VBox>
+
+            <VBox spacing="6">
+                <VBox spacing="6">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="SENHA" styleClass="form-label"/>
+
+                        <Label text="ⓘ" styleClass="info-icon" style="-fx-cursor: hand; -fx-text-fill: #888888;" onMouseClicked="#mostrarInfoBloqueio">
+                            <tooltip>
+                                <Tooltip text="Limite de tentativas de acesso" />
+                            </tooltip>
+                        </Label>
+                    </HBox>
+                    <PasswordField fx:id="txtSenha" promptText="Digite sua senha" styleClass="form-input"/>
+                </VBox>
+            </VBox>
+        </VBox>
+
+        <Label fx:id="lblMensagemErro" styleClass="form-error" wrapText="true"
+               visible="false" managed="false" alignment="CENTER" textAlignment="CENTER"/>
+
+        <Button fx:id="btnEntrar" text="Entrar no Sistema" styleClass="btn-primary"
+                maxWidth="Infinity" onAction="#autenticar"/>
+
+    </VBox>
+</StackPane>

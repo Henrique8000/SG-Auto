@@ -39,7 +39,9 @@
             <Region VBox.vgrow="ALWAYS"/>
 
             <Label text="SISTEMA" styleClass="sidebar-section-label"/>
+            <ToggleButton fx:id="btnUsuarios" text="Usuários" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaUsuarios"/>
             <ToggleButton fx:id="btnConfiguracoes" text="Configurações" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaConfiguracoes"/>
+            <ToggleButton fx:id="btnLogoff" text="Logoff" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#fazerLogoff"/>
         </VBox>
     </left>
 

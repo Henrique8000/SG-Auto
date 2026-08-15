@@ -2,11 +2,14 @@ package com.sgauto.app.controller.caixa;
 
 import com.sgauto.app.controller.FechamentoCaixaModalController;
 import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.Caixa;
 import com.sgauto.app.model.CaixaMovimentacao;
 import com.sgauto.app.service.CaixaService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,13 +51,15 @@ public class CaixaController {
 
     private final CaixaService caixaService;
     private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
     private final ObservableList<CaixaMovimentacao> movimentacoes = FXCollections.observableArrayList();
 
     private static final DateTimeFormatter FORMATADOR_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public CaixaController(CaixaService caixaService, ApplicationContext applicationContext) {
+    public CaixaController(CaixaService caixaService, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.caixaService = caixaService;
         this.applicationContext = applicationContext;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -111,55 +116,67 @@ public class CaixaController {
 
     @FXML
     private void abrirModalMovimentacao() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/movimentacao-caixa-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.CAIXA_MOVIMENTAR)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/movimentacao-caixa-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            MovimentacaoCaixaModalController controller = loader.getController();
-            controller.configurar(this::carregarDados);
+                MovimentacaoCaixaModalController controller = loader.getController();
+                controller.configurar(this::carregarDados);
 
-            Stage modal = ModalUtil.abrir(root, "Nova Movimentação");
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Nova Movimentação");
+                modal.showAndWait();
 
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir movimentação de caixa", e);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir movimentação de caixa", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 
     @FXML
     private void abrirModalFechamento() {
-        try {
-            Caixa caixaAberto = caixaService.buscarCaixaAberto();
+        if (permissaoUtil.verificar(PermissaoChave.CAIXA_FECHAR)) {
+            try {
+                Caixa caixaAberto = caixaService.buscarCaixaAberto();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/fechamento-caixa-modal.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/fechamento-caixa-modal.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            FechamentoCaixaModalController controller = loader.getController();
-            controller.configurar(caixaAberto, this::carregarDados);
+                FechamentoCaixaModalController controller = loader.getController();
+                controller.configurar(caixaAberto, this::carregarDados);
 
-            Stage modal = ModalUtil.abrir(root, "Fechamento");
-            modal.showAndWait();
+                Stage modal = ModalUtil.abrir(root, "Fechamento");
+                modal.showAndWait();
 
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir fechamento de caixa", e);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir fechamento de caixa", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 
     @FXML
     private void abrirModalHistorico() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/historico-caixa.fxml"));
-            loader.setControllerFactory(applicationContext::getBean);
-            Parent root = loader.load();
+        if (permissaoUtil.verificar(PermissaoChave.CAIXA_FINANCEIRO_RELATORIOS)) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/historico-caixa.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent root = loader.load();
 
-            Stage modal = com.sgauto.app.util.ModalUtil.abrir(root, "Histórico de Fechamentos",
-                    tabelaMovimentacoes.getScene().getWindow());
-            modal.showAndWait();
+                Stage modal = com.sgauto.app.util.ModalUtil.abrir(root, "Histórico de Fechamentos",
+                        tabelaMovimentacoes.getScene().getWindow());
+                modal.showAndWait();
 
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao abrir histórico de caixa", e);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao abrir histórico de caixa", e);
+            }
+        } else {
+            ExibirMensagemBloqueioUtil.exibir();
         }
     }
 

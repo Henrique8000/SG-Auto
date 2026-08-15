@@ -1,13 +1,16 @@
 package com.sgauto.app.controller.os;
 
 import com.sgauto.app.controller.patio.SaidaPatioModalController;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.StatusEstadiaPatio;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
 import com.sgauto.app.service.OrdemServicoService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,16 +51,18 @@ public class OrdemServicoDetalheController {
     private final OrdemServicoService ordemServicoService;
     private final EstadiaPatioRepository estadiaPatioRepository;
     private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
     private Long osId;
     private Runnable aoFechar;
     private Map<String, StatusOS> mapaStatus = Map.of();
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    public OrdemServicoDetalheController(OrdemServicoService ordemServicoService,EstadiaPatioRepository estadiaPatioRepository, ApplicationContext applicationContext) {
+    public OrdemServicoDetalheController(OrdemServicoService ordemServicoService, EstadiaPatioRepository estadiaPatioRepository, ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.ordemServicoService = ordemServicoService;
         this.applicationContext = applicationContext;
         this.estadiaPatioRepository = estadiaPatioRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     public void configurar(Long osId, Runnable aoFechar) {
@@ -126,9 +131,26 @@ public class OrdemServicoDetalheController {
         StatusOS novoStatus = mapaStatus.get(cmbNovoStatus.getValue());
         if (novoStatus == null) return;
 
+        if (novoStatus == StatusOS.FINALIZADA && !permissaoUtil.verificar(PermissaoChave.OS_FINALIZAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        } else if (novoStatus == StatusOS.EM_EXECUCAO && !permissaoUtil.verificar(PermissaoChave.OS_APROVAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        } else if (novoStatus == StatusOS.CANCELADA && !permissaoUtil.verificar(PermissaoChave.OS_CANCELAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        } else if (novoStatus != StatusOS.FINALIZADA
+                && novoStatus != StatusOS.EM_EXECUCAO
+                && novoStatus != StatusOS.CANCELADA
+                && !permissaoUtil.verificar(PermissaoChave.OS_EDITAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         try {
             ordemServicoService.alterarStatus(osId, novoStatus);
-            if (novoStatus == StatusOS.CONCLUIDA || novoStatus == StatusOS.FINALIZADA) {
+            if (novoStatus == StatusOS.CONCLUIDA || novoStatus == StatusOS.FINALIZADA || novoStatus == StatusOS.CANCELADA ) {
 
                 Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
                         .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
@@ -157,6 +179,11 @@ public class OrdemServicoDetalheController {
 
     @FXML
     private void cancelarOs() {
+        if (!permissaoUtil.verificar(PermissaoChave.OS_CANCELAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacao.setTitle("Cancelar Ordem de Serviço");
         confirmacao.setHeaderText(null);
@@ -165,22 +192,22 @@ public class OrdemServicoDetalheController {
         confirmacao.showAndWait().ifPresent(botao -> {
             if (botao == ButtonType.OK) {
                 try{
-                            Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
-                                    .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
+                    Optional<EstadiaPatio> estadiaOpt = estadiaPatioRepository
+                            .findByOrdemServicoIdAndStatus(osId, StatusEstadiaPatio.NO_PATIO);
 
-                            if (estadiaOpt.isPresent()) {
-                                Alert c = new Alert(Alert.AlertType.CONFIRMATION);
-                                c.setTitle("Veículo no Pátio");
-                                c.setHeaderText("O.S. cancelada com veículo no pátio");
-                                c.setContentText("O veículo desta O.S. ainda consta no pátio da oficina.\n" +
-                                        "Deseja registrar a saída do veículo agora?");
+                    if (estadiaOpt.isPresent()) {
+                        Alert c = new Alert(Alert.AlertType.CONFIRMATION);
+                        c.setTitle("Veículo no Pátio");
+                        c.setHeaderText("O.S. cancelada com veículo no pátio");
+                        c.setContentText("O veículo desta O.S. ainda consta no pátio da oficina.\n" +
+                                "Deseja registrar a saída do veículo agora?");
 
-                                Optional<ButtonType> resposta = c.showAndWait();
+                        Optional<ButtonType> resposta = c.showAndWait();
 
-                                if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
-                                    abrirModalSaidaPatio(estadiaOpt.get());
-                                }
-                            }
+                        if (resposta.isPresent() && resposta.get() == ButtonType.OK) {
+                            abrirModalSaidaPatio(estadiaOpt.get());
+                        }
+                    }
                     ordemServicoService.cancelarOS(osId);
                     recarregar();
                 } catch (IllegalStateException e) {

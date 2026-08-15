@@ -1,10 +1,12 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ServicoRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +18,19 @@ public class ServicoService {
 
     private final ServicoRepository servicoRepository;
     private final CategoriaRepository categoriaRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ServicoService(ServicoRepository servicoRepository, CategoriaRepository categoriaRepository) {
+    public ServicoService(ServicoRepository servicoRepository, CategoriaRepository categoriaRepository, VerificaPermissaoUtil permissaoUtil) {
         this.servicoRepository = servicoRepository;
         this.categoriaRepository = categoriaRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Servico cadastrar(Servico servico) {
+        if (!permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar serviços.");
+        }
         verificarCampos(servico);
 
         String nomeFormatado = formatarNome(servico.getNome());
@@ -41,6 +48,9 @@ public class ServicoService {
 
     @Transactional
     public Servico atualizar(Servico servico) {
+        if (!permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar serviços.");
+        }
 
         verificarCampos(servico);
 
@@ -61,18 +71,30 @@ public class ServicoService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar serviços.");
+        }
+
         Servico servico = buscarOuFalhar(id);
         servico.setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar serviços.");
+        }
+
         Servico servico = buscarOuFalhar(id);
         servico.setAtivo(false);
     }
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.SERVICO_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir serviços.");
+        }
+
         Servico servico = buscarOuFalhar(id);
         if (estaEmUso(id)) {
             throw new IllegalStateException("Não é possível excluir: este serviço está vinculado a uma ou mais Ordens de Serviço.");

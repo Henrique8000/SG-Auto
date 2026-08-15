@@ -2,19 +2,20 @@
 
 <?import javafx.scene.control.*?>
 
-<TabPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-         tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane">
+<TabPane fx:id="tabPanePatio" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+         tabClosingPolicy="UNAVAILABLE" styleClass="tab-pane"
+         fx:controller="com.sgauto.app.controller.patio.PatioCatalogoController">
     <tabs>
-        <Tab text="Pátio Atual">
+        <Tab fx:id="tabPatioAtual" text="Pátio Atual">
             <content><fx:include source="patio-atual-tab.fxml"/></content>
         </Tab>
-        <Tab text="Histórico">
+        <Tab fx:id="tabHistorico" text="Histórico">
             <content><fx:include source="patio-historico-tab.fxml"/></content>
         </Tab>
-        <Tab text="Tarifas">
+        <Tab fx:id="tabTarifas" text="Tarifas">
             <content><fx:include source="tarifa-patio-tab.fxml"/></content>
         </Tab>
-        <Tab text="Motivos">
+        <Tab fx:id="tabMotivos" text="Motivos">
             <content><fx:include source="motivo-estadia-tab.fxml"/></content>
         </Tab>
     </tabs>

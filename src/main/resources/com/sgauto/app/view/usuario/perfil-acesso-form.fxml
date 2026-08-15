@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.usuario.PerfilAcessoFormController"
+            fitToWidth="true" styleClass="modal-container" prefWidth="480" prefHeight="600">
+
+    <VBox spacing="14" styleClass="modal-container">
+        <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+        <Label fx:id="lblTituloModal" text="Novo Perfil" styleClass="page-title"/>
+
+        <VBox spacing="4">
+            <Label text="Nome do Perfil" styleClass="form-label"/>
+            <TextField fx:id="txtNome" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Descrição (opcional)" styleClass="form-label"/>
+            <TextArea fx:id="txtDescricao" styleClass="form-textarea" prefRowCount="2" wrapText="true"/>
+        </VBox>
+
+        <Label text="PERMISSÕES" styleClass="sidebar-section-label"/>
+        <VBox fx:id="boxPermissoes" spacing="12"/>
+
+        <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+            <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

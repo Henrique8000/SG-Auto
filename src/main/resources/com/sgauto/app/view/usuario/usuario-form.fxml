@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.usuario.UsuarioFormController"
+      styleClass="modal-container" spacing="16" prefWidth="440">
+
+    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+
+    <Label fx:id="lblTituloModal" text="Novo Usuário" styleClass="page-title"/>
+
+    <VBox spacing="4">
+        <Label text="Login" styleClass="form-label"/>
+        <TextField fx:id="txtLogin" styleClass="form-input"/>
+    </VBox>
+
+    <VBox fx:id="boxSenha" spacing="4">
+        <Label text="Senha Temporária" styleClass="form-label"/>
+        <PasswordField fx:id="txtSenha" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Nome de Exibição" styleClass="form-label"/>
+        <TextField fx:id="txtNomeExibicao" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="E-mail (opcional)" styleClass="form-label"/>
+        <TextField fx:id="txtEmail" styleClass="form-input"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Funcionário Vinculado (opcional)" styleClass="form-label"/>
+        <ComboBox fx:id="cmbFuncionario" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <VBox spacing="4">
+        <Label text="Perfil de Acesso" styleClass="form-label"/>
+        <ComboBox fx:id="cmbPerfil" styleClass="form-input" maxWidth="Infinity"/>
+    </VBox>
+
+    <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
+        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+</VBox>

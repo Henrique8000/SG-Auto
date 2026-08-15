@@ -1,9 +1,11 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.enums.CargoFuncionario;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.StatusFuncionario;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.repository.FuncionarioRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository) {
+    public FuncionarioService(FuncionarioRepository funcionarioRepository, VerificaPermissaoUtil permissaoUtil) {
         this.funcionarioRepository = funcionarioRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
 
@@ -74,6 +78,9 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario cadastrar(Funcionario novoFuncionario) {
+        if (!permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar funcionários.");
+        }
         if (novoFuncionario == null) {
             throw new IllegalArgumentException("Os dados do funcionário não podem ser nulos.");
         }
@@ -92,6 +99,9 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario atualizar(Long id, Funcionario funcionarioAtualizado) {
+        if (!permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar funcionários.");
+        }
         if (id == null || funcionarioAtualizado == null) {
             throw new IllegalArgumentException("ID e dados do funcionário são obrigatórios para atualização.");
         }
@@ -113,6 +123,9 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario alterarStatus(Long id, String novoStatus) {
+        if (!permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para alterar status de funcionários.");
+        }
         if (id == null || novoStatus == null || novoStatus.isBlank()) {
             throw new IllegalArgumentException("ID e novo status são obrigatórios para atualização.");
         }
@@ -139,6 +152,9 @@ public class FuncionarioService {
 
     @Transactional
     public void remover(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_EXCLUIR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir funcionários.");
+        }
         if (id == null)
             throw new IllegalArgumentException("O ID é obrigatório para a exclusão.");
 
@@ -157,6 +173,9 @@ public class FuncionarioService {
 
     @Transactional
     public void cancelarRemocao(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para reativar funcionários.");
+        }
         if (id == null)
             throw new IllegalArgumentException("ID é obrigatórios para cancelar a exclusão");
 

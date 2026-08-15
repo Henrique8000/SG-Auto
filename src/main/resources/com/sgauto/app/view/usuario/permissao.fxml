@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.usuario.PermissaoController">
+
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+
+    <top>
+        <VBox spacing="16">
+            <padding><Insets bottom="16"/></padding>
+            <Label text="Catálogo de Permissões do Sistema" styleClass="page-subtitle"/>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <TextField fx:id="txtBusca" promptText="Buscar por chave ou descrição..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="cmbFiltroModulo" promptText="Todos os módulos" styleClass="search-field"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabelaPermissoes" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colModulo" text="Módulo" prefWidth="140"/>
+                <TableColumn fx:id="colChave" text="Chave" prefWidth="200"/>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="300"/>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+            </columnResizePolicy>
+        </TableView>
+    </center>
+
+    <bottom>
+        <fx:include fx:id="paginacao" source="../paginacao-controle.fxml"/>
+    </bottom>
+</BorderPane>
