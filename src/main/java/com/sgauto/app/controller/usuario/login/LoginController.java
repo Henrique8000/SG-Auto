@@ -10,10 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -120,5 +117,15 @@ public class LoginController {
             mostrarErro("Erro ao carregar a próxima tela.");
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void mostrarInfoBloqueio() {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Política de Segurança");
+        alerta.setHeaderText(null);
+        alerta.setContentText("Para garantir a segurança dos seus dados, o sistema permite um máximo de 5 tentativas incorretas de login.\n\nCaso você erre a senha em todas as tentativas, o seu usuário será bloqueado temporariamente por 15 minutos.");
+
+        alerta.showAndWait();
     }
 }

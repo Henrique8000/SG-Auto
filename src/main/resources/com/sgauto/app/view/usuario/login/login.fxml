@@ -28,8 +28,18 @@
             </VBox>
 
             <VBox spacing="6">
-                <Label text="SENHA" styleClass="form-label"/>
-                <PasswordField fx:id="txtSenha" promptText="Digite sua senha" styleClass="form-input"/>
+                <VBox spacing="6">
+                    <HBox alignment="CENTER_LEFT" spacing="5">
+                        <Label text="SENHA" styleClass="form-label"/>
+
+                        <Label text="ⓘ" styleClass="info-icon" style="-fx-cursor: hand; -fx-text-fill: #888888;" onMouseClicked="#mostrarInfoBloqueio">
+                            <tooltip>
+                                <Tooltip text="Limite de tentativas de acesso" />
+                            </tooltip>
+                        </Label>
+                    </HBox>
+                    <PasswordField fx:id="txtSenha" promptText="Digite sua senha" styleClass="form-input"/>
+                </VBox>
             </VBox>
         </VBox>
 
