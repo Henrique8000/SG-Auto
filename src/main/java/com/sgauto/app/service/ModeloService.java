@@ -1,8 +1,10 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Modelo;
 import com.sgauto.app.repository.ModeloRepository;
 import com.sgauto.app.repository.PecaRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,14 +15,19 @@ import java.util.List;
 public class ModeloService {
     private final ModeloRepository modeloRepository;
     private final PecaRepository pecaRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ModeloService(ModeloRepository modeloRepository, PecaRepository pecaRepository) {
+    public ModeloService(ModeloRepository modeloRepository, PecaRepository pecaRepository, VerificaPermissaoUtil permissaoUtil) {
         this.modeloRepository = modeloRepository;
         this.pecaRepository = pecaRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Modelo cadastrar(Modelo modelo) {
+        if (!permissaoUtil.verificar(PermissaoChave.MODELOS_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar modelos.");
+        }
         verificarCampos(modelo);
         String nomeFormatado = formatarNome(modelo.getNome());
         modelo.setNome(nomeFormatado);
@@ -34,6 +41,9 @@ public class ModeloService {
 
     @Transactional
     public Modelo atualizar(Modelo modelo) {
+        if (!permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para editar modelos.");
+        }
         verificarCampos(modelo);
         String nomeFormatado = formatarNome(modelo.getNome());
         modelo.setNome(nomeFormatado);
@@ -49,11 +59,17 @@ public class ModeloService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar modelos.");
+        }
         buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar modelos.");
+        }
         Modelo modelo = buscarOuFalhar(id);
         if (estaEmUso(modelo.getNome())) {
             throw new IllegalStateException("Não é possível desativar: existem peças associadas a este modelo.");
@@ -63,6 +79,9 @@ public class ModeloService {
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.MODELOS_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir modelos.");
+        }
         Modelo modelo = buscarOuFalhar(id);
         if (estaEmUso(modelo.getNome())) {
             throw new IllegalStateException("Não é possível excluir: existem peças associadas a este modelo.");

@@ -1,10 +1,12 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.ClientePF;
 import com.sgauto.app.model.ClientePJ;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.ClienteRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +17,19 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final VeiculoRepository veiculoRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ClienteService(ClienteRepository clienteRepository, VeiculoRepository veiculoRepository) {
+    public ClienteService(ClienteRepository clienteRepository, VeiculoRepository veiculoRepository, VerificaPermissaoUtil permissaoUtil) {
         this.clienteRepository = clienteRepository;
         this.veiculoRepository = veiculoRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Cliente cadastrar(Cliente cliente) {
+        if (!permissaoUtil.verificar(PermissaoChave.CLIENTE_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar clientes.");
+        }
         normalizarDocumento(cliente);
         verificarCampos(cliente);
 
@@ -38,6 +45,9 @@ public class ClienteService {
 
     @Transactional
     public Cliente atualizar(Cliente cliente) {
+        if (!permissaoUtil.verificar(PermissaoChave.CLIENTE_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar clientes.");
+        }
         normalizarDocumento(cliente);
         verificarCampos(cliente);
 
@@ -55,18 +65,27 @@ public class ClienteService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CLIENTE_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar clientes.");
+        }
         Cliente cliente = buscarOuFalhar(id);
         cliente.setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CLIENTE_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar clientes.");
+        }
         Cliente cliente = buscarOuFalhar(id);
         cliente.setAtivo(false);
     }
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CLIENTE_EXCLUIR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir clientes.");
+        }
         Cliente cliente = buscarOuFalhar(id);
         if (estaEmUso(id)) {
             throw new IllegalStateException(

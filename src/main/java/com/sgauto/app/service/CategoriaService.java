@@ -1,8 +1,10 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ServicoRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,14 +16,20 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final ServicoRepository servicoRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public CategoriaService(CategoriaRepository categoriaRepository, ServicoRepository servicoRepository) {
+    public CategoriaService(CategoriaRepository categoriaRepository, ServicoRepository servicoRepository, VerificaPermissaoUtil permissaoUtil) {
         this.categoriaRepository = categoriaRepository;
         this.servicoRepository = servicoRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Categoria cadastrar(Categoria categoria) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar categorias.");
+        }
+
         verificarCampos(categoria);
         String nomeFormatado = formatarNome(categoria.getNome());
         categoria.setNome(nomeFormatado);
@@ -35,6 +43,10 @@ public class CategoriaService {
 
     @Transactional
     public Categoria atualizar(Categoria categoria) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar categorias.");
+        }
+
         verificarCampos(categoria);
         String nomeFormatado = formatarNome(categoria.getNome());
         categoria.setNome(nomeFormatado);
@@ -50,11 +62,18 @@ public class CategoriaService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar categorias.");
+        }
         buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar categorias.");
+        }
+
         Categoria categoria = buscarOuFalhar(id);
         if (estaEmUso(categoria.getNome())) {
             throw new IllegalStateException("Não é possível desativar: existem serviços associados a esta categoria.");
@@ -64,6 +83,9 @@ public class CategoriaService {
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir categorias.");
+        }
         Categoria categoria = buscarOuFalhar(id);
         if (estaEmUso(categoria.getNome())) {
             throw new IllegalStateException("Não é possível excluir: existem serviços associados a esta categoria.");

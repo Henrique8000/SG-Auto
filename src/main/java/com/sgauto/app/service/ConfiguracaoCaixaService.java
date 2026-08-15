@@ -1,8 +1,10 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.enums.ModoConferencia;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.ConfiguracaoCaixa;
 import com.sgauto.app.repository.ConfiguracaoCaixaRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +14,11 @@ public class ConfiguracaoCaixaService {
     private static final Long ID_SINGLETON = 1L;
 
     private final ConfiguracaoCaixaRepository configuracaoCaixaRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ConfiguracaoCaixaService(ConfiguracaoCaixaRepository configuracaoCaixaRepository) {
+    public ConfiguracaoCaixaService(ConfiguracaoCaixaRepository configuracaoCaixaRepository, VerificaPermissaoUtil permissaoUtil) {
         this.configuracaoCaixaRepository = configuracaoCaixaRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional(readOnly = true)
@@ -25,6 +29,10 @@ public class ConfiguracaoCaixaService {
 
     @Transactional
     public ConfiguracaoCaixa atualizarModoConferencia(ModoConferencia novoModo) {
+        if(!permissaoUtil.verificar(PermissaoChave.CONFIGURACOES_EDITAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para editar configurações.");
+        }
+
         ConfiguracaoCaixa config = configuracaoCaixaRepository.findById(ID_SINGLETON)
                 .orElseGet(() -> {
                     ConfiguracaoCaixa novaConfig = new ConfiguracaoCaixa();

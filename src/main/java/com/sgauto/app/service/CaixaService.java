@@ -1,14 +1,12 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.StatusCaixa;
+import com.sgauto.app.enums.*;
 import com.sgauto.app.model.Caixa;
 import com.sgauto.app.model.CaixaMovimentacao;
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.ConfiguracaoCaixa;
 import com.sgauto.app.repository.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.CaixaRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -21,13 +19,15 @@ public class CaixaService {
     private final CaixaRepository caixaRepository;
     private final CaixaMovimentacaoRepository caixaMovimentacaoRepository;
     private final ConfiguracaoCaixaService configuracaoCaixaService;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public CaixaService(CaixaRepository caixaRepository,
                         CaixaMovimentacaoRepository caixaMovimentacaoRepository,
-                        ConfiguracaoCaixaService configuracaoCaixaService) {
+                        ConfiguracaoCaixaService configuracaoCaixaService, VerificaPermissaoUtil permissaoUtil) {
         this.caixaRepository = caixaRepository;
         this.caixaMovimentacaoRepository = caixaMovimentacaoRepository;
         this.configuracaoCaixaService = configuracaoCaixaService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     public void garantirCaixaAberto() {
@@ -50,6 +50,10 @@ public class CaixaService {
     public CaixaMovimentacao registrarMovimentacao(TipoMovimentacao tipo, OrigemMovimentacao origem,
                                                    FormaPagamento formaPagamento, BigDecimal valor,
                                                    String descricao, Long clienteId, String placa) {
+        if(!permissaoUtil.verificar(PermissaoChave.CAIXA_MOVIMENTAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão movimentar no caixa.");
+        }
+
         Caixa caixaAberto = buscarCaixaAberto();
 
         CaixaMovimentacao mov = new CaixaMovimentacao(caixaAberto, tipo, origem, formaPagamento, valor, descricao);
@@ -105,6 +109,10 @@ public class CaixaService {
 
     @Transactional
     public Caixa fecharCaixaAtual(BigDecimal valorContado, String justificativaDiferenca) {
+        if(!permissaoUtil.verificar(PermissaoChave.CAIXA_FECHAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão fechar o caixa.");
+        }
+
         ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
         Caixa caixa = buscarCaixaAberto();
 

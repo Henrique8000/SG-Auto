@@ -1,10 +1,12 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.ModeloRepository;
 import com.sgauto.app.repository.VeiculoRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,17 +19,22 @@ public class VeiculoService {
     private final VeiculoRepository veiculoRepository;
     private final ClienteRepository clienteRepository;
     private final ModeloRepository modeloRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public VeiculoService(VeiculoRepository veiculoRepository,
                           ClienteRepository clienteRepository,
-                          ModeloRepository modeloRepository) {
+                          ModeloRepository modeloRepository, VerificaPermissaoUtil permissaoUtil) {
         this.veiculoRepository = veiculoRepository;
         this.clienteRepository = clienteRepository;
         this.modeloRepository = modeloRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
     public Veiculo cadastrar(Veiculo veiculo) {
+        if (!permissaoUtil.verificar(PermissaoChave.VEICULO_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar veículos.");
+        }
         normalizar(veiculo);
         verificarCampos(veiculo);
 
@@ -40,6 +47,9 @@ public class VeiculoService {
 
     @Transactional
     public Veiculo atualizar(Veiculo veiculo) {
+        if (!permissaoUtil.verificar(PermissaoChave.VEICULO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar veículos.");
+        }
         normalizar(veiculo);
         verificarCampos(veiculo);
 
@@ -54,16 +64,25 @@ public class VeiculoService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.VEICULO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar veículos.");
+        }
         buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.VEICULO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar veículos.");
+        }
         buscarOuFalhar(id).setAtivo(false);
     }
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.VEICULO_EXCLUIR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir veículos.");
+        }
         Veiculo veiculo = buscarOuFalhar(id);
         if (estaEmUso(id)) {
             throw new IllegalStateException(

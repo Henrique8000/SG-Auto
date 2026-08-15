@@ -3,10 +3,7 @@ package com.sgauto.app.service;
 import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.controller.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.controller.dto.patio.PatioResumoDashboardDTO;
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.StatusEstadiaPatio;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.*;
 import com.sgauto.app.model.CaixaMovimentacao;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
@@ -21,6 +18,7 @@ import com.sgauto.app.repository.patio.EstadiaPatioRepository;
 import com.sgauto.app.repository.specifications.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,12 +39,13 @@ public class PatioService {
     private final ClienteRepository clienteRepository;
     private final VeiculoRepository veiculoRepository;
     private final CaixaService caixaService;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public PatioService(EstadiaPatioRepository estadiaPatioRepository,
                         TabelaPrecoPatioRepository tabelaPrecoPatioRepository,
                         MotivoEstadiaRepository motivoEstadiaRepository, ClienteRepository clienteRepository,
                         VeiculoRepository veiculoRepository, OrdemServicoRepository ordemServicoRepository,
-                        CaixaService caixaService) {
+                        CaixaService caixaService, VerificaPermissaoUtil permissaoUtil) {
         this.estadiaPatioRepository = estadiaPatioRepository;
         this.tabelaPrecoPatioRepository = tabelaPrecoPatioRepository;
         this.motivoEstadiaRepository = motivoEstadiaRepository;
@@ -54,6 +53,7 @@ public class PatioService {
         this.veiculoRepository = veiculoRepository;
         this.ordemServicoRepository = ordemServicoRepository;
         this.caixaService = caixaService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     private static final String DESCRICAO_MOTIVO_OS = "Ordem de Serviço";
@@ -94,6 +94,10 @@ public class PatioService {
     @Transactional
     public EstadiaPatio registrarEntradaManual(Long clienteId, Long veiculoId, Long ordemServicoId,
                                                Long tarifaId, Long motivoId, String localizacao) {
+        if(!permissaoUtil.verificar(PermissaoChave.PATIO_ENTRADA)){
+            throw new IllegalStateException("Seu usuário não possui permissão para dar entradas manuais no pátio.");
+        }
+
         if (clienteId == null || tarifaId == null || motivoId == null || localizacao == null || veiculoId == null) {
             throw new IllegalArgumentException("Foram identificados campos nulos ao tentar gerar uma estadia manual no pátio.");
         }
@@ -131,6 +135,10 @@ public class PatioService {
 
     @Transactional
     public EstadiaPatio registrarSaida(Long estadiaId, FormaPagamento formaPagamento) {
+        if(!permissaoUtil.verificar(PermissaoChave.PATIO_SAIDA)){
+            throw new IllegalStateException("Seu usuário não possui permissão para dar saídas no pátio.");
+        }
+
         if (estadiaId == null)
             throw new IllegalArgumentException("Não foi possível dar saída do pátio pois o ID da estadia está nulo.");
 
@@ -188,6 +196,10 @@ public class PatioService {
 
     @Transactional
     public EstadiaPatio atualizarLocalizacao(Long estadiaId, String novaLocalizacao) {
+        if(!permissaoUtil.verificar(PermissaoChave.PATIO_CONFIGURAR)){
+            throw new IllegalStateException("Seu usuário não possui permissão para editar o pátio.");
+        }
+
         EstadiaPatio es = estadiaPatioRepository.findById(estadiaId)
                 .orElseThrow(() -> new IllegalArgumentException("Estadia de ID " + estadiaId + " não localizada."));
         es.setLocalizacao(novaLocalizacao);

@@ -1,6 +1,7 @@
 package com.sgauto.app.service.usuario;
 
 import com.sgauto.app.controller.dto.usuario.FiltroUsuarioDTO;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Usuario;
@@ -8,6 +9,7 @@ import com.sgauto.app.repository.FuncionarioRepository;
 import com.sgauto.app.repository.specifications.usuario.UsuarioSpecification;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
@@ -31,15 +33,17 @@ public class UsuarioService {
     private final PerfilAcessoRepository perfilAcessoRepository;
     private final FuncionarioRepository funcionarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
                           PerfilAcessoRepository perfilAcessoRepository,
                           FuncionarioRepository funcionarioRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder, VerificaPermissaoUtil permissaoUtil) {
         this.usuarioRepository = usuarioRepository;
         this.perfilAcessoRepository = perfilAcessoRepository;
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional(readOnly = true)
@@ -70,6 +74,9 @@ public class UsuarioService {
     @Transactional
     public Usuario cadastrar(String login, String senhaTemporaria, String nomeExibicao,
                              String email, Long funcionarioId, Long perfilId) {
+        if (!permissaoUtil.verificar(PermissaoChave.USUARIO_CRIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cadastrar usuários.");
+        }
         validarLogin(login, null);
         validarSenha(senhaTemporaria);
 
@@ -94,6 +101,9 @@ public class UsuarioService {
 
     @Transactional
     public Usuario atualizar(Long id, String nomeExibicao, String email, Long funcionarioId, Long perfilId) {
+        if (!permissaoUtil.verificar(PermissaoChave.USUARIO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar usuários.");
+        }
         Usuario usuario = buscarOuFalhar(id);
 
         List<Long> idsProtegidos = buscarIdAdminEOperador();
@@ -174,6 +184,9 @@ public class UsuarioService {
 
     @Transactional
     public void redefinirSenha(Long id, String senhaTemporaria) {
+        if (!permissaoUtil.verificar(PermissaoChave.USUARIO_ALTERAR_SENHA)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para redefinir senhas de usuários.");
+        }
         Usuario usuario = buscarOuFalhar(id);
 
         List<Long> idsProtegidos = buscarIdAdminEOperador();
@@ -193,11 +206,18 @@ public class UsuarioService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.USUARIO_EDITAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar usuários.");
+        }
+
         buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.USUARIO_EXCLUIR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar usuários.");
+        }
         Usuario usuario = buscarOuFalhar(id);
 
         List<Long> idsProtegidos = buscarIdAdminEOperador();

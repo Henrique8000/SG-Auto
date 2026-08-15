@@ -1,6 +1,7 @@
 package com.sgauto.app.service.usuario;
 
 import com.sgauto.app.controller.dto.usuario.FiltroPerfilAcessoDTO;
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Permissao;
 import com.sgauto.app.model.usuario.Usuario;
@@ -8,6 +9,7 @@ import com.sgauto.app.repository.specifications.usuario.PerfilAcessoSpecificatio
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.PermissaoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
@@ -26,13 +28,15 @@ public class PerfilAcessoService {
     private final PerfilAcessoRepository perfilAcessoRepository;
     private final PermissaoRepository permissaoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public PerfilAcessoService(PerfilAcessoRepository perfilAcessoRepository,
                                PermissaoRepository permissaoRepository,
-                               UsuarioRepository usuarioRepository) {
+                               UsuarioRepository usuarioRepository, VerificaPermissaoUtil permissaoUtil) {
         this.perfilAcessoRepository = perfilAcessoRepository;
         this.permissaoRepository = permissaoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional(readOnly = true)
@@ -58,6 +62,10 @@ public class PerfilAcessoService {
 
     @Transactional
     public PerfilAcesso cadastrar(String nome, String descricao, Set<Long> permissaoIds) {
+        if (!permissaoUtil.verificar(PermissaoChave.PERFIL_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para criar perfis de acesso.");
+        }
+
         validarNome(nome, null);
 
         PerfilAcesso perfil = new PerfilAcesso(nome.trim(), descricao);
@@ -68,6 +76,9 @@ public class PerfilAcessoService {
 
     @Transactional
     public PerfilAcesso atualizar(Long id, String nome, String descricao, Set<Long> permissaoIds) {
+        if (!permissaoUtil.verificar(PermissaoChave.PERFIL_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para atualizar perfis de acesso.");
+        }
         PerfilAcesso perfil = buscarOuFalhar(id);
 
         if (Boolean.TRUE.equals(perfil.getProtegido())) {
@@ -90,11 +101,17 @@ public class PerfilAcessoService {
 
     @Transactional
     public void ativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.PERFIL_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para ativar perfis de acesso.");
+        }
         buscarOuFalhar(id).setAtivo(true);
     }
 
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.PERFIL_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para desativar perfis de acesso.");
+        }
         PerfilAcesso perfil = buscarOuFalhar(id);
 
         if (Boolean.TRUE.equals(perfil.getProtegido())) {
@@ -115,6 +132,9 @@ public class PerfilAcessoService {
 
     @Transactional
     public void excluir(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.PERFIL_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para excluir perfis de acesso.");
+        }
         PerfilAcesso perfil = buscarOuFalhar(id);
 
         if (Boolean.TRUE.equals(perfil.getProtegido())) {
