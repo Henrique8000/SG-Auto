@@ -94,6 +94,19 @@ public class DataSeeder implements CommandLineRunner {
             );
             clienteRepository.save(cliente1);
 
+            ClientePF cliente2 = new ClientePF(
+                    "Henrique Ronaldo Da Silva Jr",
+                    "46505931832",
+                    "13999999967",
+                    null,
+                    "mockadaoDaSilvassauro@sgmail.com",
+                    "Cliente prefere contato via WhatsApp",
+                    true,
+                    "12345678X",
+                    LocalDate.of(2005, 3, 16)
+            );
+            clienteRepository.save(cliente2);
+
             Veiculo veiculo1 = new Veiculo(
                     cliente1,
                     "SNT1A23",

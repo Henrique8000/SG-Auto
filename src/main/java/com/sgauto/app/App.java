@@ -1,5 +1,8 @@
 package com.sgauto.app;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.sgauto.app.util.TratadorErrosGlobal;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +13,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class App extends Application {
 
+    private static final Logger log = LoggerFactory.getLogger(App.class);
     private ConfigurableApplicationContext springContext;
 
     @Override
@@ -30,8 +34,9 @@ public class App extends Application {
         java.net.URL cssUrl = getClass().getResource("/com/sgauto/app/css/estilo.css");
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
-        } else {
-            System.err.println("Aviso: Arquivo CSS não encontrado. Verifique o caminho!");
+        }
+        else {
+            log.warn("Arquivo CSS não encontrado. Verifique o caminho!");
         }
 
         scene.setFill(javafx.scene.paint.Color.web("#181818"));
@@ -52,6 +57,7 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
+        TratadorErrosGlobal.instalar();
         launch(args);
     }
 }

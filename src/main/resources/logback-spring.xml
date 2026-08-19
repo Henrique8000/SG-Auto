@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Pasta no perfil do usuário: funciona mesmo se a app estiver em Program Files,
+         e é portável entre Windows e Linux (user.home resolve nos dois). -->
+    <property name="LOG_DIR" value="${user.home}/.sgauto/logs" />
+
+    <property name="PADRAO"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+    <!-- Console: continua útil no desenvolvimento (IntelliJ) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${PADRAO}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Arquivo principal: tudo, rotacionado por dia e comprimido -->
+    <appender name="ARQUIVO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/sgauto.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/sgauto.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PADRAO}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Arquivo só de problemas (WARN/ERROR): triagem rápida de incidente -->
+    <appender name="ARQUIVO_ERRO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/sgauto-erros.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/sgauto-erros.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>50MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${PADRAO}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Nosso código: verboso (DEBUG), pra caçar bug -->
+    <logger name="com.sgauto.app" level="DEBUG" />
+
+    <!-- Frameworks pinados em INFO: evita ruído E impede vazar CPF/CNPJ/senha
+         nos parâmetros de SQL que o DEBUG desses pacotes exporia -->
+    <logger name="org.hibernate" level="INFO" />
+    <logger name="org.springframework" level="INFO" />
+    <logger name="com.zaxxer.hikari" level="INFO" />
+    <logger name="org.flywaydb" level="INFO" />
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ARQUIVO" />
+        <appender-ref ref="ARQUIVO_ERRO" />
+    </root>
+
+</configuration>
