@@ -1,11 +1,10 @@
-package com.sgauto.app.service;
+package com.sgauto.app.service.estoque;
 
 import com.sgauto.app.enums.CampoPreco;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Modelo;
 import com.sgauto.app.model.Peca;
-import com.sgauto.app.repository.CategoriaRepository;
 import com.sgauto.app.repository.ModeloRepository;
 import com.sgauto.app.repository.PecaRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;

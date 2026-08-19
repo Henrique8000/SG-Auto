@@ -4,7 +4,7 @@ import com.sgauto.app.controller.dto.ItemSelecionavelPeca;
 import com.sgauto.app.enums.CampoPreco;
 import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Peca;
-import com.sgauto.app.service.EstoqueService;
+import com.sgauto.app.service.estoque.EstoqueService;
 import com.sgauto.app.util.AutoCompleteComboBox;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

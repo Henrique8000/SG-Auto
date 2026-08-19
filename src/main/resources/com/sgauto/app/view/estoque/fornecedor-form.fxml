@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" prefWidth="750" prefHeight="680" styleClass="modal-container"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.fornecedor.FornecedorFormController">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Cabeçalho do Modal -->
+    <VBox spacing="5">
+        <Label text="Cadastro de Fornecedor" styleClass="page-title"/>
+        <Label text="Preencha os dados abaixo para registrar um parceiro comercial." styleClass="page-subtitle"/>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-pane-form" style="-fx-background: #181818; -fx-background-color: transparent; -fx-padding: 0;">
+        <VBox spacing="28">
+            <padding>
+                <Insets right="18" top="5" bottom="10"/>
+            </padding>
+
+            <!-- SEÇÃO 1: Dados da Empresa -->
+            <VBox spacing="12">
+                <Label text="DADOS DA EMPRESA" styleClass="section-title" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <GridPane hgap="16" vgap="14">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="30"/>
+                        <ColumnConstraints percentWidth="70"/>
+                    </columnConstraints>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Tipo de Pessoa" styleClass="form-label"/>
+                        <ComboBox fx:id="cmbTipoPessoa" maxWidth="Infinity" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="CPF / CNPJ *" styleClass="form-label"/>
+                        <TextField fx:id="txtCpfCnpj" promptText="Apenas números (Ex: 00000000000)" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                        <Label text="Razão Social *" styleClass="form-label"/>
+                        <TextField fx:id="txtRazaoSocial" promptText="Nome oficial de registro da empresa ou pessoa" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Categoria" styleClass="form-label"/>
+                        <TextField fx:id="txtCategoria" promptText="Ex: Peças, Ferramentas" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Nome Fantasia" styleClass="form-label"/>
+                        <TextField fx:id="txtNomeFantasia" promptText="Nome comercial da loja" styleClass="form-input"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <Separator style="-fx-opacity: 0.2;"/>
+
+            <!-- SEÇÃO 2: Contato -->
+            <VBox spacing="12">
+                <Label text="INFORMAÇÕES DE CONTATO" styleClass="section-title" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <GridPane hgap="16" vgap="14">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
+                        <Label text="Representante Comercial" styleClass="form-label"/>
+                        <TextField fx:id="txtNomeContato" promptText="Nome da pessoa que atende a oficina" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="Celular / WhatsApp" styleClass="form-label"/>
+                        <TextField fx:id="txtCelular" promptText="Apenas números (com DDD)" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label text="Telefone Fixo" styleClass="form-label"/>
+                        <TextField fx:id="txtTelefone" promptText="Apenas números (com DDD)" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="E-mail" styleClass="form-label"/>
+                        <TextField fx:id="txtEmail" promptText="contato@empresa.com.br" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Site (Opcional)" styleClass="form-label"/>
+                        <TextField fx:id="txtSite" promptText="www.empresa.com.br" styleClass="form-input"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <Separator style="-fx-opacity: 0.2;"/>
+
+            <!-- SEÇÃO 3: Fiscais e Endereço -->
+            <VBox spacing="12">
+                <Label text="FISCAL E LOCALIZAÇÃO" styleClass="section-title" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <GridPane hgap="16" vgap="14">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.3"/>
+                        <ColumnConstraints percentWidth="33.3"/>
+                        <ColumnConstraints percentWidth="33.4"/>
+                    </columnConstraints>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <Label text="Inscrição Estadual" styleClass="form-label"/>
+                        <TextField fx:id="txtInscricaoEstadual" promptText="Apenas números" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <Label text="Inscrição Municipal" styleClass="form-label"/>
+                        <TextField fx:id="txtInscricaoMunicipal" promptText="Apenas números" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <Label text="Prazo Entrega (Dias)" styleClass="form-label"/>
+                        <TextField fx:id="txtPrazoEntregaDias" promptText="Ex: 5" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label text="CEP" styleClass="form-label"/>
+                        <TextField fx:id="txtCep" promptText="Apenas números" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                        <Label text="Logradouro" styleClass="form-label"/>
+                        <TextField fx:id="txtLogradouro" promptText="Rua, Avenida, etc." styleClass="form-input"/>
+                    </VBox>
+
+                    <!-- Nova Linha para completar o endereço logicamente -->
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label text="Número" styleClass="form-label"/>
+                        <TextField fx:id="txtNumero" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label text="Complemento" styleClass="form-label"/>
+                        <TextField fx:id="txtComplemento" promptText="Sala, Galpão..." styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Label text="Bairro" styleClass="form-label"/>
+                        <TextField fx:id="txtBairro" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+                        <Label text="Cidade" styleClass="form-label"/>
+                        <TextField fx:id="txtCidade" styleClass="form-input"/>
+                    </VBox>
+
+                    <VBox spacing="6" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                        <Label text="UF" styleClass="form-label"/>
+                        <TextField fx:id="txtUf" promptText="SP" styleClass="form-input"/>
+                    </VBox>
+                </GridPane>
+            </VBox>
+
+            <Separator style="-fx-opacity: 0.2;"/>
+
+            <!-- SEÇÃO 4: Observações -->
+            <VBox spacing="6">
+                <Label text="Observações Gerais" styleClass="form-label"/>
+                <!-- CORREÇÃO: Utilizando form-textarea conforme seu CSS -->
+                <TextArea fx:id="txtObservacoes" prefRowCount="3" promptText="Ex: Frete grátis acima de R$ 500,00. Fecham para o almoço do meio-dia às 13h." styleClass="form-textarea"/>
+            </VBox>
+
+        </VBox>
+    </ScrollPane>
+
+    <!-- Botões de Ação (Rodapé) -->
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#fecharModal"/>
+        <Button fx:id="btnSalvar" text="Salvar Fornecedor" styleClass="btn-primary" onAction="#salvar"/>
+    </HBox>
+
+</VBox>

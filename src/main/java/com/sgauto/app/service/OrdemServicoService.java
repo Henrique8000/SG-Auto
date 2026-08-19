@@ -10,6 +10,7 @@ import com.sgauto.app.repository.*;
 import com.sgauto.app.repository.OrdemServico.OsPagamentoRepository;
 import com.sgauto.app.repository.OrdemServico.OsPecaRepository;
 import com.sgauto.app.repository.OrdemServico.OsServicoRepository;
+import com.sgauto.app.service.estoque.EstoqueService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;

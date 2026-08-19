@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.estoque;
 
 import com.sgauto.app.model.Peca;
-import com.sgauto.app.service.EstoqueService;
+import com.sgauto.app.service.estoque.EstoqueService;
 import com.sgauto.app.util.ModalUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

@@ -1,4 +1,4 @@
-package com.sgauto.app.service;
+package com.sgauto.app.service.estoque;
 
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Modelo;

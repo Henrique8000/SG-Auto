@@ -3,7 +3,7 @@ package com.sgauto.app.controller.veiculos;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.service.ClienteService;
-import com.sgauto.app.service.ModeloService;
+import com.sgauto.app.service.estoque.ModeloService;
 import com.sgauto.app.service.VeiculoService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
