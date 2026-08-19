@@ -27,6 +27,7 @@ public class TrocaSenhaObrigatoriaController {
     @FXML private Label lblMensagemErro;
     @FXML private Button btnSalvar;
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TrocaSenhaObrigatoriaController.class);
     private final UsuarioService usuarioService;
     private final ApplicationContext applicationContext;
 
@@ -68,11 +69,13 @@ public class TrocaSenhaObrigatoriaController {
 
             mudarTela(event, "/com/sgauto/app/view/principal.fxml", "SGAuto - Dashboard Principal");
 
-        } catch (IllegalArgumentException e) {
+        }
+        catch (IllegalArgumentException e) {
             mostrarErro(e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             mostrarErro("Erro interno ao tentar alterar a senha.");
-            e.printStackTrace();
+            log.error("Falha inesperada ao alterar senha obrigatória", e);
         }
     }
 
@@ -98,9 +101,10 @@ public class TrocaSenhaObrigatoriaController {
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.setMaximized(true);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao carregar o sistema principal.");
-            e.printStackTrace();
+            log.error("Erro ao carregar tela principal após troca de senha", e);
         }
     }
 }

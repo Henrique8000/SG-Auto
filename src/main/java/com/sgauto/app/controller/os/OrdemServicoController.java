@@ -31,6 +31,7 @@ import java.util.List;
 
 @Component
 public class OrdemServicoController {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OrdemServicoController.class);
 
     @FXML private Label lblAbertas;
     @FXML private Label lblEmExecucao;
@@ -290,10 +291,12 @@ public class OrdemServicoController {
             modal.showAndWait();
 
             carregarDados();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao abrir tela", "Não foi possível carregar o formulário de detalhes da O.S.");
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch (Exception e) {
+            log.error("Erro inesperado ao abrir O.S. #{}", osId, e);
             mostrarErro("Erro ao abrir O.S. #" + osId, e.getMessage() != null ? e.getMessage() : "Erro inesperado.");
         }
     }

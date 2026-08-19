@@ -22,6 +22,7 @@ import java.util.Optional;
 
 @Component
 public class PrincipalController {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PrincipalController.class);
 
     @FXML private StackPane contentArea;
     @FXML private Label lblTituloPagina;
@@ -278,9 +279,9 @@ public class PrincipalController {
                 Stage stageAtual = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stageAtual.close();
 
-            } catch (IOException e) {
-                System.err.println("Erro ao tentar voltar para a tela de login.");
-                e.printStackTrace();
+            }
+            catch (IOException e) {
+                log.error("Erro ao voltar para a tela de login", e);
             }
         }
     }
