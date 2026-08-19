@@ -25,6 +25,7 @@ public class LoginController {
     @FXML private Label lblMensagemErro;
     @FXML private Button btnEntrar;
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(LoginController.class);
     private final UsuarioService usuarioService;
     private final ApplicationContext applicationContext;
 
@@ -50,15 +51,18 @@ public class LoginController {
 
             if (Boolean.TRUE.equals(usuarioAutenticado.getDeveTrocarSenha())) {
                 abrirTelaTrocaDeSenhaObrigatoria(usuarioAutenticado, event);
-            } else {
+            }
+            else {
                 iniciarSessao(usuarioAutenticado, event);
             }
 
-        } catch (IllegalArgumentException | IllegalStateException e) {
+        }
+        catch (IllegalArgumentException | IllegalStateException e) {
             mostrarErro(e.getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             mostrarErro("Erro interno ao tentar conectar. Contate o suporte.");
-            e.printStackTrace();
+            log.error("Falha inesperada na autenticação", e);
         }
     }
 
@@ -76,12 +80,12 @@ public class LoginController {
 
     private void iniciarSessao(Usuario usuario, ActionEvent event) {
         SessaoUsuario.getInstancia().setUsuarioLogado(usuario);
-        System.out.println("Login efetuado com sucesso! Usuário: " + usuario.getNomeExibicao());
+        log.info("Login efetuado com sucesso. Usuário: {}", usuario.getNomeExibicao());
         mudarTela(event, "/com/sgauto/app/view/principal.fxml", "SGAuto - Dashboard Principal");
     }
 
     private void abrirTelaTrocaDeSenhaObrigatoria(Usuario usuario, ActionEvent event) {
-        System.out.println("Usuário necessita trocar a senha temporária.");
+        log.info("Usuário necessita trocar a senha temporária.");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/login/troca-senha-obrigatoria.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
@@ -96,9 +100,10 @@ public class LoginController {
             telaTroca.show();
 
             janelaDeLogin.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao carregar a tela de atualização de senha.");
-            e.printStackTrace();
+            log.error("Erro ao carregar tela de troca de senha obrigatória", e)
         }
     }
 
@@ -113,9 +118,10 @@ public class LoginController {
             novaJanela.show();
             janelaAtual.close();
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao carregar a próxima tela.");
-            e.printStackTrace();
+            log.error("Erro ao carregar tela: {}", fxmlPath, e);
         }
     }
 
