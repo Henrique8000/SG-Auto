@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrdemServicoDetalheController {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(OrdemServicoDetalheController.class);
 
     @FXML private Label lblCliente;
     @FXML private Label lblVeiculo;
@@ -263,9 +264,10 @@ public class OrdemServicoDetalheController {
             Stage stage = ModalUtil.abrir(root, "Registrar Saída do Veículo", lblCliente.getScene().getWindow());
             stage.showAndWait();
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            log.error("Erro ao abrir tela de saída do pátio a partir da O.S.", e);
             mostrarAlerta(Alert.AlertType.ERROR, "Erro", "Não foi possível abrir a tela do pátio.");
-            e.printStackTrace();
         }
     }
 }

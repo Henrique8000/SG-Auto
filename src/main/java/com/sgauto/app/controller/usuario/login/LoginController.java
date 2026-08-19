@@ -103,7 +103,7 @@ public class LoginController {
         }
         catch (IOException e) {
             mostrarErro("Erro ao carregar a tela de atualização de senha.");
-            log.error("Erro ao carregar tela de troca de senha obrigatória", e)
+            log.error("Erro ao carregar tela de troca de senha obrigatória", e);
         }
     }
 

@@ -101,9 +101,10 @@ public class TrocaSenhaObrigatoriaController {
             stage.setScene(new Scene(root));
             stage.setTitle(titulo);
             stage.setMaximized(true);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             mostrarErro("Erro ao carregar o sistema principal.");
-            e.printStackTrace();
+            log.error("Erro ao carregar tela principal após troca de senha", e);
         }
     }
 }
