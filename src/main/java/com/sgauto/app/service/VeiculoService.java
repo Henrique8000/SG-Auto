@@ -4,7 +4,7 @@ import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.repository.ClienteRepository;
-import com.sgauto.app.repository.ModeloRepository;
+import com.sgauto.app.repository.estoque.ModeloRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;

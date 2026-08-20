@@ -1,6 +1,6 @@
 package com.sgauto.app.model.OrdemServico;
 
-import com.sgauto.app.model.Peca;
+import com.sgauto.app.model.estoque.Peca;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 

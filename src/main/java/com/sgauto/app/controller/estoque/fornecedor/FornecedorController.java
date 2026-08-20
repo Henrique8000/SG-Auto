@@ -1,9 +1,9 @@
 package com.sgauto.app.controller.estoque.fornecedor;
 
 import com.sgauto.app.controller.PaginacaoController;
-import com.sgauto.app.controller.dto.fornecedor.FiltroFornecedorDTO;
+import com.sgauto.app.controller.dto.estoque.FiltroFornecedorDTO;
 import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.model.Fornecedor;
+import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.service.estoque.FornecedorService;
 import com.sgauto.app.util.AutoCompleteComboBox;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
@@ -15,6 +15,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,7 +27,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,13 +130,13 @@ public class FornecedorController {
 
         colAcoes.setCellFactory(coluna -> new TableCell<>() {
             private final Button btnEditar = new Button("Editar");
-            private final Button btnMensagem = new Button("Mensagem"); // 1. Criação do botão
+            private final Button btnMensagem = new Button("Mensagem");
             private final Button btnToggle = new Button();
             private final HBox container = new HBox(6);
 
             {
                 btnEditar.getStyleClass().add("btn-table-action");
-                btnMensagem.getStyleClass().add("btn-table-action"); // 2. Estilo aplicado
+                btnMensagem.getStyleClass().add("btn-table-action");
 
                 btnEditar.setDisable(!podeEditar);
                 btnToggle.setDisable(!podeExcluir);
@@ -139,9 +144,12 @@ public class FornecedorController {
                 btnEditar.setOnAction(e -> abrirModalEdicao(getTableView().getItems().get(getIndex())));
                 btnToggle.setOnAction(e -> alternarStatus(getTableView().getItems().get(getIndex())));
 
-                btnMensagem.setOnAction(e -> abrirWhatsApp(getTableView().getItems().get(getIndex())));
+                Tooltip tooltipMensagem = new Tooltip("Este botão abre o WhatsApp já no contato do fornecedor.\nÉ necessário verificar se o número de telefone cadastrado esta correto.\n\nÉ necessário estar com o WhatsApp Web conectado.");
+                tooltipMensagem.setShowDelay(javafx.util.Duration.millis(300));
+                btnMensagem.setTooltip(tooltipMensagem);
 
-                // 4. Adiciona o botão ao container (entre o Editar e o Desativar/Ativar)
+                btnMensagem.setOnAction(e -> abrirWhatsApp(getTableView().getItems().get(getIndex()).getCelular()));
+
                 container.getChildren().addAll(btnEditar, btnMensagem, btnToggle);
             }
 
@@ -242,4 +250,44 @@ public class FornecedorController {
         }
     }
 
+    private void abrirWhatsApp(String cel) {
+        if (cel == null || cel.isBlank()) {
+            ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("O fornecedor selecionado não possui um número de celular cadastrado.");
+            return;
+        }
+        String numeroLimpo = cel.replaceAll("[^0-9]", "");
+
+        if (numeroLimpo.length() == 10 || numeroLimpo.length() == 11) {
+            numeroLimpo = "55" + numeroLimpo;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Contato via WhatsApp");
+        alert.setHeaderText("Deseja entrar em contato com este fornecedor pelo WhatsApp?");
+        alert.setContentText("Número de destino: " + cel);
+
+        ButtonType btnSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
+        ButtonType btnNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
+        alert.getButtonTypes().setAll(btnSim, btnNao);
+
+        final String numeroFinal = numeroLimpo;
+
+        alert.showAndWait().ifPresent(resposta -> {
+            if (resposta == btnSim) {
+                try {
+                    // Monta o Link flexível do WhatsApp (wa.me)
+                    String url = "https://wa.me/" + numeroFinal;
+
+                    // Abre o link usando o navegador padrão do sistema
+                    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } else {
+                        ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("Abertura de navegador não suportada neste sistema.");
+                    }
+                } catch (Exception e) {
+                    ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("Erro ao tentar abrir o WhatsApp: " + e.getMessage());
+                }
+            }
+        });
+    }
 }

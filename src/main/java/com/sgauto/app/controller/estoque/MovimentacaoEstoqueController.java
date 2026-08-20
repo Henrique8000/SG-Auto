@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.estoque;
 
-import com.sgauto.app.model.Peca;
+import com.sgauto.app.model.estoque.Peca;
 import com.sgauto.app.service.estoque.EstoqueService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

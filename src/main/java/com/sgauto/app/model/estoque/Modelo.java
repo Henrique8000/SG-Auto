@@ -1,4 +1,4 @@
-package com.sgauto.app.model;
+package com.sgauto.app.model.estoque;
 
 import jakarta.persistence.*;
 

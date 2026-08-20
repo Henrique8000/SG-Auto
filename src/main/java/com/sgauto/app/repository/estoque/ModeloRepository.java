@@ -1,6 +1,6 @@
-package com.sgauto.app.repository;
+package com.sgauto.app.repository.estoque;
 
-import com.sgauto.app.model.Modelo;
+import com.sgauto.app.model.estoque.Modelo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

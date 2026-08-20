@@ -1,13 +1,23 @@
 package com.sgauto.app.controller.estoque.fornecedor;
 
-import com.sgauto.app.model.Fornecedor;
+import com.sgauto.app.controller.estoque.PecaFormController;
+import com.sgauto.app.model.estoque.CategoriaFornecedor;
+import com.sgauto.app.model.estoque.Fornecedor;
+import com.sgauto.app.service.estoque.CategoriaFornecedorService;
 import com.sgauto.app.service.estoque.FornecedorService;
 import com.sgauto.app.util.CepUtil;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
+import com.sgauto.app.util.ModalUtil;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.List;
 
 @Component
 public class FornecedorFormController {
@@ -17,7 +27,7 @@ public class FornecedorFormController {
     @FXML private TextField txtCpfCnpj;
     @FXML private TextField txtRazaoSocial;
     @FXML private TextField txtNomeFantasia;
-    @FXML private TextField txtCategoria;
+    @FXML private ComboBox<String> cmbCategoria;
 
     // Contato
     @FXML private TextField txtNomeContato;
@@ -45,9 +55,13 @@ public class FornecedorFormController {
     private Fornecedor fornecedorEdicao;
     private Runnable acaoPosSalvar;
     private final FornecedorService fornecedorService;
+    private final ApplicationContext applicationContext;
+    private final CategoriaFornecedorService categoriaService;
 
-    public FornecedorFormController(FornecedorService fornecedorService) {
+    public FornecedorFormController(FornecedorService fornecedorService, ApplicationContext applicationContext, CategoriaFornecedorService categoriaService) {
         this.fornecedorService = fornecedorService;
+        this.categoriaService = categoriaService;
+        this.applicationContext = applicationContext;
     }
 
     @FXML
@@ -57,6 +71,18 @@ public class FornecedorFormController {
 
         aplicarMascaraEFormatacao(); // Normalização UX (Bloqueia erros de digitação)
         configurarBuscaDeCep();
+        carregarCategorias();
+
+        cmbCategoria.getEditor().focusedProperty().addListener((obs, estavaFocado, estaFocado) -> {
+            if (!estaFocado) {
+                String textoDigitado = cmbCategoria.getEditor().getText();
+
+                if (textoDigitado != null && !textoDigitado.isEmpty() && !cmbCategoria.getItems().contains(textoDigitado)) {
+                    cmbCategoria.setValue(null); // Reseta o valor
+                    cmbCategoria.getEditor().setText(""); // Limpa a tela
+                }
+            }
+        });
     }
 
     // =========================================================================
@@ -126,7 +152,7 @@ public class FornecedorFormController {
         txtCpfCnpj.setText(fornecedorEdicao.getCpfCnpj());
         txtRazaoSocial.setText(fornecedorEdicao.getRazaoSocial());
         txtNomeFantasia.setText(fornecedorEdicao.getNomeFantasia());
-        txtCategoria.setText(fornecedorEdicao.getCategoria());
+        cmbCategoria.setValue(fornecedorEdicao.getCategoria());
 
         txtNomeContato.setText(fornecedorEdicao.getNomeContato());
         txtCelular.setText(fornecedorEdicao.getCelular());
@@ -161,7 +187,15 @@ public class FornecedorFormController {
             f.setCpfCnpj(txtCpfCnpj.getText());
             f.setRazaoSocial(txtRazaoSocial.getText());
             f.setNomeFantasia(txtNomeFantasia.getText());
-            f.setCategoria(txtCategoria.getText());
+            String catSelecionada = cmbCategoria.getValue();
+            if (catSelecionada == null || catSelecionada.trim().isEmpty()) {
+                throw new IllegalArgumentException("A seleção da categoria é obrigatória.");
+            }
+            if (!cmbCategoria.getItems().contains(catSelecionada)) {
+                throw new IllegalArgumentException("Por favor, selecione uma categoria válida na lista suspensa.");
+            }
+
+            f.setCategoria(catSelecionada);
 
             f.setNomeContato(txtNomeContato.getText());
             f.setCelular(txtCelular.getText());
@@ -209,5 +243,43 @@ public class FornecedorFormController {
     private void fecharModal() {
         Stage stage = (Stage) btnSalvar.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    private void abrirModalCategorias() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/categoria-fornecedor-modal.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent root = loader.load();
+
+            CategoriaFornecedorModalController controller = loader.getController();
+
+            controller.configurar(categoriaSelecionada -> {
+                if (categoriaSelecionada != null) {
+                    cmbCategoria.setValue(categoriaSelecionada.getNome());
+                }
+            });
+
+            Stage modal = ModalUtil.abrir(
+                    root,
+                    "Categorias de Fornecedor",
+                    cmbCategoria.getScene().getWindow()
+            );
+
+            modal.showAndWait();
+
+        } catch (IOException e) {
+            ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("Erro ao abrir a janela de categorias.");
+            e.printStackTrace();
+        }
+    }
+
+    private void carregarCategorias() {
+        List<String> nomesCategorias = categoriaService.listarAtivas()
+                .stream()
+                .map(CategoriaFornecedor::getNome)
+                .toList();
+
+        cmbCategoria.getItems().addAll(nomesCategorias);
     }
 }

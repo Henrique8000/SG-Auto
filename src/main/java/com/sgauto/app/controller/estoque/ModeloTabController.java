@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.estoque;
 
 import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.model.Modelo;
+import com.sgauto.app.model.estoque.Modelo;
 import com.sgauto.app.service.estoque.ModeloService;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;

@@ -49,8 +49,11 @@
                     </VBox>
 
                     <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                        <Label text="Categoria" styleClass="form-label"/>
-                        <TextField fx:id="txtCategoria" promptText="Ex: Peças, Ferramentas" styleClass="form-input"/>
+                        <Label text="Categoria *" styleClass="form-label"/>
+                        <HBox spacing="8" alignment="CENTER_LEFT">
+                            <ComboBox fx:id="cmbCategoria" editable="true" maxWidth="Infinity" promptText="Selecione ou digite" styleClass="form-input"/>
+                            <Button text="..." styleClass="btn-secondary" onAction="#abrirModalCategorias" prefWidth="40"/>
+                        </HBox>
                     </VBox>
 
                     <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">

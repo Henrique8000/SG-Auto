@@ -1,6 +1,6 @@
-package com.sgauto.app.repository;
+package com.sgauto.app.repository.estoque;
 
-import com.sgauto.app.model.Fornecedor;
+import com.sgauto.app.model.estoque.Fornecedor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

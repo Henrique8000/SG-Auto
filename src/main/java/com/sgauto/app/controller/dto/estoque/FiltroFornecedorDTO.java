@@ -1,4 +1,4 @@
-package com.sgauto.app.controller.dto.fornecedor;
+package com.sgauto.app.controller.dto.estoque;
 
 public record FiltroFornecedorDTO(
         String termo,
