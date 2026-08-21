@@ -13,6 +13,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class PecaFormController {
     @FXML private ComboBox cmbModelo;
     @FXML private Label lblErro;
     @FXML private Button btnSalvar;
+    @FXML private Label lblContagemFornecedores;
 
 
     private final EstoqueService estoqueService;
@@ -37,10 +39,12 @@ public class PecaFormController {
     private Peca pecaEmEdicao;
     private Runnable aoSalvar;
     private AutoCompleteComboBox autoCompleteCategoria;
+    private final ApplicationContext applicationContext;
 
-    public PecaFormController(EstoqueService estoqueService, ModeloService modeloService) {
+    public PecaFormController(EstoqueService estoqueService, ModeloService modeloService, ApplicationContext applicationContext) {
         this.estoqueService = estoqueService;
         this.modeloService = modeloService;
+        this.applicationContext = applicationContext;
     }
 
     public void configurar(Peca pecaExistente, Runnable aoSalvar) {
@@ -129,6 +133,7 @@ public class PecaFormController {
             cmbModelo.getSelectionModel().selectFirst();
         }
     }
+
 
     private void fecharModal() {
         ((Stage) btnSalvar.getScene().getWindow()).close();

@@ -75,22 +75,34 @@ public class FornecedorController {
         btnNovoFornecedor.setDisable(!permissaoUtil.verificar(PermissaoChave.FORNECEDOR_CRIAR));
 
         configurarColunas();
-        carregarCategorias();
 
-        paginacaoController.configurar(
-                pagina -> carregarPagina(pagina),
-                tamanho -> carregarPagina(0)
-        );
+        if (permissaoUtil.verificar(PermissaoChave.FORNECEDOR_VISUALIZAR)) {
+            carregarCategorias();
 
-        // Listeners para busca em tempo real
-        txtBusca.textProperty().addListener((obs, a, n) -> reiniciarBusca());
-        cmbCategoria.valueProperty().addListener((obs, a, n) -> reiniciarBusca());
-        grupoStatus.selectedToggleProperty().addListener((obs, antigo, novo) -> {
-            if (novo == null) antigo.setSelected(true);
-            else reiniciarBusca();
-        });
+            paginacaoController.configurar(
+                    pagina -> carregarPagina(pagina),
+                    tamanho -> carregarPagina(0)
+            );
 
-        carregarPagina(0);
+            // Listeners para busca em tempo real
+            txtBusca.textProperty().addListener((obs, a, n) -> reiniciarBusca());
+            cmbCategoria.valueProperty().addListener((obs, a, n) -> reiniciarBusca());
+            grupoStatus.selectedToggleProperty().addListener((obs, antigo, novo) -> {
+                if (novo == null) antigo.setSelected(true);
+                else reiniciarBusca();
+            });
+
+            carregarPagina(0);
+        } else {
+            tabelaFornecedores.setPlaceholder(new Label("Seu usuário não possui permissão para visualizar os fornecedores."));
+
+            txtBusca.setDisable(true);
+            cmbCategoria.setDisable(true);
+
+            btnStatusTodos.setDisable(true);
+            btnStatusAtivos.setDisable(true);
+            btnStatusInativos.setDisable(true);
+        }
     }
 
     private void carregarCategorias() {

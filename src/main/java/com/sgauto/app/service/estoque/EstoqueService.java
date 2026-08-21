@@ -3,6 +3,7 @@ package com.sgauto.app.service.estoque;
 import com.sgauto.app.enums.CampoPreco;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoAjustePreco;
+import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.model.estoque.Modelo;
 import com.sgauto.app.model.estoque.Peca;
 import com.sgauto.app.repository.estoque.ModeloRepository;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EstoqueService {
@@ -133,6 +135,16 @@ public class EstoqueService {
         }
         pecaRepository.saveAll(pecas);
         return pecas.size();
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Fornecedor> carregarFornecedoresDaPeca(Long pecaId) {
+        Peca peca = pecaRepository.findById(pecaId)
+                .orElseThrow(() -> new IllegalArgumentException("Peça não encontrada."));
+
+        peca.getFornecedores().size();
+
+        return peca.getFornecedores();
     }
 
     private BigDecimal calcularNovoValor(BigDecimal valorAtual, TipoAjustePreco tipo, BigDecimal valor) {

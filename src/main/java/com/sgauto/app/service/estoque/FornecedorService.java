@@ -168,4 +168,8 @@ public class FornecedorService {
         if (!permissaoUtil.verificar(PermissaoChave.FORNECEDOR_VISUALIZAR)) return 0;
         return fornecedorRepository.countByAtivo(ativo);
     }
+
+    public List<Fornecedor> listarAtivos() {
+        return fornecedorRepository.findByAtivoTrueOrderByRazaoSocialAsc();
+    }
 }

@@ -2,6 +2,8 @@ package com.sgauto.app.model.estoque;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "t_peca")
@@ -32,6 +34,14 @@ public class Peca {
     @Column(name = "peca_modelo", nullable = false, length = 100)
     private String modelo;
 
+    @ManyToMany
+    @JoinTable(
+            name = "t_peca_fornecedor",
+            joinColumns = @JoinColumn(name = "peca_id"),
+            inverseJoinColumns = @JoinColumn(name = "fornecedor_id")
+    )
+    private Set<Fornecedor> fornecedores = new HashSet<>();
+
     public Peca() {}
 
     public Peca(String codigo, String descricao, String modelo, BigDecimal precoCusto, BigDecimal precoVenda,
@@ -60,4 +70,6 @@ public class Peca {
     public void setEstoqueMinimo(Integer estoqueMinimo) { this.estoqueMinimo = estoqueMinimo; }
     public String getModelo() { return modelo; }
     public void setModelo(String modelo) { this.modelo = modelo; }
+    public Set<Fornecedor> getFornecedores() {return fornecedores;}
+    public void setFornecedores(Set<Fornecedor> fornecedores) {this.fornecedores = fornecedores;}
 }
