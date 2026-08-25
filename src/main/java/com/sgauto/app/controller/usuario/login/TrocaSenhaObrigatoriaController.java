@@ -63,7 +63,7 @@ public class TrocaSenhaObrigatoriaController {
         try {
             usuarioService.trocarSenha(usuarioLogado.getId(), senhaAtual, novaSenha);
 
-            System.out.println("Senha atualizada com sucesso. Liberando acesso ao sistema...");
+            log.info("Senha atualizada com sucesso. Liberando acesso ao sistema.");
 
             SessaoUsuario.getInstancia().setUsuarioLogado(usuarioLogado);
 
