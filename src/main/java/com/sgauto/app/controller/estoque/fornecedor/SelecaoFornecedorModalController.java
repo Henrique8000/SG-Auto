@@ -1,7 +1,10 @@
 package com.sgauto.app.controller.estoque.fornecedor;
 
+import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.service.estoque.FornecedorService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -31,12 +34,14 @@ public class SelecaoFornecedorModalController {
     private final FornecedorService fornecedorService;
     private final ObservableList<Fornecedor> todosFornecedoresAtivos = FXCollections.observableArrayList();
     private FilteredList<Fornecedor> listaFiltrada; // Movido para o escopo da classe
+    private final VerificaPermissaoUtil permissaoUtil;
 
     private final Set<Long> idsSelecionados = new HashSet<>();
     private Consumer<Set<Fornecedor>> onConfirmar;
 
-    public SelecaoFornecedorModalController(FornecedorService fornecedorService) {
+    public SelecaoFornecedorModalController(FornecedorService fornecedorService, VerificaPermissaoUtil permissaoUtil) {
         this.fornecedorService = fornecedorService;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @FXML
@@ -49,6 +54,11 @@ public class SelecaoFornecedorModalController {
 
     public void configurar(Set<Fornecedor> fornecedoresJaVinculados, Consumer<Set<Fornecedor>> onConfirmar) {
         this.onConfirmar = onConfirmar;
+
+        this.idsSelecionados.clear();
+
+        this.txtBusca.clear();
+        this.chkApenasSelecionados.setSelected(false);
 
         if (fornecedoresJaVinculados != null) {
             fornecedoresJaVinculados.forEach(f -> idsSelecionados.add(f.getId()));
@@ -157,6 +167,11 @@ public class SelecaoFornecedorModalController {
 
     @FXML
     private void confirmar() {
+        if (!permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+            ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("Você não tem permissão para alterar os fornecedores desta peça.");
+            return;
+        }
+
         if (onConfirmar != null) {
             Set<Fornecedor> selecaoFinal = todosFornecedoresAtivos.stream()
                     .filter(f -> idsSelecionados.contains(f.getId()))
@@ -164,6 +179,7 @@ public class SelecaoFornecedorModalController {
 
             onConfirmar.accept(selecaoFinal);
         }
+
         fecharModal();
     }
 
