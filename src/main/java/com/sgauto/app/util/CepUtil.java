@@ -13,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class CepUtil {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CepUtil.class);
 
     private static final HttpClient CLIENT = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(3))
@@ -52,8 +53,9 @@ public class CepUtil {
                         Platform.runLater(() -> callback.accept(endereco));
                     }
                 }
-            } catch (Exception e) {
-                System.out.println("Consulta de CEP indisponível no momento.");
+            }
+            catch (Exception e) {
+                log.warn("Consulta de CEP indisponível no momento", e);
             }
         });
     }

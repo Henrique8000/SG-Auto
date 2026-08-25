@@ -9,6 +9,7 @@ import javafx.stage.Window;
 import java.net.URL;
 
 public class ModalUtil {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModalUtil.class);
 
     private static final String CSS_PATH = "/com/sgauto/app/css/estilo.css";
 
@@ -26,11 +27,12 @@ public class ModalUtil {
         URL cssUrl = ModalUtil.class.getResource(CSS_PATH);
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());
-        } else {
-            System.err.println("Aviso: Arquivo CSS não encontrado no caminho: " + CSS_PATH);
+        }
+        else {
+            log.warn("Arquivo CSS não encontrado no caminho: {}", CSS_PATH);
         }
 
-        scene.setFill(javafx.scene.paint.Color.web("#1a1c20"));
+            scene.setFill(javafx.scene.paint.Color.web("#1a1c20"));
 
         Stage modal = new Stage();
         modal.initModality(Modality.APPLICATION_MODAL);
