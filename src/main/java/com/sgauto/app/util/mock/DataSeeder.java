@@ -20,6 +20,7 @@ import java.util.List;
 @Component
 @Profile("dev")
 public class DataSeeder implements CommandLineRunner {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataSeeder.class);
 
     private final CategoriaRepository categoriaRepository;
     private final ModeloRepository modeloRepository;
@@ -49,7 +50,7 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         if (categoriaRepository.count() == 0) {
-            System.out.println("🌱 [DEV] Iniciando o povoamento do banco de dados (Mock Data)...");
+            log.info("[DEV] Iniciando o povoamento do banco de dados (Mock Data)...");
 
             Categoria catPeca = new Categoria("Filtros e Lubrificantes", "Óleos e filtros em geral", "PECA", true);
             Categoria catServico = new Categoria("Mecânica Geral", "Serviços de rotina e manutenção", "SERVICO", true);
@@ -122,7 +123,7 @@ public class DataSeeder implements CommandLineRunner {
             );
             veiculoRepository.save(veiculo1);
 
-            System.out.println("✅ [DEV] Banco de dados populado com sucesso!");
+            log.info("[DEV] Banco de dados populado com sucesso!");
         }
     }
 }
