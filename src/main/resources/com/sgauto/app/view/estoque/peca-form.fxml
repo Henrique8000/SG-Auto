@@ -24,7 +24,7 @@
 
     <VBox spacing="4">
         <Label text="Modelo" styleClass="form-label"/>
-        <ComboBox fx:id="cmbModelo" styleClass="search-field"/>
+        <ComboBox fx:id="cmbModelo" styleClass="search-field" maxWidth="Infinity"/>
     </VBox>
 
     <HBox spacing="12">
@@ -40,11 +40,11 @@
 
     <HBox spacing="12">
         <VBox spacing="4" HBox.hgrow="ALWAYS">
-            <Label text="Quantidade em Estoque" styleClass="form-label"/>
+            <Label text="Estoque Atual" styleClass="form-label"/>
             <TextField fx:id="txtQuantidade" styleClass="form-input"/>
         </VBox>
         <VBox spacing="4" HBox.hgrow="ALWAYS">
-            <Label text="Estoque Mínimo" styleClass="form-label"/>
+            <Label text="Estoque Mín." styleClass="form-label"/>
             <TextField fx:id="txtEstoqueMinimo" styleClass="form-input"/>
         </VBox>
     </HBox>
@@ -53,6 +53,6 @@
 
     <HBox spacing="12" alignment="CENTER_RIGHT">
         <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
-        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
+        <Button fx:id="btnSalvar" text="Salvar Peça" styleClass="btn-primary" onAction="#salvar"/>
     </HBox>
 </VBox>

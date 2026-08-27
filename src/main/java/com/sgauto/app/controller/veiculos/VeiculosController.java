@@ -2,7 +2,7 @@ package com.sgauto.app.controller.veiculos;
 
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Veiculo;
-import com.sgauto.app.service.ModeloService;
+import com.sgauto.app.service.estoque.ModeloService;
 import com.sgauto.app.service.VeiculoService;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;

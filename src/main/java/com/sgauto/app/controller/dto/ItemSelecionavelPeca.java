@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.dto;
 
-import com.sgauto.app.model.Peca;
+import com.sgauto.app.model.estoque.Peca;
 import javafx.beans.property.SimpleBooleanProperty;
 
 public class ItemSelecionavelPeca {

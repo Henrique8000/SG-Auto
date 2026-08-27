@@ -1,19 +1,20 @@
-package com.sgauto.app.service;
+package com.sgauto.app.service.estoque;
 
 import com.sgauto.app.enums.CampoPreco;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.enums.TipoAjustePreco;
-import com.sgauto.app.model.Modelo;
-import com.sgauto.app.model.Peca;
-import com.sgauto.app.repository.CategoriaRepository;
-import com.sgauto.app.repository.ModeloRepository;
-import com.sgauto.app.repository.PecaRepository;
+import com.sgauto.app.model.estoque.Fornecedor;
+import com.sgauto.app.model.estoque.Modelo;
+import com.sgauto.app.model.estoque.Peca;
+import com.sgauto.app.repository.estoque.ModeloRepository;
+import com.sgauto.app.repository.estoque.PecaRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EstoqueService {
@@ -134,6 +135,16 @@ public class EstoqueService {
         }
         pecaRepository.saveAll(pecas);
         return pecas.size();
+    }
+
+    @Transactional(readOnly = true)
+    public Set<Fornecedor> carregarFornecedoresDaPeca(Long pecaId) {
+        Peca peca = pecaRepository.findById(pecaId)
+                .orElseThrow(() -> new IllegalArgumentException("Peça não encontrada."));
+
+        peca.getFornecedores().size();
+
+        return peca.getFornecedores();
     }
 
     private BigDecimal calcularNovoValor(BigDecimal valorAtual, TipoAjustePreco tipo, BigDecimal valor) {

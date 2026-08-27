@@ -868,3 +868,26 @@ ScrollPane.modal-container {
     -fx-border-radius: 8;
     -fx-border-width: 1;
 }
+
+/* ═══════════════ 18. SCROLLPANE (formulário longo) ═══════════════ */
+.scroll-pane-form {
+    -fx-background: -bg-app; /* Força o fundo escuro do viewport */
+    -fx-background-color: transparent;
+}
+
+.scroll-pane-form > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane-form .scroll-bar:vertical {
+    -fx-background-color: -bg-app;
+}
+
+.scroll-pane-form .scroll-bar:vertical .thumb {
+    -fx-background-color: -bg-card-hover;
+    -fx-background-radius: 6;
+}
+
+.scroll-pane-form .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}

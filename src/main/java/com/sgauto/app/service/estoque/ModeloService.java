@@ -1,9 +1,9 @@
-package com.sgauto.app.service;
+package com.sgauto.app.service.estoque;
 
 import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.model.Modelo;
-import com.sgauto.app.repository.ModeloRepository;
-import com.sgauto.app.repository.PecaRepository;
+import com.sgauto.app.model.estoque.Modelo;
+import com.sgauto.app.repository.estoque.ModeloRepository;
+import com.sgauto.app.repository.estoque.PecaRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" prefWidth="650" prefHeight="600" styleClass="modal-container"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.fornecedor.CategoriaFornecedorModalController">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <!-- Cabeçalho -->
+    <VBox spacing="5">
+        <Label text="Gerenciar Categorias" styleClass="modal-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e0e0e0;"/>
+        <Label text="Selecione uma categoria existente ou crie uma nova rapidamente." styleClass="modal-subtitle" style="-fx-text-fill: #8e8e8e;"/>
+    </VBox>
+
+    <!-- Nova Categoria (Criação Rápida) -->
+    <VBox spacing="10" style="-fx-background-color: #222222; -fx-padding: 15; -fx-background-radius: 6; -fx-border-color: #333333; -fx-border-radius: 6;">
+        <Label text="NOVA CATEGORIA" styleClass="section-title" style="-fx-font-weight: bold; -fx-text-fill: #555; -fx-font-size: 11px;"/>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <TextField fx:id="txtNovaCategoriaNome" promptText="Nome da categoria *" styleClass="form-input" prefWidth="200"/>
+            <TextField fx:id="txtNovaCategoriaDesc" promptText="Descrição (Opcional)" styleClass="form-input" HBox.hgrow="ALWAYS"/>
+            <Button text="Adicionar" styleClass="btn-primary" onAction="#adicionarCategoria"/>
+        </HBox>
+    </VBox>
+
+    <Separator style="-fx-opacity: 0.2;"/>
+
+    <!-- Filtros da Listagem -->
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <TextField fx:id="txtBusca" promptText="Buscar categoria..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+
+        <HBox styleClass="segmented-control">
+            <fx:define>
+                <ToggleGroup fx:id="grupoStatus"/>
+            </fx:define>
+            <ToggleButton fx:id="btnStatusTodos" text="Todos" styleClass="segmented-button" toggleGroup="$grupoStatus" selected="true"/>
+            <ToggleButton fx:id="btnStatusAtivos" text="Ativos" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+            <ToggleButton fx:id="btnStatusInativos" text="Inativos" styleClass="segmented-button" toggleGroup="$grupoStatus"/>
+        </HBox>
+    </HBox>
+
+    <!-- Tabela de Categorias -->
+    <TableView fx:id="tabelaCategorias" VBox.vgrow="ALWAYS" styleClass="modern-table">
+        <columns>
+            <TableColumn fx:id="colNome" text="Nome" prefWidth="180"/>
+            <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="200"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+            <TableColumn fx:id="colAcoes" text="Ações" prefWidth="120" sortable="false"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+        </columnResizePolicy>
+    </TableView>
+
+    <!-- Rodapé -->
+    <HBox alignment="CENTER_RIGHT" spacing="15">
+        <Button text="Fechar" styleClass="btn-secondary" onAction="#fecharModal"/>
+    </HBox>
+
+</VBox>

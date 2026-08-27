@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16" prefWidth="550" prefHeight="500" styleClass="modal-container"
+      xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.estoque.fornecedor.SelecaoFornecedorModalController">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <VBox spacing="4">
+        <Label text="Vincular Fornecedores" styleClass="modal-title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #e0e0e0;"/>
+        <Label text="Selecione os fornecedores que vendem esta peça." styleClass="modal-subtitle" style="-fx-text-fill: #8e8e8e;"/>
+    </VBox>
+
+    <!-- Área de Filtros -->
+    <VBox spacing="8">
+        <TextField fx:id="txtBusca" promptText="Buscar fornecedor por nome ou CNPJ..." styleClass="search-field"/>
+        <CheckBox fx:id="chkApenasSelecionados" text="Mostrar apenas selecionados" styleClass="check-box"/>
+    </VBox>
+
+    <TableView fx:id="tabelaFornecedores" VBox.vgrow="ALWAYS" styleClass="modern-table">
+        <columns>
+            <!-- Coluna para o CheckBox -->
+            <TableColumn fx:id="colSelecionar" prefWidth="50" sortable="false" resizable="false"/>
+            <TableColumn fx:id="colRazao" text="Fornecedor / Razão Social" prefWidth="240"/>
+            <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="150"/>
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY_ALL_COLUMNS"/>
+        </columnResizePolicy>
+    </TableView>
+
+    <!-- Rodapé -->
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <Label fx:id="lblContagem" text="0 selecionados" styleClass="results-count"/>
+
+        <Region HBox.hgrow="ALWAYS"/>
+
+        <Button text="Cancelar" styleClass="btn-secondary" onAction="#fecharModal"/>
+        <Button fx:id="btnConfirmar" text="Confirmar Seleção" styleClass="btn-primary" onAction="#confirmar"/>
+    </HBox>
+
+</VBox>

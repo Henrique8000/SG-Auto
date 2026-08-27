@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.estoque;
 
-import com.sgauto.app.model.Modelo;
-import com.sgauto.app.service.ModeloService;
+import com.sgauto.app.model.estoque.Modelo;
+import com.sgauto.app.service.estoque.ModeloService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

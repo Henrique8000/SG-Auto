@@ -35,6 +35,10 @@ INSERT INTO t_permissao (permissao_chave, permissao_descricao, permissao_modulo)
 ('SERVICO_VISUALIZAR', 'Visualizar tabela de serviços prestados', 'Estoque'),
 ('SERVICO_GERENCIAR', 'Criar, editar e remover serviços e tempos padrão', 'Estoque'),
 ('CATEGORIA_GERENCIAR', 'Gerenciar categorias e modelos de veículos/peças', 'Estoque'),
+('FORNECEDOR_VISUALIZAR', 'Visualizar tela de fornecedores', 'Estoque'),
+('FORNECEDOR_CRIAR', 'Criar fornecedores', 'Estoque'),
+('FORNECEDOR_EDITAR', 'Editar fornecedores já existentes', 'Estoque'),
+('FORNECEDOR_EXCLUIR', 'Excluir fornecedores', 'Estoque'),
 
 -- MÓDULO: OPERACIONAL (ORDEM DE SERVIÇO)
 ('OS_VISUALIZAR', 'Visualizar listagem e histórico de Ordens de Serviço', 'Operacional'),

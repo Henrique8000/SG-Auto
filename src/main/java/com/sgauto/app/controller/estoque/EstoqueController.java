@@ -1,8 +1,10 @@
 package com.sgauto.app.controller.estoque;
 
+import com.sgauto.app.controller.estoque.fornecedor.SelecaoFornecedorModalController;
 import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.model.Peca;
-import com.sgauto.app.service.EstoqueService;
+import com.sgauto.app.model.estoque.Fornecedor;
+import com.sgauto.app.model.estoque.Peca;
+import com.sgauto.app.service.estoque.EstoqueService;
 import com.sgauto.app.util.AutoCompleteComboBox;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class EstoqueController {
@@ -108,7 +111,6 @@ public class EstoqueController {
         }
     }
 
-
     private void configurarOrdenacao() {
         cmbOrdenar.setItems(FXCollections.observableArrayList(
                 ORD_DESC_AZ, ORD_DESC_ZA, ORD_ESTOQUE_MENOR, ORD_ESTOQUE_MAIOR));
@@ -142,11 +144,13 @@ public class EstoqueController {
         colAcoes.setCellFactory(coluna -> new TableCell<>() {
             private final Button btnMovimentar = new Button("Movimentar");
             private final Button btnEditar = new Button("Editar");
+            private final Button btnFornecedor = new Button("Fornecedor");
             private final Button btnExcluir = new Button("Excluir");
-            private final HBox container = new HBox(6, btnMovimentar, btnEditar, btnExcluir);
+            private final HBox container = new HBox(6, btnMovimentar, btnEditar, btnFornecedor, btnExcluir);
             {
                 btnMovimentar.getStyleClass().add("btn-table-action");
                 btnEditar.getStyleClass().add("btn-table-action");
+                btnFornecedor.getStyleClass().add("btn-table-action");
                 btnExcluir.getStyleClass().addAll("btn-table-action", "btn-table-danger");
 
                 btnMovimentar.setOnAction(e -> {
@@ -163,6 +167,11 @@ public class EstoqueController {
                     } else {
                         ExibirMensagemBloqueioUtil.exibir();
                     }
+                });
+
+                // NOVO: Agora chama o modal exclusivo de fornecedores da peça
+                btnFornecedor.setOnAction(e -> {
+                    abrirModalFornecedores(getTableView().getItems().get(getIndex()));
                 });
 
                 btnExcluir.setOnAction(e -> {
@@ -295,6 +304,34 @@ public class EstoqueController {
         }
     }
 
+    private void abrirModalFornecedores(Peca peca) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/selecao-fornecedor-modal.fxml"));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent root = loader.load();
+
+            SelecaoFornecedorModalController controller = loader.getController();
+
+            Set<Fornecedor> fornecedoresCarregados = estoqueService.carregarFornecedoresDaPeca(peca.getId());
+
+            controller.configurar(fornecedoresCarregados, novaSelecao -> {
+                if (permissaoUtil.verificar(PermissaoChave.PECA_EDITAR)) {
+                    peca.setFornecedores(novaSelecao);
+                    estoqueService.atualizar(peca);
+                    carregarDados();
+                } else {
+                    ExibirMensagemBloqueioUtil.exibirMensagemPersonalizada("Você tem permissão apenas para visualizar os fornecedores desta peça.");
+                }
+            });
+
+            Stage modal = ModalUtil.abrir(root, "Fornecedores — " + peca.getCodigo(), tabelaPecas.getScene().getWindow());
+            modal.showAndWait();
+
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao abrir a janela de fornecedores", e);
+        }
+    }
+
     private void abrirMovimentacao(Peca peca) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/movimentacao-estoque-modal.fxml"));
@@ -347,5 +384,4 @@ public class EstoqueController {
     private String formatarMoeda(BigDecimal valor) {
         return String.format("R$ %,.2f", valor);
     }
-
 }
