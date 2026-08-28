@@ -1,9 +1,8 @@
 package com.sgauto.app.service.usuario;
 
-import com.sgauto.app.controller.dto.usuario.FiltroPermissaoDTO;
-import com.sgauto.app.model.usuario.PerfilAcesso;
+import com.sgauto.app.dto.usuario.FiltroPermissaoDTO;
 import com.sgauto.app.model.usuario.Permissao;
-import com.sgauto.app.repository.specifications.usuario.PermissaoSpecification;
+import com.sgauto.app.specifications.usuario.PermissaoSpecification;
 import com.sgauto.app.repository.usuario.PermissaoRepository;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;

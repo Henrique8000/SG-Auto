@@ -1,5 +1,6 @@
 package com.sgauto.app.repository.OrdemServico;
 
+import com.sgauto.app.dto.dashboard.OsPorStatusDTO;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,4 +47,40 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
 
     @Query("SELECT os FROM OrdemServico os JOIN FETCH os.cliente JOIN FETCH os.veiculo JOIN FETCH os.funcionario WHERE os.id = :id")
     Optional<OrdemServico> findByIdDetalhado(@Param("id") Long id);
+
+    // ___________
+
+    @Query("""
+            SELECT new com.sgauto.app.dto.OsPorStatusDTO(os.status, COUNT(os))
+            FROM OrdemServico os
+            WHERE os.ativo = true
+            GROUP BY os.status
+            """)
+    List<OsPorStatusDTO> contarPorStatus();
+
+    @Query("""
+            SELECT COUNT(os)
+            FROM OrdemServico os
+            WHERE os.ativo = true
+            AND os.status NOT IN (:statusEncerrados)
+            """)
+    long contarOsAbertas(@Param("statusEncerrados") List<StatusOS> statusEncerrados);
+
+    @Query("""
+            SELECT COUNT(os)
+            FROM OrdemServico os
+            WHERE os.ativo = true
+            AND os.status = :status
+            """)
+    long contarPorStatusUnico(@Param("status") StatusOS status);
+
+    @Query("""
+            SELECT AVG(os.valorTotal)
+            FROM OrdemServico os
+            WHERE os.status = com.sgauto.app.enums.StatusOS.FINALIZADA
+            AND os.dataFinalizacao BETWEEN :inicio AND :fim
+            """)
+    BigDecimal calcularTicketMedio(@Param("inicio") LocalDateTime inicio,
+                                   @Param("fim") LocalDateTime fim);
 }
+

@@ -1,6 +1,6 @@
-package com.sgauto.app.repository.specifications.estoque;
+package com.sgauto.app.specifications.estoque;
 
-import com.sgauto.app.controller.dto.estoque.FiltroCategoriaFornecedorDTO;
+import com.sgauto.app.dto.estoque.FiltroCategoriaFornecedorDTO;
 import com.sgauto.app.model.estoque.CategoriaFornecedor;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;

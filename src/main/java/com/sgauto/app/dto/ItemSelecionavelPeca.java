@@ -1,4 +1,4 @@
-package com.sgauto.app.controller.dto;
+package com.sgauto.app.dto;
 
 import com.sgauto.app.model.estoque.Peca;
 import javafx.beans.property.SimpleBooleanProperty;

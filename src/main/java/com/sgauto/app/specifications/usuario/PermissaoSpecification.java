@@ -1,4 +1,4 @@
-package com.sgauto.app.repository.specifications.usuario;
+package com.sgauto.app.specifications.usuario;
 
 import com.sgauto.app.model.usuario.Permissao;
 import org.springframework.data.jpa.domain.Specification;

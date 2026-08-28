@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.servicos;
 
-import com.sgauto.app.controller.dto.ItemSelecionavelServico;
+import com.sgauto.app.dto.ItemSelecionavelServico;
 import com.sgauto.app.enums.TipoAjustePreco;
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.service.CategoriaService;

@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.usuario;
 
 import com.sgauto.app.controller.PaginacaoController;
-import com.sgauto.app.controller.dto.usuario.FiltroPermissaoDTO;
+import com.sgauto.app.dto.usuario.FiltroPermissaoDTO;
 import com.sgauto.app.model.usuario.Permissao;
 import com.sgauto.app.service.usuario.PermissaoService;
 import javafx.collections.FXCollections;

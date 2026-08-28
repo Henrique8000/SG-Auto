@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.estoque.fornecedor;
 
-import com.sgauto.app.controller.dto.estoque.FiltroCategoriaFornecedorDTO;
+import com.sgauto.app.dto.estoque.FiltroCategoriaFornecedorDTO;
 import com.sgauto.app.model.estoque.CategoriaFornecedor;
 import com.sgauto.app.service.estoque.CategoriaFornecedorService;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;

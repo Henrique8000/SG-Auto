@@ -27,4 +27,8 @@ public interface EstadiaPatioRepository extends JpaRepository<EstadiaPatio, Long
     boolean existsByTarifaId(Long tarifaId);
 
     boolean existsByMotivoId(Long motivoId);
+
+    List<EstadiaPatio> findByStatusOrderByDataEntradaAsc(StatusEstadiaPatio status);
+
+    long countByStatus(StatusEstadiaPatio status);
 }

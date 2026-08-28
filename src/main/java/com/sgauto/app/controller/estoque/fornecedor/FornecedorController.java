@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.estoque.fornecedor;
 
 import com.sgauto.app.controller.PaginacaoController;
-import com.sgauto.app.controller.dto.estoque.FiltroFornecedorDTO;
+import com.sgauto.app.dto.estoque.FiltroFornecedorDTO;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.service.estoque.FornecedorService;
