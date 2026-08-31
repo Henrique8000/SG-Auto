@@ -18,13 +18,8 @@ public enum PeriodoDashboard {
         this.dias = dias;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public int getDias() {
-        return dias;
-    }
+    public String getLabel() { return label; }
+    public int getDias() { return dias; }
 
     public LocalDateTime getInicio() {
         return LocalDate.now().minusDays(dias - 1L).atStartOfDay();

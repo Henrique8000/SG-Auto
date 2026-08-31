@@ -13,19 +13,19 @@ public interface PecaRepository extends JpaRepository<Peca, Long> {
     boolean existsByModelo(String modelo);
 
     @Query("""
-            SELECT new com.sgauto.app.dto.PecaEstoqueCriticoDTO(p.id, p.nome, p.quantidade, p.estoqueMinimo)
+            SELECT new com.sgauto.app.dto.dashboard.PecaEstoqueCriticoDTO(
+                p.id, p.descricao, p.quantidadeEstoque, p.estoqueMinimo
+            )
             FROM Peca p
-            WHERE p.ativo = true
-            AND p.quantidade <= p.estoqueMinimo
-            ORDER BY p.quantidade ASC
+            WHERE p.quantidadeEstoque <= p.estoqueMinimo
+            ORDER BY p.quantidadeEstoque ASC
             """)
     List<PecaEstoqueCriticoDTO> buscarAbaixoDoEstoqueMinimo();
 
     @Query("""
             SELECT COUNT(p)
             FROM Peca p
-            WHERE p.ativo = true
-            AND p.quantidade <= p.estoqueMinimo
+            WHERE p.quantidadeEstoque <= p.estoqueMinimo
             """)
     long contarPecasEstoqueCritico();
 }

@@ -891,3 +891,92 @@ ScrollPane.modal-container {
 .scroll-pane-form .scroll-bar:vertical .track {
     -fx-background-color: transparent;
 }
+
+/* ═══════════════ 24. DASHBOARD ═══════════════ */
+
+/* Variante "perigo" para os KPIs críticos (estoque zerado, etc.) —
+   complementa .card-value e .card-value-warning que já existem */
+.card-value-danger {
+    -fx-text-fill: -danger;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.card-alerta {
+    -fx-border-color: -danger;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+}
+
+.card-sublabel {
+    -fx-text-fill: -text-muted;
+    -fx-font-size: 11px;
+}
+
+/* Cards que envolvem os gráficos — mesma linguagem visual do .card,
+   só sem a altura fixa de 96px (os gráficos precisam de mais espaço) */
+.chart-card {
+    -fx-background-color: -bg-card;
+    -fx-background-radius: 6;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-padding: 18 20;
+    -fx-spacing: 10;
+}
+
+.section-title {
+    -fx-text-fill: -text-primary;
+    -fx-font-size: 13.5px;
+    -fx-font-weight: bold;
+}
+
+/* ── Gráficos: fundo transparente para herdar o .chart-card,
+   grid e eixos no tom "Cinza Mineral" do design system ── */
+.dashboard-chart {
+    -fx-background-color: transparent;
+    -fx-legend-visible: false;
+}
+.dashboard-chart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+.dashboard-chart .chart-vertical-grid-lines,
+.dashboard-chart .chart-horizontal-grid-lines {
+    -fx-stroke: -border-subtle;
+}
+.dashboard-chart .axis {
+    -fx-tick-label-fill: -text-secondary;
+    -fx-font-size: 11px;
+}
+.dashboard-chart .axis-label {
+    -fx-text-fill: -text-secondary;
+}
+.dashboard-chart .chart-title {
+    -fx-text-fill: -text-primary;
+}
+
+/* Barras e linha no tom ocre anodizado (mesma cor de ação primária) */
+.dashboard-chart .default-color0.chart-bar {
+    -fx-bar-fill: -accent;
+}
+.dashboard-chart .default-color0.chart-bar:hover {
+    -fx-bar-fill: -accent-hover;
+}
+.dashboard-chart .default-color0.chart-line-symbol {
+    -fx-background-color: -accent, -bg-card;
+}
+.dashboard-chart .default-color0.chart-series-line {
+    -fx-stroke: -accent;
+    -fx-stroke-width: 2px;
+}
+
+/* Tooltip customizado dos gráficos, no tom titânio */
+.dashboard-chart .chart-line-symbol .tooltip,
+.chart-bar .tooltip {
+    -fx-background-color: -bg-input;
+    -fx-text-fill: -text-primary;
+    -fx-border-color: -border-subtle;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-font-size: 12px;
+}

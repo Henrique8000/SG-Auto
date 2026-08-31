@@ -18,22 +18,22 @@ public interface CaixaMovimentacaoRepository extends JpaRepository<CaixaMoviment
     List<CaixaMovimentacao> findByCaixaIdAndOrigem(Long caixaId, OrigemMovimentacao origem);
 
     @Query("""
-            SELECT COALESCE(SUM(m.valor), 0)
-            FROM CaixaMovimentacao m
-            WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
-            AND m.dataMovimentacao BETWEEN :inicio AND :fim
-            """)
+        SELECT COALESCE(SUM(m.valor), 0)
+        FROM CaixaMovimentacao m
+        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        AND m.data BETWEEN :inicio AND :fim
+        """)
     BigDecimal somarEntradasPorPeriodo(@Param("inicio") LocalDateTime inicio,
                                        @Param("fim") LocalDateTime fim);
 
     @Query("""
-            SELECT new com.sgauto.app.dto.FaturamentoDiarioDTO(CAST(m.dataMovimentacao AS date), SUM(m.valor))
-            FROM CaixaMovimentacao m
-            WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
-            AND m.dataMovimentacao BETWEEN :inicio AND :fim
-            GROUP BY CAST(m.dataMovimentacao AS date)
-            ORDER BY CAST(m.dataMovimentacao AS date)
-            """)
+        SELECT new com.sgauto.app.dto.dashboard.FaturamentoDiarioDTO(CAST(m.data AS LocalDate), SUM(m.valor))
+        FROM CaixaMovimentacao m
+        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        AND m.data BETWEEN :inicio AND :fim
+        GROUP BY CAST(m.data AS LocalDate)
+        ORDER BY CAST(m.data AS LocalDate)
+        """)
     List<FaturamentoDiarioDTO> faturamentoDiarioPorPeriodo(@Param("inicio") LocalDateTime inicio,
                                                            @Param("fim") LocalDateTime fim);
 }
