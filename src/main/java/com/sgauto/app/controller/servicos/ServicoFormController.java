@@ -20,6 +20,7 @@ public class ServicoFormController {
     @FXML private TextField txtNome;
     @FXML private TextArea txtDescricao;
     @FXML private TextField txtValor;
+    @FXML private TextField txtValorMaoDeObra;
     @FXML private TextField txtComissao;
     @FXML private TextField txtTempoEstimado;
     @FXML private TextField txtGarantiaDias;
@@ -56,6 +57,7 @@ public class ServicoFormController {
             txtNome.setText(servicoExistente.getNome());
             txtDescricao.setText(servicoExistente.getDescricao());
             txtValor.setText(servicoExistente.getValor().toString());
+            txtValorMaoDeObra.setText(servicoExistente.getValorMaoDeObra().toString());
             txtComissao.setText(servicoExistente.getComissaoPorcentagem().toString());
             txtTempoEstimado.setText(servicoExistente.getTempoEstimadoMinutos().toString());
             txtGarantiaDias.setText(servicoExistente.getGarantiaDias().toString());
@@ -71,6 +73,8 @@ public class ServicoFormController {
             String nome = txtNome.getText().trim();
             String descricao = txtDescricao.getText().trim();
             BigDecimal valor = new BigDecimal(txtValor.getText().trim());
+            String maoDeObraTexto = txtValorMaoDeObra.getText() == null ? "" : txtValorMaoDeObra.getText().trim();
+            BigDecimal valorMaoDeObra = maoDeObraTexto.isEmpty() ? BigDecimal.ZERO : new BigDecimal(maoDeObraTexto);
             BigDecimal comissao = new BigDecimal(txtComissao.getText().trim());
             Integer tempoEstimado = Integer.parseInt(txtTempoEstimado.getText().trim());
             Integer garantiaDias = Integer.parseInt(txtGarantiaDias.getText().trim());
@@ -83,7 +87,7 @@ public class ServicoFormController {
 
             if (servicoEmEdicao == null) {
                 Servico novo = new Servico(codigo, nome, categoria, descricao, valor,
-                        tempoEstimado, garantiaDias, comissao, observacoes, true);
+                        valorMaoDeObra, tempoEstimado, garantiaDias, comissao, observacoes, true);
                 servicoService.cadastrar(novo);
             } else {
                 servicoEmEdicao.setCodigo(codigo);
@@ -91,6 +95,7 @@ public class ServicoFormController {
                 servicoEmEdicao.setNome(nome);
                 servicoEmEdicao.setDescricao(descricao);
                 servicoEmEdicao.setValor(valor);
+                servicoEmEdicao.setValorMaoDeObra(valorMaoDeObra);
                 servicoEmEdicao.setComissaoPorcentagem(comissao);
                 servicoEmEdicao.setTempoEstimadoMinutos(tempoEstimado);
                 servicoEmEdicao.setGarantiaDias(garantiaDias);
@@ -122,4 +127,4 @@ public class ServicoFormController {
     private void fecharModal() {
         ((Stage) btnSalvar.getScene().getWindow()).close();
     }
-}
+}

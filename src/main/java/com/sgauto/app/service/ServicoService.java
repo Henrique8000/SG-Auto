@@ -192,6 +192,16 @@ public class ServicoService {
         if (servico.getValor() == null || servico.getValor().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("O valor do serviço não pode ser negativo");
         }
+
+        if (servico.getValorMaoDeObra() == null) {
+            servico.setValorMaoDeObra(BigDecimal.ZERO);
+        }
+        if (servico.getValorMaoDeObra().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("O valor da mão de obra não pode ser negativo");
+        }
+        if (servico.getValorMaoDeObra().compareTo(servico.getValor()) > 0) {
+            throw new IllegalArgumentException("A mão de obra não pode ser maior que o valor total do serviço");
+        }
     }
 
     private String formatarNome(String nome) {

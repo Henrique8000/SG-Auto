@@ -67,7 +67,8 @@ public class DataSeeder implements CommandLineRunner {
 
             Servico serv1 = new Servico("SRV-TROCA", "Troca de Óleo e Filtro", catServico.getNome(),
                     "Procedimento padrão de esgotamento e troca", new BigDecimal("40.00"),
-                    30, 30, new BigDecimal("10.00"), "Limpar bem o bujão antes de recolocar", true);
+                    new BigDecimal("25.00"), 30, 30, new BigDecimal("10.00"),
+                    "Limpar bem o bujão antes de recolocar", true);
             servicoRepository.save(serv1);
 
             Funcionario func1 = new Funcionario();
