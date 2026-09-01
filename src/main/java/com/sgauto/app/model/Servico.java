@@ -27,6 +27,9 @@ public class Servico {
     @Column(name = "servico_valor", nullable = false)
     private BigDecimal valor;
 
+    @Column(name = "servico_valor_mao_de_obra", nullable = false)
+    private BigDecimal valorMaoDeObra;
+
     @Column(name = "servico_tempo_estimado_minutos", nullable = false)
     private Integer tempoEstimadoMinutos;
 
@@ -51,13 +54,14 @@ public class Servico {
     public Servico() {}
 
     public Servico(String codigo, String nome, String categoria, String descricao, BigDecimal valor,
-                   Integer tempoEstimadoMinutos, Integer garantiaDias, BigDecimal comissaoPorcentagem,
-                   String observacoesTecnicas, Boolean ativo) {
+                   BigDecimal valorMaoDeObra, Integer tempoEstimadoMinutos, Integer garantiaDias,
+                   BigDecimal comissaoPorcentagem, String observacoesTecnicas, Boolean ativo) {
         this.codigo = codigo;
         this.nome = nome;
         this.categoria = categoria;
         this.descricao = descricao;
         this.valor = valor != null ? valor : BigDecimal.ZERO;
+        this.valorMaoDeObra = valorMaoDeObra != null ? valorMaoDeObra : BigDecimal.ZERO;
         this.tempoEstimadoMinutos = tempoEstimadoMinutos != null ? tempoEstimadoMinutos : 60;
         this.garantiaDias = garantiaDias != null ? garantiaDias : 90;
         this.comissaoPorcentagem = comissaoPorcentagem != null ? comissaoPorcentagem : BigDecimal.ZERO;
@@ -93,6 +97,9 @@ public class Servico {
 
     public BigDecimal getValor() { return valor; }
     public void setValor(BigDecimal valor) { this.valor = valor; }
+
+    public BigDecimal getValorMaoDeObra() { return valorMaoDeObra; }
+    public void setValorMaoDeObra(BigDecimal valorMaoDeObra) { this.valorMaoDeObra = valorMaoDeObra; }
 
     public Integer getTempoEstimadoMinutos() { return tempoEstimadoMinutos; }
     public void setTempoEstimadoMinutos(Integer tempoEstimadoMinutos) { this.tempoEstimadoMinutos = tempoEstimadoMinutos; }
