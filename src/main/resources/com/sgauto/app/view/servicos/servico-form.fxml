@@ -37,13 +37,20 @@
     <Label text="CONDIÇÕES COMERCIAIS" styleClass="sidebar-section-label"/>
     <HBox spacing="12">
         <VBox spacing="4" HBox.hgrow="ALWAYS">
-            <Label text="Valor (R\$)" styleClass="form-label"/>
+            <Label text="Valor total (R\$)" styleClass="form-label"/>
             <TextField fx:id="txtValor" styleClass="form-input"/>
         </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Mão de obra (R\$)" styleClass="form-label"/>
+            <TextField fx:id="txtValorMaoDeObra" styleClass="form-input" promptText="Parte do valor total"/>
+        </VBox>
+    </HBox>
+    <HBox spacing="12">
         <VBox spacing="4" HBox.hgrow="ALWAYS">
             <Label text="Comissão (%)" styleClass="form-label"/>
             <TextField fx:id="txtComissao" styleClass="form-input"/>
         </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
     </HBox>
     <HBox spacing="12">
         <VBox spacing="4" HBox.hgrow="ALWAYS">
@@ -67,4 +74,4 @@
         <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>
         <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
     </HBox>
-</VBox>
+</VBox>
