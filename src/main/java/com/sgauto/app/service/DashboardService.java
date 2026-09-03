@@ -110,11 +110,18 @@ public class DashboardService {
     }
 
     // ------------------------------------------------------------------
-    // Gráfico: comissão por funcionário no período selecionado
+    // Faturamento por foma de pagamento e Serviços mais realizados
     // ------------------------------------------------------------------
 
-    public List<ComissaoFuncionarioDTO> comissaoPorFuncionario(PeriodoDashboard periodo) {
-        return osServicoRepository.comissaoPorFuncionario(periodo.getInicio(), periodo.getFim());
+    public List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento(PeriodoDashboard periodo) {
+        return caixaMovimentacaoRepository.faturamentoPorFormaPagamento(periodo.getInicio(), periodo.getFim());
+    }
+
+    public List<ServicoMaisRealizadoDTO> servicosMaisRealizados(PeriodoDashboard periodo) {
+        return osServicoRepository.servicosMaisRealizados(periodo.getInicio(), periodo.getFim())
+                .stream()
+                .limit(5) 
+                .toList();
     }
 
     // ------------------------------------------------------------------

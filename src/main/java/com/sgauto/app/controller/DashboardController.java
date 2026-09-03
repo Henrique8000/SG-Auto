@@ -1,18 +1,20 @@
 package com.sgauto.app.controller;
 
 import com.sgauto.app.dto.dashboard.*;
+import com.sgauto.app.enums.FormaPagamento;
 import com.sgauto.app.enums.PeriodoDashboard;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.service.DashboardService;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
@@ -45,18 +47,14 @@ public class DashboardController implements javafx.fxml.Initializable {
     // ---- Gráficos ----
     @FXML private BarChart<String, Number> chartOsPorStatus;
     @FXML private LineChart<String, Number> chartFaturamento;
-    @FXML private BarChart<String, Number> chartComissao;
+    @FXML private PieChart chartFormaPagamento;
+    @FXML private BarChart<String, Number> chartServicosMaisRealizados;
 
-    // ---- Tabelas de alerta ----
+    // ---- Tabela de alerta ----
     @FXML private TableView<PecaEstoqueCriticoDTO> tabelaPecasCriticas;
     @FXML private TableColumn<PecaEstoqueCriticoDTO, String> colPecaNome;
     @FXML private TableColumn<PecaEstoqueCriticoDTO, Integer> colPecaQuantidade;
     @FXML private TableColumn<PecaEstoqueCriticoDTO, Integer> colPecaMinimo;
-
-    @FXML private TableView<VeiculoPatioDTO> tabelaPatio;
-    @FXML private TableColumn<VeiculoPatioDTO, String> colPatioPlaca;
-    @FXML private TableColumn<VeiculoPatioDTO, String> colPatioCliente;
-    @FXML private TableColumn<VeiculoPatioDTO, Long> colPatioDias;
 
     private final DashboardService dashboardService;
     private final NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -100,17 +98,14 @@ public class DashboardController implements javafx.fxml.Initializable {
     private void selecionarPeriodo(PeriodoDashboard periodo) {
         this.periodoSelecionado = periodo;
         carregarFaturamento();
-        carregarComissao();
+        carregarFormaPagamento();
+        carregarServicosMaisRealizados();
     }
 
     private void configurarTabelas() {
-        colPecaNome.setCellValueFactory(new PropertyValueFactory<>("descricao"));
-        colPecaQuantidade.setCellValueFactory(new PropertyValueFactory<>("quantidadeEstoque"));
-        colPecaMinimo.setCellValueFactory(new PropertyValueFactory<>("estoqueMinimo"));
-
-        colPatioPlaca.setCellValueFactory(new PropertyValueFactory<>("placa"));
-        colPatioCliente.setCellValueFactory(new PropertyValueFactory<>("clienteNome"));
-        colPatioDias.setCellValueFactory(new PropertyValueFactory<>("diasNoPatio"));
+        colPecaNome.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().nome()));
+        colPecaQuantidade.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().quantidade()));
+        colPecaMinimo.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().estoqueMinimo()));
     }
 
     private void configurarGraficos() {
@@ -118,15 +113,18 @@ public class DashboardController implements javafx.fxml.Initializable {
         chartOsPorStatus.setLegendVisible(false);
         chartFaturamento.setAnimated(true);
         chartFaturamento.setCreateSymbols(true);
-        chartComissao.setAnimated(true);
-        chartComissao.setLegendVisible(false);
+        chartFormaPagamento.setAnimated(true);
+        chartFormaPagamento.setLabelsVisible(true);
+        chartServicosMaisRealizados.setAnimated(true);
+        chartServicosMaisRealizados.setLegendVisible(false);
     }
 
     private void carregarTudo() {
         carregarResumo();
         carregarOsPorStatus();
         carregarFaturamento();
-        carregarComissao();
+        carregarFormaPagamento();
+        carregarServicosMaisRealizados();
         carregarAlertas();
     }
 
@@ -145,18 +143,23 @@ public class DashboardController implements javafx.fxml.Initializable {
         );
     }
 
-    private void carregarComissao() {
+    private void carregarFormaPagamento() {
         executarEmBackground(
-                () -> dashboardService.comissaoPorFuncionario(periodoSelecionado),
-                this::preencherGraficoComissao
+                () -> dashboardService.faturamentoPorFormaPagamento(periodoSelecionado),
+                this::preencherGraficoFormaPagamento
+        );
+    }
+
+    private void carregarServicosMaisRealizados() {
+        executarEmBackground(
+                () -> dashboardService.servicosMaisRealizados(periodoSelecionado),
+                this::preencherGraficoServicosMaisRealizados
         );
     }
 
     private void carregarAlertas() {
         executarEmBackground(dashboardService::pecasEstoqueCritico,
                 lista -> tabelaPecasCriticas.getItems().setAll(lista));
-        executarEmBackground(dashboardService::veiculosNoPatio,
-                lista -> tabelaPatio.getItems().setAll(lista));
     }
 
     private <T> void executarEmBackground(java.util.concurrent.Callable<T> consulta, Consumer<T> aoConcluir) {
@@ -167,7 +170,7 @@ public class DashboardController implements javafx.fxml.Initializable {
             }
         };
         task.setOnSucceeded(e -> aoConcluir.accept(task.getValue()));
-        task.setOnFailed(e -> task.getException().printStackTrace()); // troque pelo seu TratadorErrosGlobal
+        task.setOnFailed(e -> task.getException().printStackTrace());
 
         Thread thread = new Thread(task, "dashboard-loader");
         thread.setDaemon(true);
@@ -192,15 +195,19 @@ public class DashboardController implements javafx.fxml.Initializable {
         }
         chartOsPorStatus.getData().setAll(serie);
 
-        Platform.runLater(() -> serie.getData().forEach(ponto -> {
-            String texto = ponto.getYValue() + " OS em \"" + ponto.getXValue() + "\"";
-            Tooltip.install(ponto.getNode(), new Tooltip(texto));
-            ponto.getNode().setCursor(Cursor.HAND);
-            ponto.getNode().setOnMouseClicked(evt -> {
-                StatusOS status = statusOriginal(dados, ponto.getXValue());
-                if (status != null) onStatusSelecionado.accept(status);
-            });
-        }));
+        // ADICIONE ESTA LINHA AQUI
+        ajustarLarguraBarras(chartOsPorStatus, dados.size());
+
+        String[] cores = {"#c68a3c", "#5e977a", "#587b8d", "#c95d53", "#d8a45f"};
+
+        Platform.runLater(() -> {
+            int i = 0;
+            for (XYChart.Data<String, Number> data : serie.getData()) {
+                data.getNode().setStyle("-fx-bar-fill: " + cores[i % cores.length] + ";");
+                Tooltip.install(data.getNode(), new Tooltip(data.getYValue() + " OS (" + data.getXValue() + ")"));
+                i++;
+            }
+        });
     }
 
     private void preencherGraficoFaturamento(List<FaturamentoDiarioDTO> dados) {
@@ -217,21 +224,52 @@ public class DashboardController implements javafx.fxml.Initializable {
         }));
     }
 
-    private void preencherGraficoComissao(List<ComissaoFuncionarioDTO> dados) {
-        XYChart.Series<String, Number> serie = new XYChart.Series<>();
-        for (ComissaoFuncionarioDTO item : dados) {
-            serie.getData().add(new XYChart.Data<>(item.funcionarioNome(), item.totalComissao()));
-        }
-        chartComissao.getData().setAll(serie);
+    private void preencherGraficoFormaPagamento(List<FaturamentoPorFormaPagamentoDTO> dados) {
+        List<PieChart.Data> fatias = dados.stream()
+                .map(item -> new PieChart.Data(formatarFormaPagamento(item.formaPagamento()), item.valor().doubleValue()))
+                .toList();
+        chartFormaPagamento.getData().setAll(fatias);
 
-        Platform.runLater(() -> serie.getData().forEach(ponto -> {
-            String texto = ponto.getXValue() + ": " + formatoMoeda.format(ponto.getYValue());
-            Tooltip.install(ponto.getNode(), new Tooltip(texto));
+        Platform.runLater(() -> chartFormaPagamento.getData().forEach(fatia -> {
+            String texto = fatia.getName() + ": " + formatoMoeda.format(fatia.getPieValue());
+            Tooltip.install(fatia.getNode(), new Tooltip(texto));
         }));
+    }
+
+    private void preencherGraficoServicosMaisRealizados(List<ServicoMaisRealizadoDTO> dados) {
+        XYChart.Series<String, Number> serie = new XYChart.Series<>();
+        for (ServicoMaisRealizadoDTO item : dados) {
+            serie.getData().add(new XYChart.Data<>(item.servicoNome(), item.quantidade()));
+        }
+        chartServicosMaisRealizados.getData().setAll(serie);
+        ajustarLarguraBarras(chartServicosMaisRealizados, dados.size());
+
+        // Aplicando cores variadas também neste gráfico
+        String[] cores = {"#587b8d", "#c68a3c", "#5e977a", "#d8a45f", "#c95d53"};
+
+        Platform.runLater(() -> {
+            int i = 0;
+            for (XYChart.Data<String, Number> data : serie.getData()) {
+                data.getNode().setStyle("-fx-bar-fill: " + cores[i % cores.length] + ";");
+                String texto = data.getYValue() + "x realizado\n" + data.getXValue();
+                Tooltip.install(data.getNode(), new Tooltip(texto));
+                i++;
+            }
+        });
     }
 
     private String formatarStatus(StatusOS status) {
         String[] partes = status.name().toLowerCase(Locale.ROOT).split("_");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < partes.length; i++) {
+            if (i > 0) sb.append(" ");
+            sb.append(Character.toUpperCase(partes[i].charAt(0))).append(partes[i].substring(1));
+        }
+        return sb.toString();
+    }
+
+    private String formatarFormaPagamento(FormaPagamento formaPagamento) {
+        String[] partes = formaPagamento.name().toLowerCase(Locale.ROOT).split("_");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < partes.length; i++) {
             if (i > 0) sb.append(" ");
@@ -246,5 +284,17 @@ public class DashboardController implements javafx.fxml.Initializable {
                 .map(OsPorStatusDTO::status)
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void ajustarLarguraBarras(BarChart<String, Number> chart, int quantidadeCategorias) {
+        double gap = switch (quantidadeCategorias) {
+            case 0, 1 -> 250;
+            case 2 -> 150;
+            case 3 -> 80;
+            case 4 -> 40;
+            case 5 -> 20;
+            default -> 10;
+        };
+        chart.setCategoryGap(gap);
     }
 }

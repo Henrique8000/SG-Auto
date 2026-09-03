@@ -1,6 +1,7 @@
 package com.sgauto.app.repository;
 
 import com.sgauto.app.dto.dashboard.FaturamentoDiarioDTO;
+import com.sgauto.app.dto.dashboard.FaturamentoPorFormaPagamentoDTO;
 import com.sgauto.app.enums.OrigemMovimentacao;
 import com.sgauto.app.enums.TipoMovimentacao;
 import com.sgauto.app.model.CaixaMovimentacao;
@@ -36,4 +37,16 @@ public interface CaixaMovimentacaoRepository extends JpaRepository<CaixaMoviment
         """)
     List<FaturamentoDiarioDTO> faturamentoDiarioPorPeriodo(@Param("inicio") LocalDateTime inicio,
                                                            @Param("fim") LocalDateTime fim);
+
+    @Query("""
+        SELECT new com.sgauto.app.dto.dashboard.FaturamentoPorFormaPagamentoDTO(m.formaPagamento, SUM(m.valor))
+        FROM CaixaMovimentacao m
+        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        AND m.formaPagamento IS NOT NULL
+        AND m.data BETWEEN :inicio AND :fim
+        GROUP BY m.formaPagamento
+        ORDER BY SUM(m.valor) DESC
+        """)
+    List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento(@Param("inicio") LocalDateTime inicio,
+                                                                       @Param("fim") LocalDateTime fim);
 }

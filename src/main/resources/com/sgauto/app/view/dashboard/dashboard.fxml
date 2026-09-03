@@ -1,162 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToggleButton?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.sgauto.app.controller.DashboardController">
 
-    <!-- ===================== TOPO: título + filtro de período ===================== -->
+    <!-- ===================== TOPO ===================== -->
     <top>
         <HBox spacing="12" styleClass="topbar" alignment="CENTER_LEFT">
-
-            <Label text="Dashboard" styleClass="page-title"/>
-
-            <Region HBox.hgrow="ALWAYS"/>
-
             <HBox styleClass="segmented-control" spacing="2">
-                <ToggleButton fx:id="btnPeriodo7d" text="7 dias" styleClass="segmented-button"/>
-                <ToggleButton fx:id="btnPeriodo30d" text="30 dias" styleClass="segmented-button"/>
-                <ToggleButton fx:id="btnPeriodo90d" text="90 dias" styleClass="segmented-button"/>
+                <ToggleButton fx:id="btnPeriodo7d" text="7d" styleClass="segmented-button"/>
+                <ToggleButton fx:id="btnPeriodo30d" text="30d" styleClass="segmented-button"/>
+                <ToggleButton fx:id="btnPeriodo90d" text="90d" styleClass="segmented-button"/>
             </HBox>
-
+            <Region HBox.hgrow="ALWAYS"/>
             <Button fx:id="btnAtualizar" text="Atualizar" styleClass="btn-primary"/>
         </HBox>
     </top>
 
-    <!-- ===================== CENTRO: KPIs + gráficos + alertas ===================== -->
+    <!-- ===================== CENTRO ===================== -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="scroll-pane-form">
-            <VBox spacing="20" styleClass="content-area">
+        <VBox spacing="16" styleClass="content-area" VBox.vgrow="ALWAYS">
 
-                <!-- - Linha de cards KPI - -->
-                <HBox spacing="16">
+            <!-- LINHA 1: 7 KPIs em linha única -->
+            <HBox spacing="10" VBox.vgrow="NEVER">
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="Faturamento hoje (Caixa)" styleClass="card-title"/>
-                        <Label fx:id="lblFaturamentoDia" text="R\$ 0,00" styleClass="card-value"/>
-                    </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Faturamento hoje" styleClass="card-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Soma de todas as entradas no caixa hoje."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblFaturamentoDia" text="R$ 0,00" styleClass="card-value"/>
+                </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="Faturamento no mês (Caixa)" styleClass="card-title"/>
-                        <Label fx:id="lblFaturamentoMes" text="R\$ 0,00" styleClass="card-value"/>
-                    </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Faturamento mês" styleClass="card-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Soma de todas as entradas no caixa neste mês."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblFaturamentoMes" text="R$ 0,00" styleClass="card-value"/>
+                </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="OS finalizadas no mês" styleClass="card-title"/>
-                        <Label fx:id="lblFaturamentoOsMes" text="R\$ 0,00" styleClass="card-value-accent"/>
-                    </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="OS finalizadas (Mês)" styleClass="card-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Valor total em Ordens de Serviço finalizadas no mês."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblFaturamentoOsMes" text="R$ 0,00" styleClass="card-value-accent"/>
+                </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                        <Label text="OS abertas" styleClass="card-title"/>
-                        <Label fx:id="lblOsAbertas" text="0" styleClass="card-value"/>
-                        <Label fx:id="lblOsAguardando" text="0 aguardando aprovação" styleClass="card-sublabel"/>
-                    </VBox>
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="OS Abertas" styleClass="card-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Total de Ordens de Serviço em andamento."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblOsAbertas" text="0" styleClass="card-value"/>
+                    <Label fx:id="lblOsAguardando" text="0 aguardando aprovação" styleClass="card-sublabel"/>
+                </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
                         <Label text="Ticket médio" styleClass="card-title"/>
-                        <Label fx:id="lblTicketMedio" text="R\$ 0,00" styleClass="card-value"/>
-                    </VBox>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Média do valor faturado por OS."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblTicketMedio" text="R$ 0,00" styleClass="card-value"/>
+                </VBox>
 
-                    <VBox styleClass="card, card-alerta" HBox.hgrow="ALWAYS">
+                <VBox styleClass="card, card-alerta" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
                         <Label text="Estoque crítico" styleClass="card-title"/>
-                        <Label fx:id="lblEstoqueCritico" text="0" styleClass="card-value-danger"/>
-                    </VBox>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Peças que atingiram o limite mínimo no estoque."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblEstoqueCritico" text="0" styleClass="card-value-danger"/>
+                </VBox>
 
-                    <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
                         <Label text="Veículos no pátio" styleClass="card-title"/>
-                        <Label fx:id="lblVeiculosPatio" text="0" styleClass="card-value"/>
-                    </VBox>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Total de veículos estacionados fisicamente na oficina."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <Label fx:id="lblVeiculosPatio" text="0" styleClass="card-value"/>
+                </VBox>
+            </HBox>
 
-                </HBox>
-
-                <!-- - Linha de gráficos: OS por status + Faturamento - -->
-                <HBox spacing="16">
-
-                    <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
+            <!-- LINHA 2: Gráficos Principais -->
+            <HBox spacing="12" VBox.vgrow="ALWAYS">
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" prefWidth="450">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
                         <Label text="Ordens de Serviço por status" styleClass="section-title"/>
-                        <BarChart fx:id="chartOsPorStatus" styleClass="dashboard-chart" prefHeight="280" legendVisible="false">
-                            <xAxis>
-                                <CategoryAxis label="Status"/>
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="Quantidade"/>
-                            </yAxis>
-                        </BarChart>
-                    </VBox>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Distribuição do funil de atendimento em tempo real."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <BarChart fx:id="chartOsPorStatus" styleClass="dashboard-chart" legendVisible="false" VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis/></xAxis>
+                        <yAxis><NumberAxis/></yAxis>
+                    </BarChart>
+                </VBox>
 
-                    <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
-                        <Label text="Faturamento no período (Caixa)" styleClass="section-title"/>
-                        <LineChart fx:id="chartFaturamento" styleClass="dashboard-chart" prefHeight="280" legendVisible="false">
-                            <xAxis>
-                                <CategoryAxis label="Dia"/>
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="R$"/>
-                            </yAxis>
-                        </LineChart>
-                    </VBox>
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" prefWidth="450">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Faturamento no período" styleClass="section-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Evolução histórica das movimentações de entrada financeiras."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <LineChart fx:id="chartFaturamento" styleClass="dashboard-chart" legendVisible="false" VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis/></xAxis>
+                        <yAxis><NumberAxis/></yAxis>
+                    </LineChart>
+                </VBox>
+            </HBox>
 
-                </HBox>
+            <!-- LINHA 3: Gráficos Secundários + Tabela -->
+            <HBox spacing="12" VBox.vgrow="ALWAYS">
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" prefWidth="300">
+                    <Label text="Forma de pagamento" styleClass="section-title"/>
+                    <PieChart fx:id="chartFormaPagamento" styleClass="dashboard-chart" VBox.vgrow="ALWAYS"/>
+                </VBox>
 
-                <!-- - Linha inferior: Comissão + Tabelas de alerta - -->
-                <HBox spacing="16">
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" prefWidth="300">
+                    <HBox spacing="5" alignment="CENTER_LEFT">
+                        <Label text="Serviços mais realizados" styleClass="section-title"/>
+                        <Label text="ⓘ" styleClass="info-icon">
+                            <tooltip><Tooltip text="Top 5 serviços executados no período selecionado."/></tooltip>
+                        </Label>
+                    </HBox>
+                    <BarChart fx:id="chartServicosMaisRealizados" styleClass="dashboard-chart" legendVisible="false" VBox.vgrow="ALWAYS">
+                        <xAxis><CategoryAxis/></xAxis>
+                        <yAxis><NumberAxis/></yAxis>
+                    </BarChart>
+                </VBox>
 
-                    <VBox styleClass="chart-card" HBox.hgrow="ALWAYS">
-                        <Label text="Comissão por funcionário" styleClass="section-title"/>
-                        <BarChart fx:id="chartComissao" styleClass="dashboard-chart" prefHeight="260" legendVisible="false">
-                            <xAxis>
-                                <CategoryAxis label="Funcionário"/>
-                            </xAxis>
-                            <yAxis>
-                                <NumberAxis label="R$"/>
-                            </yAxis>
-                        </BarChart>
-                    </VBox>
+                <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" prefWidth="300">
+                    <Label text="Estoque crítico (Resumo)" styleClass="section-title"/>
+                    <TableView fx:id="tabelaPecasCriticas" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colPecaNome" text="Peça" prefWidth="130"/>
+                            <TableColumn fx:id="colPecaQuantidade" text="Qtd." prefWidth="50"/>
+                            <TableColumn fx:id="colPecaMinimo" text="Mín." prefWidth="50"/>
+                        </columns>
+                        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </HBox>
 
-                    <VBox spacing="16" HBox.hgrow="ALWAYS">
-
-                        <VBox styleClass="chart-card">
-                            <Label text="Estoque crítico" styleClass="section-title"/>
-                            <TableView fx:id="tabelaPecasCriticas" prefHeight="120" styleClass="modern-table">
-                                <columns>
-                                    <TableColumn fx:id="colPecaNome" text="Peça" prefWidth="180"/>
-                                    <TableColumn fx:id="colPecaQuantidade" text="Qtd." prefWidth="70"/>
-                                    <TableColumn fx:id="colPecaMinimo" text="Mínimo" prefWidth="70"/>
-                                </columns>
-                            </TableView>
-                        </VBox>
-
-                        <VBox styleClass="chart-card">
-                            <Label text="Veículos no pátio" styleClass="section-title"/>
-                            <TableView fx:id="tabelaPatio" prefHeight="120" styleClass="modern-table">
-                                <columns>
-                                    <TableColumn fx:id="colPatioPlaca" text="Placa" prefWidth="90"/>
-                                    <TableColumn fx:id="colPatioCliente" text="Cliente" prefWidth="150"/>
-                                    <TableColumn fx:id="colPatioDias" text="Dias" prefWidth="60"/>
-                                </columns>
-                            </TableView>
-                        </VBox>
-
-                    </VBox>
-
-                </HBox>
-
-            </VBox>
-        </ScrollPane>
+        </VBox>
     </center>
-
 </BorderPane>
