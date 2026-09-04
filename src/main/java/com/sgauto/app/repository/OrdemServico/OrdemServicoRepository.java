@@ -37,7 +37,11 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
 
     Long countByStatusAndDataConclusaoBetween(StatusOS status, LocalDateTime inicio, LocalDateTime fim);
 
-    List<OrdemServico> findByStatus(StatusOS status);
+    @Query("SELECT new com.sgauto.app.dto.dashboard.OsPorStatusDTO(os.status, COUNT(os.id)) " +
+            "FROM OrdemServico os " +
+            "WHERE os.dataAbertura BETWEEN :inicio AND :fim " +
+            "GROUP BY os.status")
+    List<OsPorStatusDTO> contarPorStatusNoPeriodo(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
 
     @Query("SELECT os FROM OrdemServico os " +
             "JOIN FETCH os.cliente " +

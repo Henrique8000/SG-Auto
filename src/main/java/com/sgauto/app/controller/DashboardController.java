@@ -133,7 +133,10 @@ public class DashboardController implements javafx.fxml.Initializable {
     }
 
     private void carregarOsPorStatus() {
-        executarEmBackground(dashboardService::osPorStatus, this::preencherGraficoOsPorStatus);
+        executarEmBackground(
+                () -> dashboardService.osPorStatus(periodoSelecionado),
+                this::preencherGraficoOsPorStatus
+        );
     }
 
     private void carregarFaturamento() {
@@ -178,14 +181,42 @@ public class DashboardController implements javafx.fxml.Initializable {
     }
 
     private void preencherResumo(DashboardResumoDTO resumo) {
-        lblFaturamentoDia.setText(formatoMoeda.format(resumo.faturamentoCaixaDia()));
-        lblFaturamentoMes.setText(formatoMoeda.format(resumo.faturamentoCaixaMes()));
-        lblFaturamentoOsMes.setText(formatoMoeda.format(resumo.faturamentoOsFinalizadasMes()));
-        lblOsAbertas.setText(String.valueOf(resumo.osAbertasTotal()));
+        // Faturamento Dia
+        String valFatDia = formatoMoeda.format(resumo.faturamentoCaixaDia());
+        lblFaturamentoDia.setText(valFatDia);
+        lblFaturamentoDia.setTooltip(new Tooltip("Faturamento hoje: " + valFatDia));
+
+        // Faturamento Mês
+        String valFatMes = formatoMoeda.format(resumo.faturamentoCaixaMes());
+        lblFaturamentoMes.setText(valFatMes);
+        lblFaturamentoMes.setTooltip(new Tooltip("Faturamento mês: " + valFatMes));
+
+        // OS Finalizadas no Mês
+        String valFatOsMes = formatoMoeda.format(resumo.faturamentoOsFinalizadasMes());
+        lblFaturamentoOsMes.setText(valFatOsMes);
+        lblFaturamentoOsMes.setTooltip(new Tooltip("OS finalizadas (Mês): " + valFatOsMes));
+
+        // OS Abertas
+        String valOsAbertas = String.valueOf(resumo.osAbertasTotal());
+        lblOsAbertas.setText(valOsAbertas);
+        lblOsAbertas.setTooltip(new Tooltip("OS Abertas: " + valOsAbertas));
+
         lblOsAguardando.setText(resumo.osAguardandoAprovacao() + " aguardando aprovação");
-        lblTicketMedio.setText(formatoMoeda.format(resumo.ticketMedio()));
-        lblEstoqueCritico.setText(String.valueOf(resumo.pecasEstoqueCritico()));
-        lblVeiculosPatio.setText(String.valueOf(resumo.veiculosNoPatio()));
+
+        // Ticket Médio
+        String valTicket = formatoMoeda.format(resumo.ticketMedio());
+        lblTicketMedio.setText(valTicket);
+        lblTicketMedio.setTooltip(new Tooltip("Ticket médio: " + valTicket));
+
+        // Estoque Crítico
+        String valEstoque = String.valueOf(resumo.pecasEstoqueCritico());
+        lblEstoqueCritico.setText(valEstoque);
+        lblEstoqueCritico.setTooltip(new Tooltip("Estoque crítico: " + valEstoque));
+
+        // Veículos no Pátio
+        String valPatio = String.valueOf(resumo.veiculosNoPatio());
+        lblVeiculosPatio.setText(valPatio);
+        lblVeiculosPatio.setTooltip(new Tooltip("Veículos no pátio: " + valPatio));
     }
 
     private void preencherGraficoOsPorStatus(List<OsPorStatusDTO> dados) {

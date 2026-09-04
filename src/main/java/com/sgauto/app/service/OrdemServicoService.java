@@ -1,5 +1,6 @@
 package com.sgauto.app.service;
 
+import com.sgauto.app.dto.dashboard.OsPorStatusDTO;
 import com.sgauto.app.enums.*;
 import com.sgauto.app.model.*;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
@@ -486,9 +487,8 @@ public class OrdemServicoService {
                 .orElseThrow(() -> new EntityNotFoundException("Ordem de serviço não encontrada. ID: " + id));
     }
 
-    @Transactional(readOnly = true)
-    public List<OrdemServico> listarPorStatus(StatusOS status) {
-        return ordemServicoRepository.findByStatus(status);
+    public List<OsPorStatusDTO> osPorStatus(PeriodoDashboard periodo) {
+        return ordemServicoRepository.contarPorStatusNoPeriodo(periodo.getInicio(), periodo.getFim());
     }
 
     @Transactional(readOnly = true)

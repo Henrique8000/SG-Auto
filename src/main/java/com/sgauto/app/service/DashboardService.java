@@ -97,7 +97,7 @@ public class DashboardService {
     // Gráfico: OS por status
     // ------------------------------------------------------------------
 
-    public List<OsPorStatusDTO> osPorStatus() {
+    public List<OsPorStatusDTO> osPorStatus(PeriodoDashboard periodo) {
         return ordemServicoRepository.contarPorStatus();
     }
 
