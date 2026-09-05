@@ -56,6 +56,23 @@ public class DashboardController implements javafx.fxml.Initializable {
     @FXML private TableColumn<PecaEstoqueCriticoDTO, Integer> colPecaQuantidade;
     @FXML private TableColumn<PecaEstoqueCriticoDTO, Integer> colPecaMinimo;
 
+
+    // ---- Elementos para Tooltips Estáticos ----
+    @FXML private Label lblTituloFatDia;
+    @FXML private Label iconInfoFatDia;
+    @FXML private Label lblTituloFatMes;
+    @FXML private Label iconInfoFatMes;
+    @FXML private Label lblTituloOsMes;
+    @FXML private Label iconInfoOsMes;
+    @FXML private Label lblTituloOsAbertas;
+    @FXML private Label iconInfoOsAbertas;
+    @FXML private Label lblTituloTicket;
+    @FXML private Label iconInfoTicket;
+    @FXML private Label lblTituloEstoque;
+    @FXML private Label iconInfoEstoque;
+    @FXML private Label lblTituloPatio;
+    @FXML private Label iconInfoPatio;
+
     private final DashboardService dashboardService;
     private final NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     private final DateTimeFormatter formatoDataCurta = DateTimeFormatter.ofPattern("dd/MM");
@@ -78,6 +95,7 @@ public class DashboardController implements javafx.fxml.Initializable {
         configurarFiltroPeriodo();
         configurarTabelas();
         configurarGraficos();
+        configurarTooltipsEstaticos();
         carregarTudo();
     }
 
@@ -327,5 +345,24 @@ public class DashboardController implements javafx.fxml.Initializable {
             default -> 10;
         };
         chart.setCategoryGap(gap);
+    }
+
+    private void configurarTooltipsEstaticos() {
+        lblTituloFatDia.setTooltip(new Tooltip("Faturamento hoje"));
+        lblTituloFatMes.setTooltip(new Tooltip("Faturamento mês"));
+        lblTituloOsMes.setTooltip(new Tooltip("OS finalizadas (Mês)"));
+        lblTituloOsAbertas.setTooltip(new Tooltip("OS Abertas"));
+        lblTituloTicket.setTooltip(new Tooltip("Ticket médio"));
+        lblTituloEstoque.setTooltip(new Tooltip("Estoque crítico"));
+        lblTituloPatio.setTooltip(new Tooltip("Veículos no pátio"));
+
+        // Tooltips informativos para os ícones "ⓘ"
+        iconInfoFatDia.setTooltip(new Tooltip("Soma de todas as entradas no caixa hoje."));
+        iconInfoFatMes.setTooltip(new Tooltip("Soma de todas as entradas no caixa neste mês."));
+        iconInfoOsMes.setTooltip(new Tooltip("Valor total em Ordens de Serviço finalizadas no mês."));
+        iconInfoOsAbertas.setTooltip(new Tooltip("Total de Ordens de Serviço em andamento."));
+        iconInfoTicket.setTooltip(new Tooltip("Média do valor faturado por OS."));
+        iconInfoEstoque.setTooltip(new Tooltip("Peças que atingiram o limite mínimo no estoque."));
+        iconInfoPatio.setTooltip(new Tooltip("Total de veículos estacionados fisicamente na oficina."));
     }
 }

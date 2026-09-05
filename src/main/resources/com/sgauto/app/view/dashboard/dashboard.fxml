@@ -30,48 +30,32 @@
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Faturamento hoje" styleClass="card-title">
-                            <tooltip><Tooltip text="Faturamento hoje"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Soma de todas as entradas no caixa hoje."/></tooltip>
-                        </Label>
+                        <Label text="Faturamento hoje" styleClass="card-title" fx:id="lblTituloFatDia"/>
+                        <Label fx:id="iconInfoFatDia" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblFaturamentoDia" text="R$ 0,00" styleClass="card-value"/>
                 </VBox>
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Faturamento mês" styleClass="card-title">
-                            <tooltip><Tooltip text="Faturamento mês"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Soma de todas as entradas no caixa neste mês."/></tooltip>
-                        </Label>
+                        <Label text="Faturamento mês" styleClass="card-title" fx:id="lblTituloFatMes"/>
+                        <Label fx:id="iconInfoFatMes" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblFaturamentoMes" text="R$ 0,00" styleClass="card-value"/>
                 </VBox>
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="OS finalizadas (Mês)" styleClass="card-title">
-                            <tooltip><Tooltip text="OS finalizadas (Mês)"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Valor total em Ordens de Serviço finalizadas no mês."/></tooltip>
-                        </Label>
+                        <Label text="OS finalizadas (Mês)" styleClass="card-title" fx:id="lblTituloOsMes"/>
+                        <Label fx:id="iconInfoOsMes" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblFaturamentoOsMes" text="R$ 0,00" styleClass="card-value-accent"/>
                 </VBox>
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="OS Abertas" styleClass="card-title">
-                            <tooltip><Tooltip text="OS Abertas"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Total de Ordens de Serviço em andamento."/></tooltip>
-                        </Label>
+                        <Label text="OS Abertas" styleClass="card-title" fx:id="lblTituloOsAbertas"/>
+                        <Label fx:id="iconInfoOsAbertas" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblOsAbertas" text="0" styleClass="card-value"/>
                     <Label fx:id="lblOsAguardando" text="0 aguardando aprovação" styleClass="card-sublabel"/>
@@ -79,36 +63,24 @@
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Ticket médio" styleClass="card-title">
-                            <tooltip><Tooltip text="Ticket médio"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Média do valor faturado por OS."/></tooltip>
-                        </Label>
+                        <Label text="Ticket médio" styleClass="card-title" fx:id="lblTituloTicket"/>
+                        <Label fx:id="iconInfoTicket" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblTicketMedio" text="R$ 0,00" styleClass="card-value"/>
                 </VBox>
 
                 <VBox styleClass="card, card-alerta" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Estoque crítico" styleClass="card-title">
-                            <tooltip><Tooltip text="Estoque crítico"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Peças que atingiram o limite mínimo no estoque."/></tooltip>
-                        </Label>
+                        <Label text="Estoque crítico" styleClass="card-title" fx:id="lblTituloEstoque"/>
+                        <Label fx:id="iconInfoEstoque" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblEstoqueCritico" text="0" styleClass="card-value-danger"/>
                 </VBox>
 
                 <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
                     <HBox spacing="5" alignment="CENTER_LEFT">
-                        <Label text="Veículos no pátio" styleClass="card-title">
-                            <tooltip><Tooltip text="Veículos no pátio"/></tooltip>
-                        </Label>
-                        <Label text="ⓘ" styleClass="info-icon">
-                            <tooltip><Tooltip text="Total de veículos estacionados fisicamente na oficina."/></tooltip>
-                        </Label>
+                        <Label text="Veículos no pátio" styleClass="card-title" fx:id="lblTituloPatio"/>
+                        <Label fx:id="iconInfoPatio" text="ⓘ" styleClass="info-icon"/>
                     </HBox>
                     <Label fx:id="lblVeiculosPatio" text="0" styleClass="card-value"/>
                 </VBox>
@@ -150,7 +122,7 @@
                 <!-- Forma de Pagamento: Largura contida para o gráfico de pizza ficar harmônico -->
                 <VBox styleClass="chart-card" prefWidth="260" minWidth="260" maxWidth="280" minHeight="0">
                     <Label text="Forma de pagamento" styleClass="section-title"/>
-                    <PieChart fx:id="chartFormaPagamento" styleClass="dashboard-chart" VBox.vgrow="ALWAYS" minHeight="0" minWidth="0"/>
+                    <PieChart fx:id="chartFormaPagamento" styleClass="dashboard-chart" VBox.vgrow="ALWAYS" minHeight="0" minWidth="0" scaleX="1.25" scaleY="1.25"/>
                 </VBox>
 
                 <!-- Serviços mais realizados: HBox.hgrow="ALWAYS" permite que ele ocupe mais espaço -->

@@ -994,10 +994,22 @@ ScrollPane.modal-container {
     -fx-font-size: 12px;
 }
 
+.dashboard-chart.pie-chart {
+    -fx-padding: 0px;
+}
+
+/* Deixa a linha branca e mais curta, forçando o raio do gráfico a crescer */
+.dashboard-chart .chart-pie-label-line {
+    -fx-stroke: #ffffff; /* Linha branca */
+    -fx-label-line-length: 8px; /* O padrão é 20px. Ao encurtar, a pizza ganha 12px de raio */
+}
+
 .dashboard-chart .chart-pie-label {
-    -fx-fill: -text-primary; /* Aplica o cinza claro do seu tema */
+    -fx-fill: -text-primary; /* Mantém o texto da legenda visível */
     -fx-font-size: 12px;
 }
-.dashboard-chart .chart-pie-label-line {
-    -fx-stroke: -border-subtle; /* Deixa a linha conectora sutil */
+
+.info-icon {
+    -fx-text-fill: -text-secondary;
+    -fx-font-size: 14px;
 }
