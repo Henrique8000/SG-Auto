@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.patio;
 
-import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
-import com.sgauto.app.controller.dto.patio.PatioItemDashboardDTO;
+import com.sgauto.app.dto.patio.PatioFiltroDTO;
+import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.enums.StatusEstadiaPatio;
 import com.sgauto.app.service.PatioService;
 import javafx.beans.property.SimpleStringProperty;

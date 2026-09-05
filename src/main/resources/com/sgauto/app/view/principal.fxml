@@ -55,7 +55,8 @@
                 </VBox>
             </top>
             <center>
-                <StackPane fx:id="contentArea" styleClass="content-area"/>
+                <!-- minHeight="0" e minWidth="0" impedem que o Dashboard empurre a janela para fora -->
+                <StackPane fx:id="contentArea" styleClass="content-area" minHeight="0" minWidth="0"/>
             </center>
         </BorderPane>
     </center>

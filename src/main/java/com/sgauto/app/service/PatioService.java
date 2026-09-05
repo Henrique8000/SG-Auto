@@ -1,8 +1,8 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.controller.dto.patio.PatioFiltroDTO;
-import com.sgauto.app.controller.dto.patio.PatioItemDashboardDTO;
-import com.sgauto.app.controller.dto.patio.PatioResumoDashboardDTO;
+import com.sgauto.app.dto.patio.PatioFiltroDTO;
+import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
+import com.sgauto.app.dto.patio.PatioResumoDashboardDTO;
 import com.sgauto.app.enums.*;
 import com.sgauto.app.model.CaixaMovimentacao;
 import com.sgauto.app.model.Cliente;
@@ -15,7 +15,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
-import com.sgauto.app.repository.specifications.patio.EstadiaPatioSpecifications;
+import com.sgauto.app.specifications.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;

@@ -1,10 +1,10 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.controller.dto.estoque.FiltroFornecedorDTO;
+import com.sgauto.app.dto.estoque.FiltroFornecedorDTO;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.repository.estoque.FornecedorRepository;
-import com.sgauto.app.repository.specifications.estoque.FornecedorSpecification;
+import com.sgauto.app.specifications.estoque.FornecedorSpecification;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;

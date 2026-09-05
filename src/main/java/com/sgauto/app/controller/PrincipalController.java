@@ -62,7 +62,20 @@ public class PrincipalController {
 
     @FXML
     private void irParaDashboard() {
-        mostrarTela("Dashboard", "Visão geral da oficina", montarPlaceholder("Tela de Dashboard em construção"));
+        try {
+            if(permissaoUtil.verificar(PermissaoChave.OS_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/dashboard/dashboard.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Dashboard", "Acompanhe os dados da sua oficina", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Dashboard", e);
+        }
     }
 
     @FXML

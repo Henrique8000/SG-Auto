@@ -1,12 +1,12 @@
 package com.sgauto.app.service.usuario;
 
-import com.sgauto.app.controller.dto.usuario.FiltroUsuarioDTO;
+import com.sgauto.app.dto.usuario.FiltroUsuarioDTO;
 import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.repository.FuncionarioRepository;
-import com.sgauto.app.repository.specifications.usuario.UsuarioSpecification;
+import com.sgauto.app.specifications.usuario.UsuarioSpecification;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.repository.usuario.UsuarioRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;

@@ -1,9 +1,9 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.controller.dto.estoque.FiltroCategoriaFornecedorDTO;
+import com.sgauto.app.dto.estoque.FiltroCategoriaFornecedorDTO;
 import com.sgauto.app.model.estoque.CategoriaFornecedor;
 import com.sgauto.app.repository.estoque.CategoriaFornecedorRepository;
-import com.sgauto.app.repository.specifications.estoque.CategoriaFornecedorSpecification;
+import com.sgauto.app.specifications.estoque.CategoriaFornecedorSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
