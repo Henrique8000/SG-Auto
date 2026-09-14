@@ -1,7 +1,7 @@
-package com.sgauto.app.repository;
+package com.sgauto.app.repository.caixa;
 
 import com.sgauto.app.enums.StatusCaixa;
-import com.sgauto.app.model.Caixa;
+import com.sgauto.app.model.caixa.Caixa;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

@@ -10,8 +10,7 @@
     <fx:define>
         <ToggleGroup fx:id="grupoRemovido"/>
     </fx:define>
-
-    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+    
 
     <top>
         <VBox spacing="16">

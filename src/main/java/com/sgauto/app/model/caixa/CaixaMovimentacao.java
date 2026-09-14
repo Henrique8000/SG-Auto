@@ -1,4 +1,4 @@
-package com.sgauto.app.model;
+package com.sgauto.app.model.caixa;
 
 import com.sgauto.app.enums.FormaPagamento;
 import com.sgauto.app.enums.OrigemMovimentacao;

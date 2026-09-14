@@ -1,43 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.sgauto.app.controller.configuracoes.ConfiguracoesController" spacing="20">
+<ScrollPane fitToWidth="true" styleClass="scroll-pane-form" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sgauto.app.controller.configuracoes.ConfiguracoesController">
+    <VBox spacing="20" style="-fx-padding: 32; -fx-background-color: -bg-app;">
 
-    <fx:define>
-        <ToggleGroup fx:id="grupoModo"/>
-    </fx:define>
+        <fx:define>
+            <ToggleGroup fx:id="grupoModo"/>
+        </fx:define>
 
-    <!-- Título atualizado com a classe correta -->
-    <Label text="Fechamento de Caixa" styleClass="page-subtitle-caixa"/>
+        <!-- ======================= CAIXA ======================= -->
+        <Label text="Fechamento de Caixa" styleClass="page-subtitle-caixa"/>
 
-    <VBox styleClass="config-option" spacing="6">
-        <RadioButton fx:id="radioObrigatoria" text="Conferência obrigatória"
-                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
-        <Label text="O operador precisa informar o valor contado na gaveta antes de conseguir fechar o caixa."
-               styleClass="config-option-desc" wrapText="true"/>
+        <VBox styleClass="config-option" spacing="6">
+            <RadioButton fx:id="radioObrigatoria" text="Conferência obrigatória"
+                         toggleGroup="$grupoModo" styleClass="config-option-title"/>
+            <Label text="O operador precisa informar o valor contado na gaveta antes de conseguir fechar o caixa."
+                   styleClass="config-option-desc" wrapText="true"/>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <RadioButton fx:id="radioOpcional" text="Conferência opcional"
+                         toggleGroup="$grupoModo" styleClass="config-option-title"/>
+            <Label text="O sistema oferece a contagem, mas o caixa pode ser fechado sem informar o valor."
+                   styleClass="config-option-desc" wrapText="true"/>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <RadioButton fx:id="radioSemConferencia" text="Sem conferência"
+                         toggleGroup="$grupoModo" styleClass="config-option-title"/>
+            <Label text="O caixa fecha automaticamente com o valor calculado pelo sistema, sem contagem física."
+                   styleClass="config-option-desc" wrapText="true"/>
+        </VBox>
+
+        <Separator/>
+
+        <!-- ======================= BACKUP ======================= -->
+        <VBox spacing="5">
+            <Label text="Sistema de Backup" styleClass="page-subtitle-caixa"/>
+            <Label fx:id="lblUltimoBackup" text="Último backup: Buscando..." styleClass="config-option-desc" style="-fx-text-fill: -text-secondary; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="12">
+
+            <CheckBox fx:id="chkBackupAutomatico" text="Habilitar backup automático" styleClass="config-option-title"/>
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Intervalo de execução (dias):" styleClass="config-option-desc"/>
+                <Spinner fx:id="spinIntervaloDias" prefWidth="80" styleClass="form-input"/>
+            </HBox>
+
+            <CheckBox fx:id="chkBackupCaixa" text="Realizar backup imediatamente após o fechamento de caixa" styleClass="config-option-title"/>
+
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <Label text="Pasta de Backup Local" styleClass="config-option-title"/>
+            <HBox spacing="10">
+                <TextField fx:id="txtPastaLocal" HBox.hgrow="ALWAYS" promptText="Selecione a pasta no disco local..." editable="false" styleClass="form-input"/>
+                <Button text="Procurar..." styleClass="btn-secondary" onAction="#escolherPastaLocal"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <Label text="Pasta de Sincronização Nuvem" styleClass="config-option-title"/>
+            <HBox spacing="10">
+                <TextField fx:id="txtPastaNuvem" HBox.hgrow="ALWAYS" promptText="Selecione a pasta do Google Drive/OneDrive..." editable="false" styleClass="form-input"/>
+                <Button text="Procurar..." styleClass="btn-secondary" onAction="#escolherPastaNuvem"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <Label text="Diretório de Instalação do PostgreSQL (Pasta 'bin')" styleClass="config-option-title"/>
+            <HBox spacing="10">
+                <TextField fx:id="txtPastaPgDump" HBox.hgrow="ALWAYS" promptText="Ex: C:\Program Files\PostgreSQL\16\bin" editable="false" styleClass="form-input"/>
+                <Button text="Procurar..." styleClass="btn-secondary" onAction="#escolherPastaPgDump"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="config-option" spacing="6">
+            <Label text="Exportação Manual (Pendrive / HD Externo)" styleClass="config-option-title"/>
+            <Label text="Gere uma cópia de segurança agora mesmo e salve em um dispositivo removível." styleClass="config-option-desc" wrapText="true"/>
+            <HBox spacing="10" style="-fx-padding: 8 0 0 0;">
+                <Button text="Exportar Backup Agora..." styleClass="btn-secondary" onAction="#exportarParaPendrive"/>
+            </HBox>
+        </VBox>
+
+
+        <Label fx:id="lblMensagem" styleClass="results-count" managed="false" visible="false"/>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="btnSalvar" text="Salvar Configurações" styleClass="btn-primary" onAction="#salvar"/>
+        </HBox>
+
     </VBox>
-
-    <VBox styleClass="config-option" spacing="6">
-        <RadioButton fx:id="radioOpcional" text="Conferência opcional"
-                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
-        <Label text="O sistema oferece a contagem, mas o caixa pode ser fechado sem informar o valor."
-               styleClass="config-option-desc" wrapText="true"/>
-    </VBox>
-
-    <VBox styleClass="config-option" spacing="6">
-        <RadioButton fx:id="radioSemConferencia" text="Sem conferência"
-                     toggleGroup="$grupoModo" styleClass="config-option-title"/>
-        <Label text="O caixa fecha automaticamente com o valor calculado pelo sistema, sem contagem física."
-               styleClass="config-option-desc" wrapText="true"/>
-    </VBox>
-
-    <Label fx:id="lblMensagem" styleClass="results-count" managed="false" visible="false"/>
-
-    <HBox alignment="CENTER_RIGHT">
-        <Button fx:id="btnSalvar" text="Salvar" styleClass="btn-primary" onAction="#salvar"/>
-    </HBox>
-</VBox>
+</ScrollPane>

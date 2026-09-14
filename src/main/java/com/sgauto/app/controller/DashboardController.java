@@ -24,9 +24,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import com.sgauto.app.model.BackupHistorico;
+import com.sgauto.app.service.backup.BackupHistoricoService;
+import java.util.Optional;
 
 @Component
 public class DashboardController implements javafx.fxml.Initializable {
+
+    @FXML private Label lblStatusBackup;
 
     // ---- KPIs (cards do topo) ----
     @FXML private Label lblFaturamentoDia;
@@ -74,6 +79,7 @@ public class DashboardController implements javafx.fxml.Initializable {
     @FXML private Label iconInfoPatio;
 
     private final DashboardService dashboardService;
+    private final BackupHistoricoService backupHistoricoService;
     private final NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
     private final DateTimeFormatter formatoDataCurta = DateTimeFormatter.ofPattern("dd/MM");
 
@@ -82,8 +88,9 @@ public class DashboardController implements javafx.fxml.Initializable {
 
     private Consumer<StatusOS> onStatusSelecionado = status -> { };
 
-    public DashboardController(DashboardService dashboardService) {
+    public DashboardController(DashboardService dashboardService, BackupHistoricoService backupHistoricoService) {
         this.dashboardService = dashboardService;
+        this.backupHistoricoService = backupHistoricoService;
     }
 
     public void setOnStatusSelecionado(Consumer<StatusOS> callback) {
@@ -144,6 +151,7 @@ public class DashboardController implements javafx.fxml.Initializable {
         carregarFormaPagamento();
         carregarServicosMaisRealizados();
         carregarAlertas();
+        carregarStatusBackup();
     }
 
     private void carregarResumo() {
@@ -364,5 +372,36 @@ public class DashboardController implements javafx.fxml.Initializable {
         iconInfoTicket.setTooltip(new Tooltip("Média do valor faturado por OS."));
         iconInfoEstoque.setTooltip(new Tooltip("Peças que atingiram o limite mínimo no estoque."));
         iconInfoPatio.setTooltip(new Tooltip("Total de veículos estacionados fisicamente na oficina."));
+    }
+
+    private void carregarStatusBackup() {
+        executarEmBackground(() -> {
+            Optional<BackupHistorico> ultimo = backupHistoricoService.obterUltimoBackup();
+            boolean atrasado = backupHistoricoService.backupEstaAtrasado();
+            return new BackupInfo(ultimo.orElse(null), atrasado);
+        }, this::preencherStatusBackup);
+    }
+
+    // Usando Record do Java para transferir os dados da thread de background para a tela
+    private record BackupInfo(BackupHistorico ultimo, boolean atrasado) {}
+
+    private void preencherStatusBackup(BackupInfo info) {
+        if (info.ultimo() != null) {
+            String dataFormatada = info.ultimo().getData().format(DateTimeFormatter.ofPattern("dd/MM 'às' HH:mm"));
+
+            if (info.atrasado()) {
+                lblStatusBackup.setText("⚠ Backup atrasado (" + dataFormatada + ")");
+                lblStatusBackup.getStyleClass().setAll("label", "badge-inactive"); // Vermelho
+                lblStatusBackup.setTooltip(new Tooltip("O último backup passou do intervalo configurado. Vá em Configurações para verificar."));
+            } else {
+                lblStatusBackup.setText("✓ Backup em dia (" + dataFormatada + ")");
+                lblStatusBackup.getStyleClass().setAll("label", "badge-active"); // Verde
+                lblStatusBackup.setTooltip(new Tooltip("Cópia de segurança funcionando corretamente."));
+            }
+        } else {
+            lblStatusBackup.setText("⚠ Nenhum backup realizado");
+            lblStatusBackup.getStyleClass().setAll("label", "badge-inactive"); // Vermelho
+            lblStatusBackup.setTooltip(new Tooltip("Nenhum backup com sucesso foi encontrado no sistema."));
+        }
     }
 }

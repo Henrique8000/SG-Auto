@@ -16,7 +16,12 @@
                 <ToggleButton fx:id="btnPeriodo30d" text="30d" styleClass="segmented-button"/>
                 <ToggleButton fx:id="btnPeriodo90d" text="90d" styleClass="segmented-button"/>
             </HBox>
+
             <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- NOVO: Indicador de Backup -->
+            <Label fx:id="lblStatusBackup" text="Backup: Verificando..." styleClass="badge-normal"/>
+
             <Button fx:id="btnAtualizar" text="Atualizar" styleClass="btn-primary"/>
         </HBox>
     </top>

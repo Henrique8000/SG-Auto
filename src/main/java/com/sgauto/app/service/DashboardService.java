@@ -5,7 +5,7 @@ import com.sgauto.app.enums.PeriodoDashboard;
 import com.sgauto.app.enums.StatusEstadiaPatio;
 import com.sgauto.app.enums.StatusOS;
 import com.sgauto.app.model.patio.EstadiaPatio;
-import com.sgauto.app.repository.CaixaMovimentacaoRepository;
+import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.OrdemServico.OsServicoRepository;
 import com.sgauto.app.repository.estoque.PecaRepository;
