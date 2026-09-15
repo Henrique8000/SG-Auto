@@ -7,6 +7,7 @@ import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.OrdemServico.OsPagamento;
 import com.sgauto.app.model.OrdemServico.OsPeca;
 import com.sgauto.app.model.OrdemServico.OsServico;
+import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import com.sgauto.app.model.estoque.Peca;
 import com.sgauto.app.repository.*;
 import com.sgauto.app.repository.OrdemServico.OsPagamentoRepository;

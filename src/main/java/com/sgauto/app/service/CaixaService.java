@@ -1,11 +1,12 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.enums.*;
-import com.sgauto.app.model.Caixa;
-import com.sgauto.app.model.CaixaMovimentacao;
-import com.sgauto.app.model.ConfiguracaoCaixa;
-import com.sgauto.app.repository.CaixaMovimentacaoRepository;
-import com.sgauto.app.repository.CaixaRepository;
+import com.sgauto.app.model.caixa.Caixa;
+import com.sgauto.app.model.caixa.CaixaMovimentacao;
+import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
+import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
+import com.sgauto.app.repository.caixa.CaixaRepository;
+import com.sgauto.app.service.backup.BackupService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,18 @@ public class CaixaService {
     private final CaixaRepository caixaRepository;
     private final CaixaMovimentacaoRepository caixaMovimentacaoRepository;
     private final ConfiguracaoCaixaService configuracaoCaixaService;
+    private final ConfigSistemaService configSistemaService;
+    private final BackupService backupService;
     private final VerificaPermissaoUtil permissaoUtil;
 
     public CaixaService(CaixaRepository caixaRepository,
                         CaixaMovimentacaoRepository caixaMovimentacaoRepository,
-                        ConfiguracaoCaixaService configuracaoCaixaService, VerificaPermissaoUtil permissaoUtil) {
+                        ConfiguracaoCaixaService configuracaoCaixaService, ConfigSistemaService configSistemaService, BackupService backupService, VerificaPermissaoUtil permissaoUtil) {
         this.caixaRepository = caixaRepository;
         this.caixaMovimentacaoRepository = caixaMovimentacaoRepository;
         this.configuracaoCaixaService = configuracaoCaixaService;
+        this.configSistemaService = configSistemaService;
+        this.backupService = backupService;
         this.permissaoUtil = permissaoUtil;
     }
 
@@ -159,6 +164,12 @@ public class CaixaService {
         Caixa caixaFechado = caixaRepository.save(caixa);
 
         abrirNovoCaixa();
+
+        if (configSistemaService.isBackupAposFechamentoCaixaAtivo()) {
+            java.util.concurrent.CompletableFuture.runAsync(() -> {
+                backupService.executarBackupPadrao(TipoBackup.CAIXA);
+            });
+        }
 
         return caixaFechado;
     }

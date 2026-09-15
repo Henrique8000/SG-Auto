@@ -7,8 +7,6 @@
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.sgauto.app.controller.os.OrdemServicoController">
 
-    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
-
     <top>
         <VBox spacing="16">
             <padding><Insets bottom="20"/></padding>

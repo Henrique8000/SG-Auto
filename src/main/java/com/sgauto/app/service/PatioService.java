@@ -4,7 +4,7 @@ import com.sgauto.app.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.dto.patio.PatioResumoDashboardDTO;
 import com.sgauto.app.enums.*;
-import com.sgauto.app.model.CaixaMovimentacao;
+import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.model.patio.EstadiaPatio;

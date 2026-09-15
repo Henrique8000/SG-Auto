@@ -1,8 +1,8 @@
 package com.sgauto.app.controller;
 
 import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.model.Caixa;
-import com.sgauto.app.model.ConfiguracaoCaixa;
+import com.sgauto.app.model.caixa.Caixa;
+import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
 import com.sgauto.app.service.CaixaService;
 import com.sgauto.app.service.ConfiguracaoCaixaService;
 import javafx.fxml.FXML;
