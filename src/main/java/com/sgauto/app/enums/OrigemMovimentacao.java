@@ -7,5 +7,7 @@ public enum OrigemMovimentacao {
     SANGRIA,
     SUPRIMENTO,
     OS_PAGAMENTO,
-    PATIO
+    PATIO,
+    CONTA_RECEBER,
+    CONTA_PAGAR
 }

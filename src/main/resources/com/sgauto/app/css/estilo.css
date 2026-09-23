@@ -1060,3 +1060,60 @@ ScrollPane.modal-container {
 .spinner.form-input .decrement-arrow-button:hover .decrement-arrow {
     -fx-background-color: -accent;
 }
+
+/* ═══════════════ DESTAQUE DE SELEÇÃO NAS TABELAS ═══════════════ */
+
+/* Altera a cor de fundo da linha selecionada na tabela */
+.modern-table .table-row-cell:filled:selected {
+    -fx-background-color: -accent-soft; /* Fundo translúcido com ocre anodizado */
+    -fx-border-color: transparent transparent -accent transparent; /* Linha de reforço na parte inferior */
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Mantém o texto perfeitamente legível e em destaque na linha selecionada */
+.modern-table .table-row-cell:filled:selected .text,
+.modern-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: -text-white;
+    -fx-font-weight: bold;
+}
+
+/* Efeito ao passar o mouse por cima das linhas (Hover) */
+.modern-table .table-row-cell:filled:hover {
+    -fx-background-color: -bg-card-hover;
+}
+
+/* ═══════════════ SUBMENU EXPANSÍVEL (FINANCEIRO) ═══════════════ */
+
+/* Remove qualquer preenchimento extra que o botão pai possa gerar */
+.nav-button-expansivel {
+    -fx-padding: 8 16;
+}
+
+/* Cria uma "caixa" sutilmente mais escura para abrigar os itens filhos */
+.nav-submenu {
+    -fx-background-color: -bg-input; /* Fundo mais profundo/escuro que o Sidebar (#121212) */
+    -fx-background-radius: 4;
+    -fx-margin: 0 12 8 12; /* Margem para alinhar perfeitamente com os botões normais */
+    -fx-padding: 6 0;
+
+    /* Fio guia à esquerda para indicar hierarquia (Tree-line) */
+    -fx-border-color: transparent transparent transparent #222222;
+    -fx-border-width: 0 0 0 2;
+    -fx-border-insets: 0 0 0 16;
+}
+
+/* Estilo específico para os botões filhos (dentro do submenu) */
+.nav-button-sub {
+    -fx-padding: 8 16 8 36; /* Padding esquerdo (36) faz a indentação do texto */
+    -fx-margin: 0 8; /* Margem reduzida para caber no bloco escuro */
+    -fx-pref-width: 200;
+    -fx-font-size: 12.5px; /* Fonte levemente menor para distinguir do pai */
+}
+
+/* Comportamento de seleção do filho (mais discreto que o principal) */
+.nav-button-sub:selected {
+    -fx-background-color: rgba(198, 138, 60, 0.10); /* Ocre super suave */
+    -fx-text-fill: -text-white; /* Branco para destacar bem no fundo escuro */
+    -fx-border-width: 0; /* Remove a barra grossa lateral para manter o visual limpo */
+}
+

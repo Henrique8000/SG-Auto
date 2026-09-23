@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sgauto.app.controller.financeiro.DarBaixaContaReceberController"
+      styleClass="modal-container"
+      spacing="10" prefWidth="380">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Dar baixa em conta a receber" styleClass="page-title"/>
+    <Label fx:id="lblDescricao" styleClass="section-title" wrapText="true"/>
+    <Label fx:id="lblValorDevido" styleClass="card-sublabel"/>
+    <Label fx:id="lblJaRecebido" styleClass="card-sublabel"/>
+
+    <Separator/>
+
+    <Label text="Valor recebido nesta baixa" styleClass="form-label"/>
+    <TextField fx:id="txtValorRecebido" promptText="Ex: 150,00" styleClass="form-input"/>
+
+    <Label text="Data do recebimento" styleClass="form-label"/>
+    <DatePicker fx:id="dtRecebimento" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label text="Forma de recebimento" styleClass="form-label"/>
+    <ComboBox fx:id="cmbFormaRecebimento" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label fx:id="lblErro" styleClass="form-error" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-secondary"/>
+        <Button fx:id="btnConfirmar" text="Confirmar baixa" styleClass="btn-primary" defaultButton="true"/>
+    </HBox>
+
+</VBox>

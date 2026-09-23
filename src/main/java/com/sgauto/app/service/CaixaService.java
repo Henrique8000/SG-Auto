@@ -55,6 +55,15 @@ public class CaixaService {
     public CaixaMovimentacao registrarMovimentacao(TipoMovimentacao tipo, OrigemMovimentacao origem,
                                                    FormaPagamento formaPagamento, BigDecimal valor,
                                                    String descricao, Long clienteId, String placa) {
+        return registrarMovimentacao(tipo, origem, formaPagamento, valor, descricao, clienteId, placa, null);
+    }
+
+    // overload para contas a pagar e receber
+    @Transactional
+    public CaixaMovimentacao registrarMovimentacao(TipoMovimentacao tipo, OrigemMovimentacao origem,
+                                                   FormaPagamento formaPagamento, BigDecimal valor,
+                                                   String descricao, Long clienteId, String placa,
+                                                   Long referenciaId) {
         if(!permissaoUtil.verificar(PermissaoChave.CAIXA_MOVIMENTAR)){
             throw new IllegalStateException("Seu usuário não possui permissão movimentar no caixa.");
         }
@@ -64,6 +73,7 @@ public class CaixaService {
         CaixaMovimentacao mov = new CaixaMovimentacao(caixaAberto, tipo, origem, formaPagamento, valor, descricao);
         mov.setClienteId(clienteId);
         mov.setPlaca(placa);
+        mov.setReferenciaId(referenciaId);
         return caixaMovimentacaoRepository.save(mov);
     }
 

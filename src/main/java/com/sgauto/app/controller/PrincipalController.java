@@ -1,27 +1,29 @@
 package com.sgauto.app.controller;
 
 import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
-import com.sgauto.app.util.ModalUtil;
 import com.sgauto.app.util.SessaoUsuario;
 import com.sgauto.app.util.VerificaPermissaoUtil;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.util.Optional;
 
 @Component
 public class PrincipalController {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PrincipalController.class);
 
     @FXML private StackPane contentArea;
@@ -30,17 +32,34 @@ public class PrincipalController {
 
     @FXML private ToggleGroup menuLateral;
 
-    private final ApplicationContext applicationContext;
-    private final VerificaPermissaoUtil permissaoUtil;
-
+    // OPERAÇÃO
     @FXML private ToggleButton btnDashboard;
     @FXML private ToggleButton btnOrdens;
     @FXML private ToggleButton btnClientes;
-    @FXML private ToggleButton btnServicos;
+    @FXML private ToggleButton btnVeiculos;
     @FXML private ToggleButton btnPatioAtual;
+
+    // FINANCEIRO (grupo expansível)
+    @FXML private Button btnFinanceiroToggle;
+    @FXML private Label lblFinanceiroChevron;
+    @FXML private VBox submenuFinanceiro;
+    @FXML private ToggleButton btnContasReceber;
+    @FXML private ToggleButton btnContasPagar;
+    @FXML private ToggleButton btnCategoriasFinanceiras;
+
+    // GESTÃO
     @FXML private ToggleButton btnEstoque;
+    @FXML private ToggleButton btnCatalogoServicos;
+    @FXML private ToggleButton btnFuncionarios;
     @FXML private ToggleButton btnCaixa;
+
+    // SISTEMA
+    @FXML private ToggleButton btnUsuarios;
     @FXML private ToggleButton btnConfiguracoes;
+    @FXML private ToggleButton btnLogoff;
+
+    private final ApplicationContext applicationContext;
+    private final VerificaPermissaoUtil permissaoUtil;
 
     public PrincipalController(ApplicationContext applicationContext, VerificaPermissaoUtil permissaoUtil) {
         this.applicationContext = applicationContext;
@@ -49,7 +68,6 @@ public class PrincipalController {
 
     @FXML
     public void initialize() {
-
         // Impedir nenhuma seleção no menu lateral
         menuLateral.selectedToggleProperty().addListener((obs, toggleAntigo, toggleNovo) -> {
             if (toggleNovo == null) {
@@ -57,202 +75,129 @@ public class PrincipalController {
             }
         });
 
+        submenuFinanceiro.setVisible(false);
+        submenuFinanceiro.setManaged(false);
+        btnFinanceiroToggle.setOnAction(e -> alternarSubmenuFinanceiro());
+
+        // Se o usuário navegar direto para uma conta (ex: veio de uma OS) o submenu já abre expandido
+        btnContasReceber.selectedProperty().addListener((obs, antigo, novo) -> abrirSubmenuSeSelecionado(novo));
+        btnContasPagar.selectedProperty().addListener((obs, antigo, novo) -> abrirSubmenuSeSelecionado(novo));
+        btnCategoriasFinanceiras.selectedProperty().addListener((obs, antigo, novo) -> abrirSubmenuSeSelecionado(novo)); // <-- Adicionado
+
         irParaDashboard();
+    }
+
+    private void alternarSubmenuFinanceiro() {
+        boolean novoEstado = !submenuFinanceiro.isVisible();
+        submenuFinanceiro.setVisible(novoEstado);
+        submenuFinanceiro.setManaged(novoEstado);
+        lblFinanceiroChevron.setText(novoEstado ? "▾" : "▸");
+    }
+
+    private void abrirSubmenuSeSelecionado(boolean selecionado) {
+        if (selecionado && !submenuFinanceiro.isVisible()) {
+            submenuFinanceiro.setVisible(true);
+            submenuFinanceiro.setManaged(true);
+            lblFinanceiroChevron.setText("▾");
+        }
     }
 
     @FXML
     private void irParaDashboard() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.OS_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/dashboard/dashboard.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Dashboard", "Acompanhe os dados da sua oficina", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Dashboard", e);
-        }
+        carregarTela(PermissaoChave.OS_VISUALIZAR, "/com/sgauto/app/view/dashboard/dashboard.fxml",
+                "Dashboard", "Acompanhe os dados da sua oficina");
     }
 
     @FXML
     private void irParaOrdens() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.OS_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/os/ordem-servico.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Ordem de Serviços", "Cadastro e histórico de ordens de serviço", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de OS", e);
-        }
+        carregarTela(PermissaoChave.OS_VISUALIZAR, "/com/sgauto/app/view/os/ordem-servico.fxml",
+                "Ordem de Serviços", "Cadastro e histórico de ordens de serviço");
     }
 
     @FXML
     private void irParaClientes() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.CLIENTE_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/clientes/clientes.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Clientes", "Cadastro e histórico de clientes", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Clientes", e);
-        }
+        carregarTela(PermissaoChave.CLIENTE_VISUALIZAR, "/com/sgauto/app/view/clientes/clientes.fxml",
+                "Clientes", "Cadastro e histórico de clientes");
     }
 
     @FXML
     private void irParaVeiculos() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.VEICULO_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/veiculos/veiculos.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Veículos", "Cadastro e visualização de Veículos", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Veículos", e);
-        }
-    }
-
-    @FXML
-    private void irParaCatalogoServicos() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.SERVICO_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/servicos/catalogo-servico.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Catálogo de Serviços", e);
-        }
-    }
-
-    @FXML
-    private void irParaFuncionarios() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.FUNCIONARIO_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/funcionario/funcionario.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Funcionários", "Cadastro e gestão de funcionários", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Funcionários", e);
-        }
+        carregarTela(PermissaoChave.VEICULO_VISUALIZAR, "/com/sgauto/app/view/veiculos/veiculos.fxml",
+                "Veículos", "Cadastro e visualização de Veículos");
     }
 
     @FXML
     private void irParaPatioAtual() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.PATIO_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/patio/catalogo-patio.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Pátio", "Veículos no pátio, tarifas e motivos de estadia", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Pátio", e);
-        }
+        carregarTela(PermissaoChave.PATIO_VISUALIZAR, "/com/sgauto/app/view/patio/catalogo-patio.fxml",
+                "Pátio", "Veículos no pátio, tarifas e motivos de estadia");
+    }
+
+    @FXML
+    private void irParaContasReceber() {
+        carregarTela(PermissaoChave.CONTA_RECEBER_VISUALIZAR, "/com/sgauto/app/view/financeiro/contas-a-receber-listagem.fxml",
+                "Contas a Receber", "Recebimentos de clientes e ordens de serviço");
+    }
+
+    @FXML
+    private void irParaContasPagar() {
+        carregarTela(PermissaoChave.CONTA_PAGAR_VISUALIZAR, "/com/sgauto/app/view/financeiro/contas-a-pagar-listagem.fxml",
+                "Contas a Pagar", "Pagamentos a fornecedores e despesas da oficina");
+    }
+
+    @FXML
+    private void irParaCategoriasFinanceiras() {
+        carregarTela(PermissaoChave.CATEGORIA_CONTA_VISUALIZAR, "/com/sgauto/app/view/financeiro/categoria_financeira.fxml",
+                "Categorias Financeiras", "Gerencie as classificações de despesas e receitas da oficina");
     }
 
     @FXML
     private void irParaEstoque() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.PECA_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/estoque/catalogo-estoque.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Estoque", "Peças e controle de estoque", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Estoque", e);
-        }
+        carregarTela(PermissaoChave.PECA_VISUALIZAR, "/com/sgauto/app/view/estoque/catalogo-estoque.fxml",
+                "Estoque", "Peças e controle de estoque");
+    }
+
+    @FXML
+    private void irParaCatalogoServicos() {
+        carregarTela(PermissaoChave.SERVICO_VISUALIZAR, "/com/sgauto/app/view/servicos/catalogo-servico.fxml",
+                "Catálogo de Serviços", "Serviços e categorias disponíveis para uso em Ordens de Serviço");
+    }
+
+    @FXML
+    private void irParaFuncionarios() {
+        carregarTela(PermissaoChave.FUNCIONARIO_VISUALIZAR, "/com/sgauto/app/view/funcionario/funcionario.fxml",
+                "Funcionários", "Cadastro e gestão de funcionários");
     }
 
     @FXML
     private void irParaCaixa() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.CAIXA_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/caixa/caixa.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Caixa", "Movimentações e fechamento do caixa atual", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Caixa", e);
-        }
-    }
-
-    @FXML
-    private void irParaConfiguracoes() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.CONFIGURACOES_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/configuracoes/configuracoes.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Configurações", "Preferências do sistema", tela);
-            }
-            else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Configurações", e);
-        }
+        carregarTela(PermissaoChave.CAIXA_VISUALIZAR, "/com/sgauto/app/view/caixa/caixa.fxml",
+                "Caixa", "Movimentações e fechamento do caixa atual");
     }
 
     @FXML
     private void irParaUsuarios() {
-        try {
-            if(permissaoUtil.verificar(PermissaoChave.USUARIO_VISUALIZAR)){
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/usuario/catalogo-usuario.fxml"));
-                loader.setControllerFactory(applicationContext::getBean);
-                Parent tela = loader.load();
-                mostrarTela("Usuários", "Criação e administração de perfis do sistema", tela);
-            }else{
-                ExibirMensagemBloqueioUtil.exibir();
-            }
+        carregarTela(PermissaoChave.USUARIO_VISUALIZAR, "/com/sgauto/app/view/usuario/catalogo-usuario.fxml",
+                "Usuários", "Criação e administração de perfis do sistema");
+    }
 
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Erro ao carregar tela de Usuários", e);
+    @FXML
+    private void irParaConfiguracoes() {
+        carregarTela(PermissaoChave.CONFIGURACOES_VISUALIZAR, "/com/sgauto/app/view/configuracoes/configuracoes.fxml",
+                "Configurações", "Preferências do sistema");
+    }
+
+    private void carregarTela(PermissaoChave permissaoNecessaria, String caminhoFxml, String titulo, String subtitulo) {
+        try {
+            if (!permissaoUtil.verificar(permissaoNecessaria)) {
+                ExibirMensagemBloqueioUtil.exibir();
+                return;
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminhoFxml));
+            loader.setControllerFactory(applicationContext::getBean);
+            Parent tela = loader.load();
+            mostrarTela(titulo, subtitulo, tela);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela: " + titulo, e);
         }
     }
 
@@ -266,7 +211,6 @@ public class PrincipalController {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.isPresent() && result.get() == ButtonType.OK) {
-
             SessaoUsuario.getInstancia().limparSessao();
 
             try {
@@ -275,43 +219,28 @@ public class PrincipalController {
                 Parent root = loader.load();
 
                 Scene scene = new Scene(root, 600, 500);
-
                 String css = getClass().getResource("/com/sgauto/app/css/estilo.css").toExternalForm();
                 scene.getStylesheets().add(css);
                 scene.setFill(javafx.scene.paint.Color.web("#181818"));
 
-                // Não utiliza o ModalUtil pra ficar identico ao App.java
                 Stage loginStage = new Stage();
                 loginStage.setScene(scene);
                 loginStage.setTitle("SGAuto - Autenticação");
                 loginStage.setResizable(false);
-
                 loginStage.show();
                 loginStage.centerOnScreen();
 
                 Stage stageAtual = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stageAtual.close();
-
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 log.error("Erro ao voltar para a tela de login", e);
             }
         }
     }
 
-    private void mostrarTela(String titulo, String subtitulo, javafx.scene.Node conteudo) {
+    private void mostrarTela(String titulo, String subtitulo, Node conteudo) {
         lblTituloPagina.setText(titulo);
         lblSubtituloPagina.setText(subtitulo);
         contentArea.getChildren().setAll(conteudo);
-    }
-
-    private VBox montarPlaceholder(String texto) {
-        VBox box = new VBox();
-        box.setAlignment(javafx.geometry.Pos.CENTER);
-        Label label = new Label(texto);
-        label.getStyleClass().add("placeholder-text");
-        box.getChildren().add(label);
-        VBox.setVgrow(box, Priority.ALWAYS);
-        return box;
     }
 }

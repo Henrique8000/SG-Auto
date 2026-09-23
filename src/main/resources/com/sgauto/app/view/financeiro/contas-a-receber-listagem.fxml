@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.sgauto.app.controller.financeiro.ContaReceberListagemController"
+            styleClass="content-area"
+            prefWidth="900" prefHeight="560">
+
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding><Insets top="0" right="0" bottom="20" left="0"/></padding>
+            <Label text="Contas a Receber" styleClass="page-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label text="Status:" styleClass="form-label"/>
+            <ComboBox fx:id="filtroStatus" promptText="Todos" styleClass="search-field"/>
+            <Button fx:id="btnNovaConta" text="Nova conta" styleClass="btn-primary"/>
+            <Button fx:id="btnDarBaixa" text="Dar baixa" styleClass="btn-secondary"/>
+            <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-secondary"/>
+        </HBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tabela" styleClass="modern-table">
+            <columns>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="240"/>
+                <TableColumn fx:id="colCliente" text="Cliente" prefWidth="180"/>
+                <TableColumn fx:id="colParcela" text="Parcela" prefWidth="80"/>
+                <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
+                <TableColumn fx:id="colVencimento" text="Vencimento" prefWidth="110"/>
+                <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <Label fx:id="lblMensagem" styleClass="form-error">
+            <padding><Insets top="8" right="0" bottom="0" left="0"/></padding>
+        </Label>
+    </bottom>
+
+</BorderPane>
