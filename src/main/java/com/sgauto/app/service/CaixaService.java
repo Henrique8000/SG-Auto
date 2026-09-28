@@ -8,6 +8,8 @@ import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.caixa.CaixaRepository;
 import com.sgauto.app.service.backup.BackupService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
+import com.sgauto.app.model.usuario.Usuario;
+import com.sgauto.app.util.SessaoUsuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -44,6 +46,12 @@ public class CaixaService {
         return caixaRepository.save(caixa);
     }
 
+    // Login (único e imutável) de quem executou a ação.
+    // "Sistema" é só um fallback, caso a ação ocorra sem usuário na sessão.
+    private String obterLoginUsuarioLogado() {
+        Usuario usuario = SessaoUsuario.getInstancia().getUsuarioLogado();
+        return usuario != null ? usuario.getLogin() : "Sistema";
+    }
 
     @Transactional(readOnly = true)
     public Caixa buscarCaixaAberto() {
@@ -157,7 +165,7 @@ public class CaixaService {
         caixa.setDiferenca(diferenca);
         caixa.setModoConferenciaUsado(config.getModoConferencia());
         caixa.setJustificativaDiferenca(justificativaDiferenca);
-        caixa.setUsuarioFechamento("Sistema"); // trocar quando existir usuário logado
+        caixa.setUsuarioFechamento(obterLoginUsuarioLogado());
         caixa.setDataFechamento(LocalDateTime.now());
         caixa.setStatus(StatusCaixa.FECHADO);
 
