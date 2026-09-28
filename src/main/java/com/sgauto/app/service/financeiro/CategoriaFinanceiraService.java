@@ -1,6 +1,6 @@
 package com.sgauto.app.service.financeiro;
 
-import com.sgauto.app.enums.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.repository.financeiro.CategoriaFinanceiraRepository;
 import org.springframework.data.domain.Page;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,11 @@ public class CategoriaFinanceiraService {
                 : null;
 
         return repository.buscarComFiltros(filtroNome, tipo, ativo, PageRequest.of(pagina, tamanho));
+    }
+
+    @Transactional(readOnly = true)
+    public CategoriaFinanceira procurarPeloId(Long id){
+        return repository.findById(id);
     }
 
     private void validarCategoria(CategoriaFinanceira categoria) {

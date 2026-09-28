@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.patio;
 
 public enum CategoriaVeiculoPatio {
     MOTO,

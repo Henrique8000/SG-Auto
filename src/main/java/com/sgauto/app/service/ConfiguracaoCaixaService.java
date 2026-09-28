@@ -1,7 +1,7 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
 import com.sgauto.app.repository.caixa.ConfiguracaoCaixaRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;

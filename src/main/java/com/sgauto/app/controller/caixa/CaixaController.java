@@ -1,9 +1,8 @@
 package com.sgauto.app.controller.caixa;
 
-import com.sgauto.app.controller.caixa.FechamentoCaixaModalController;
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.caixa.Caixa;
 import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import com.sgauto.app.service.CaixaService;

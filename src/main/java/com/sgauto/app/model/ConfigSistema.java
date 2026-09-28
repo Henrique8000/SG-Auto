@@ -1,6 +1,6 @@
 package com.sgauto.app.model;
 
-import com.sgauto.app.enums.ConfigChave;
+import com.sgauto.app.enums.backup.ConfigChave;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

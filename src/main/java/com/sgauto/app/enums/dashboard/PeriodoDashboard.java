@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.dashboard;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

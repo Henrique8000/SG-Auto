@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.patio;
 
-import com.sgauto.app.enums.CategoriaVeiculoPatio;
+import com.sgauto.app.enums.patio.CategoriaVeiculoPatio;
 import com.sgauto.app.model.patio.TabelaPrecoPatio;
 import com.sgauto.app.service.TabelaPrecoPatioService;
 import com.sgauto.app.util.NumeroUtil;

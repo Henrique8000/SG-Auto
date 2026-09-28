@@ -1,6 +1,6 @@
 package com.sgauto.app.model.OrdemServico;
 
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.*;
 import jakarta.persistence.*;
 import java.math.BigDecimal;

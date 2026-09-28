@@ -1,8 +1,8 @@
 package com.sgauto.app.controller.configuracoes;
 
-import com.sgauto.app.enums.ConfigChave;
-import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.backup.ConfigChave;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.BackupHistorico;
 import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
 import com.sgauto.app.service.backup.BackupHistoricoService;

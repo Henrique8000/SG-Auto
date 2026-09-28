@@ -2,8 +2,8 @@ package com.sgauto.app.controller.patio;
 
 // Lembre-se de importar as suas classes de permissão
 // import com.sgauto.app.util.PermissaoUtil;
-// import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.PermissaoChave;
+// import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;

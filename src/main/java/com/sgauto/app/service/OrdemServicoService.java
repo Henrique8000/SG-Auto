@@ -1,7 +1,12 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.dto.dashboard.OsPorStatusDTO;
-import com.sgauto.app.enums.*;
+import com.sgauto.app.enums.dashboard.PeriodoDashboard;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.os.StatusOS;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.*;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.OrdemServico.OsPagamento;

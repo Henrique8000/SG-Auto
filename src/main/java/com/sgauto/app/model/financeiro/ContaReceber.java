@@ -1,7 +1,7 @@
 package com.sgauto.app.model.financeiro;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.StatusConta;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import jakarta.persistence.*;

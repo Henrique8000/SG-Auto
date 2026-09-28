@@ -1,7 +1,7 @@
 package com.sgauto.app.model.caixa;
 
-import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.enums.StatusCaixa;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
+import com.sgauto.app.enums.financeiro.StatusCaixa;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

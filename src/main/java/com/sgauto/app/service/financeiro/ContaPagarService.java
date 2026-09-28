@@ -1,9 +1,9 @@
 package com.sgauto.app.service.financeiro;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.StatusConta;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.StatusConta;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.financeiro.ContaPagar;
 import com.sgauto.app.repository.financeiro.ContaPagarRepository;
 import com.sgauto.app.service.CaixaService;

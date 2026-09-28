@@ -1,6 +1,6 @@
 package com.sgauto.app.repository.financeiro;
 
-import com.sgauto.app.enums.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,10 +9,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoriaFinanceiraRepository extends JpaRepository<CategoriaFinanceira, Long> {
 
     Page<CategoriaFinanceira> findByAtivoTrue(Pageable pageable);
+
+    @Override
+    Optional<CategoriaFinanceira> findById(Long Id);
 
     List<CategoriaFinanceira> findAllByAtivoTrue();
 

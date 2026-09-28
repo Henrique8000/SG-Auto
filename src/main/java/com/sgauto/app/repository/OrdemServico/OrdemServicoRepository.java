@@ -1,7 +1,7 @@
 package com.sgauto.app.repository.OrdemServico;
 
 import com.sgauto.app.dto.dashboard.OsPorStatusDTO;
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

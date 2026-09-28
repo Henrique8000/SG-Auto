@@ -1,6 +1,6 @@
 package com.sgauto.app.model.patio;
 
-import com.sgauto.app.enums.CategoriaVeiculoPatio;
+import com.sgauto.app.enums.patio.CategoriaVeiculoPatio;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

@@ -1,9 +1,10 @@
 package com.sgauto.app.service;
 
 import com.sgauto.app.dto.dashboard.*;
-import com.sgauto.app.enums.PeriodoDashboard;
-import com.sgauto.app.enums.StatusEstadiaPatio;
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.dashboard.PeriodoDashboard;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
@@ -58,8 +59,8 @@ public class DashboardService {
         LocalDateTime inicioMes = LocalDate.now().withDayOfMonth(1).atStartOfDay();
         LocalDateTime fimMes = LocalDate.now().atTime(LocalTime.MAX);
 
-        BigDecimal faturamentoCaixaDia = caixaMovimentacaoRepository.somarEntradasPorPeriodo(inicioHoje, fimHoje);
-        BigDecimal faturamentoCaixaMes = caixaMovimentacaoRepository.somarEntradasPorPeriodo(inicioMes, fimMes);
+        BigDecimal faturamentoCaixaDia = caixaMovimentacaoRepository.somarEntradasPorPeriodo(inicioHoje, fimHoje, TipoMovimentacao.ENTRADA);
+        BigDecimal faturamentoCaixaMes = caixaMovimentacaoRepository.somarEntradasPorPeriodo(inicioMes, fimMes, TipoMovimentacao.ENTRADA);
         BigDecimal faturamentoOsFinalizadasMes =
                 ordemServicoRepository.somarFaturamentoPorPeriodo(StatusOS.FINALIZADA, inicioMes, fimMes);
 
@@ -106,7 +107,7 @@ public class DashboardService {
     // ------------------------------------------------------------------
 
     public List<FaturamentoDiarioDTO> faturamentoNoPeriodo(PeriodoDashboard periodo) {
-        return caixaMovimentacaoRepository.faturamentoDiarioPorPeriodo(periodo.getInicio(), periodo.getFim());
+        return caixaMovimentacaoRepository.faturamentoDiarioPorPeriodo(periodo.getInicio(), periodo.getFim(), TipoMovimentacao.ENTRADA);
     }
 
     // ------------------------------------------------------------------
@@ -114,11 +115,11 @@ public class DashboardService {
     // ------------------------------------------------------------------
 
     public List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento(PeriodoDashboard periodo) {
-        return caixaMovimentacaoRepository.faturamentoPorFormaPagamento(periodo.getInicio(), periodo.getFim());
+        return caixaMovimentacaoRepository.faturamentoPorFormaPagamento(periodo.getInicio(), periodo.getFim(), TipoMovimentacao.ENTRADA);
     }
 
     public List<ServicoMaisRealizadoDTO> servicosMaisRealizados(PeriodoDashboard periodo) {
-        return osServicoRepository.servicosMaisRealizados(periodo.getInicio(), periodo.getFim())
+        return osServicoRepository.servicosMaisRealizados(periodo.getInicio(), periodo.getFim(), StatusOS.FINALIZADA)
                 .stream()
                 .limit(5) 
                 .toList();

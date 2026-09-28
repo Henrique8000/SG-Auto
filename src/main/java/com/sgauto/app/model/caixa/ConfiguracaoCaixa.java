@@ -1,6 +1,6 @@
 package com.sgauto.app.model.caixa;
 
-import com.sgauto.app.enums.ModoConferencia;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

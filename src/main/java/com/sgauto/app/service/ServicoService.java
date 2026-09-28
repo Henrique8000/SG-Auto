@@ -1,7 +1,7 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.TipoAjustePreco;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.estoque_servico.TipoAjustePreco;
 import com.sgauto.app.model.Categoria;
 import com.sgauto.app.model.Servico;
 import com.sgauto.app.repository.CategoriaRepository;

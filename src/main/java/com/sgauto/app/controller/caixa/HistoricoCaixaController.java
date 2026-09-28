@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.caixa;
 
-import com.sgauto.app.enums.ModoConferencia;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
 import com.sgauto.app.model.caixa.Caixa;
 import com.sgauto.app.service.CaixaService;
 import javafx.beans.property.SimpleStringProperty;

@@ -1,6 +1,6 @@
 package com.sgauto.app.model.OrdemServico;
 
-import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.os;
 
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.service.OrdemServicoService;
 import com.sgauto.app.service.PatioService;

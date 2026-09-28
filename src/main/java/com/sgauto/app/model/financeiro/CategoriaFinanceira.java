@@ -1,6 +1,6 @@
 package com.sgauto.app.model.financeiro;
 
-import com.sgauto.app.enums.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 

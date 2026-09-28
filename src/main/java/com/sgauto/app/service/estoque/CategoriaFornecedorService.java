@@ -1,6 +1,6 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.dto.estoque.FiltroCategoriaFornecedorDTO;
+import com.sgauto.app.dto.estoque_servico.FiltroCategoriaFornecedorDTO;
 import com.sgauto.app.model.estoque.CategoriaFornecedor;
 import com.sgauto.app.repository.estoque.CategoriaFornecedorRepository;
 import com.sgauto.app.specifications.estoque.CategoriaFornecedorSpecification;

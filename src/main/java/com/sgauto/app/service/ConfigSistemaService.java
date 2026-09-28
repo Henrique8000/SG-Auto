@@ -1,6 +1,6 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.ConfigChave;
+import com.sgauto.app.enums.backup.ConfigChave;
 import com.sgauto.app.model.ConfigSistema;
 import com.sgauto.app.repository.ConfigSistemaRepository;
 import org.slf4j.Logger;

@@ -2,8 +2,8 @@ package com.sgauto.app.repository.caixa;
 
 import com.sgauto.app.dto.dashboard.FaturamentoDiarioDTO;
 import com.sgauto.app.dto.dashboard.FaturamentoPorFormaPagamentoDTO;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,32 +21,35 @@ public interface CaixaMovimentacaoRepository extends JpaRepository<CaixaMoviment
     @Query("""
         SELECT COALESCE(SUM(m.valor), 0)
         FROM CaixaMovimentacao m
-        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        WHERE m.tipo = :tipo
         AND m.data BETWEEN :inicio AND :fim
         """)
     BigDecimal somarEntradasPorPeriodo(@Param("inicio") LocalDateTime inicio,
-                                       @Param("fim") LocalDateTime fim);
+                                       @Param("fim") LocalDateTime fim,
+                                       @Param("tipo") TipoMovimentacao tipo);
 
     @Query("""
         SELECT new com.sgauto.app.dto.dashboard.FaturamentoDiarioDTO(CAST(m.data AS LocalDate), SUM(m.valor))
         FROM CaixaMovimentacao m
-        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        WHERE m.tipo = :tipo
         AND m.data BETWEEN :inicio AND :fim
         GROUP BY CAST(m.data AS LocalDate)
         ORDER BY CAST(m.data AS LocalDate)
         """)
     List<FaturamentoDiarioDTO> faturamentoDiarioPorPeriodo(@Param("inicio") LocalDateTime inicio,
-                                                           @Param("fim") LocalDateTime fim);
+                                                           @Param("fim") LocalDateTime fim,
+                                                           @Param("tipo") TipoMovimentacao tipo);
 
     @Query("""
         SELECT new com.sgauto.app.dto.dashboard.FaturamentoPorFormaPagamentoDTO(m.formaPagamento, SUM(m.valor))
         FROM CaixaMovimentacao m
-        WHERE m.tipo = com.sgauto.app.enums.TipoMovimentacao.ENTRADA
+        WHERE m.tipo = :tipo
         AND m.formaPagamento IS NOT NULL
         AND m.data BETWEEN :inicio AND :fim
         GROUP BY m.formaPagamento
         ORDER BY SUM(m.valor) DESC
         """)
     List<FaturamentoPorFormaPagamentoDTO> faturamentoPorFormaPagamento(@Param("inicio") LocalDateTime inicio,
-                                                                       @Param("fim") LocalDateTime fim);
+                                                                       @Param("fim") LocalDateTime fim,
+                                                                       @Param("tipo") TipoMovimentacao tipo);
 }

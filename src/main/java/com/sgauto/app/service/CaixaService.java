@@ -1,6 +1,11 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.*;
+import com.sgauto.app.enums.backup.TipoBackup;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.StatusCaixa;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.caixa.Caixa;
 import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import com.sgauto.app.model.caixa.ConfiguracaoCaixa;

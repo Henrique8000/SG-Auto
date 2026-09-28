@@ -1,8 +1,8 @@
 package com.sgauto.app.model;
 
-import com.sgauto.app.enums.CargoFuncionario;
-import com.sgauto.app.enums.StatusFuncionario;
-import com.sgauto.app.enums.TipoContratoFuncionario;
+import com.sgauto.app.enums.funcionario.CargoFuncionario;
+import com.sgauto.app.enums.funcionario.StatusFuncionario;
+import com.sgauto.app.enums.funcionario.TipoContratoFuncionario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import org.hibernate.annotations.JdbcTypeCode;

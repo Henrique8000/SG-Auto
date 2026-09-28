@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.financeiro;
 
-import com.sgauto.app.enums.StatusConta;
+import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.model.financeiro.ContaReceber;
 import com.sgauto.app.service.financeiro.ContaReceberService;
 import com.sgauto.app.util.ModalUtil;
@@ -10,15 +10,12 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 
 @Component

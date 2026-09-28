@@ -1,6 +1,6 @@
 package com.sgauto.app.repository.caixa;
 
-import com.sgauto.app.enums.StatusCaixa;
+import com.sgauto.app.enums.financeiro.StatusCaixa;
 import com.sgauto.app.model.caixa.Caixa;
 import org.springframework.data.jpa.repository.JpaRepository;
 

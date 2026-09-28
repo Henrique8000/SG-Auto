@@ -1,8 +1,8 @@
 package com.sgauto.app.controller.caixa;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.service.CaixaService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

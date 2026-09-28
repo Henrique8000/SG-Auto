@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.os;
 
 public enum StatusOS {
     ABERTA,

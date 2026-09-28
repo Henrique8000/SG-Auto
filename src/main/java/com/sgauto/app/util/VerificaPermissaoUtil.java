@@ -1,6 +1,6 @@
 package com.sgauto.app.util;
 
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.repository.usuario.PerfilAcessoRepository;
 import org.springframework.stereotype.Component;

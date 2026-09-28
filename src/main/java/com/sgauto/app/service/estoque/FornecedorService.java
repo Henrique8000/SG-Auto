@@ -1,7 +1,7 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.dto.estoque.FiltroFornecedorDTO;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.dto.estoque_servico.FiltroFornecedorDTO;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.repository.estoque.FornecedorRepository;
 import com.sgauto.app.specifications.estoque.FornecedorSpecification;

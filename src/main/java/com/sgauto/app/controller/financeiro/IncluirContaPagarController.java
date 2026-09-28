@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.financeiro;
 
-import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.model.financeiro.ContaPagar;

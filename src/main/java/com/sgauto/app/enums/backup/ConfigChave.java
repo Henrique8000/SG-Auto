@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.backup;
 
 public enum ConfigChave {
     BACKUP_PASTA_LOCAL,

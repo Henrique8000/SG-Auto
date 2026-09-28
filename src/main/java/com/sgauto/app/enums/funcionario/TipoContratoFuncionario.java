@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.funcionario;
 
 public enum TipoContratoFuncionario {
     CLT("CLT"),

@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.financeiro;
 
 import com.sgauto.app.controller.PaginacaoController;
-import com.sgauto.app.enums.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.service.financeiro.CategoriaFinanceiraService;
 import javafx.beans.property.SimpleStringProperty;

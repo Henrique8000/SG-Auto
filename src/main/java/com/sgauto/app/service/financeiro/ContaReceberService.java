@@ -1,12 +1,16 @@
 package com.sgauto.app.service.financeiro;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.StatusConta;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.dto.financeiro.RequisicaoContaReceberDTO;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.StatusConta;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.model.Cliente;
+import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.model.financeiro.ContaReceber;
 import com.sgauto.app.repository.financeiro.ContaReceberRepository;
 import com.sgauto.app.service.CaixaService;
+import com.sgauto.app.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,11 +25,17 @@ import java.util.Optional;
 @Service
 public class ContaReceberService {
 
-    @Autowired
-    private ContaReceberRepository contaReceberRepository;
+    private final ContaReceberRepository contaReceberRepository;
+    private final CaixaService caixaService;
+    private final ClienteService clienteService;
+    private final CategoriaFinanceiraService categoriaFinanceiraService;
 
-    @Autowired
-    private CaixaService caixaService;
+    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, CategoriaFinanceiraService categoriaFinanceiraService) {
+        this.contaReceberRepository = contaReceberRepository;
+        this.caixaService = caixaService;
+        this.clienteService = clienteService;
+        this.categoriaFinanceiraService = categoriaFinanceiraService;
+    }
 
     /**
      * Cadastra uma única linha de conta a receber (uma parcela). Sempre nasce como PENDENTE,
@@ -74,10 +84,38 @@ public class ContaReceberService {
 
     // metodo para registrar contas marcadas como parcelas em outras telas do sistema
     @Transactional
-    public ContaReceber cadastrarDiretoPeloSistema(ContaReceber contaReceber){
-        if (contaReceber == null) {
+    public ContaReceber cadastrarDiretoPeloSistema(RequisicaoContaReceberDTO dto){
+        if (dto == null) {
             throw new IllegalArgumentException("Dados da conta a receber não informados.");
         }
+
+        ContaReceber conta = new ContaReceber();
+
+        conta.setDescricao(dto.getDescricao());
+        conta.setOrigem("Sistema");
+        conta.setDataVencimento(dto.getDataVencimentoInicial());
+        conta.setTotalParcelas(dto.getQuantidadeParcelas());
+        conta.setNumeroParcela(1);
+        conta.setStatus(StatusConta.PENDENTE);
+
+        BigDecimal valorEntrada = dto.getValorEntrada() != null ? dto.getValorEntrada() : BigDecimal.ZERO;
+        conta.setValorOriginal(dto.getValorTotal().subtract(valorEntrada));
+
+        String refOS = dto.getOrdemServicoId() != null ? " | Ref OS: " + dto.getOrdemServicoId() : "";
+        conta.setObservacoes("Parcelamento gerado automaticamente. Origem: " + "Sistema" + refOS);
+
+        if (dto.getClienteId() != null) {
+            Cliente cliente;
+            cliente = clienteService.buscarPorId(dto.getClienteId());
+            conta.setCliente(cliente);
+        }
+
+        if (dto.getCategoriaFinanceiraId() != null) {
+            CategoriaFinanceira categoria;
+            categoria = categoriaFinanceiraService.procurarPeloId(dto.getCategoriaFinanceiraId());
+            conta.setCategoria(categoria);
+        }
+
     }
 
     /**
@@ -275,7 +313,7 @@ public class ContaReceberService {
     }
 
     /**
-     * Cancela uma conta a receber (nunca deletar fisicamente — histórico financeiro precisa ficar rastreável).
+     * Cancela uma conta a receber - softdelete
      */
     @Transactional
     public ContaReceber cancelar(Long id, String motivo) {

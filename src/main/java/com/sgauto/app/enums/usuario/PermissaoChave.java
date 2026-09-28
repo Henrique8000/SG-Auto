@@ -1,4 +1,4 @@
-package com.sgauto.app.enums;
+package com.sgauto.app.enums.usuario;
 
 public enum PermissaoChave {
     // MÓDULO: USUÁRIOS E SEGURANÇA

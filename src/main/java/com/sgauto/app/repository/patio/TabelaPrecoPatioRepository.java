@@ -1,7 +1,7 @@
 package com.sgauto.app.repository.patio;
 
 import com.sgauto.app.model.patio.TabelaPrecoPatio;
-import com.sgauto.app.enums.CategoriaVeiculoPatio;
+import com.sgauto.app.enums.patio.CategoriaVeiculoPatio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

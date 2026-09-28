@@ -1,8 +1,8 @@
 package com.sgauto.app.controller.estoque;
 
-import com.sgauto.app.dto.ItemSelecionavelPeca;
-import com.sgauto.app.enums.CampoPreco;
-import com.sgauto.app.enums.TipoAjustePreco;
+import com.sgauto.app.dto.estoque_servico.ItemSelecionavelPeca;
+import com.sgauto.app.enums.estoque_servico.CampoPreco;
+import com.sgauto.app.enums.estoque_servico.TipoAjustePreco;
 import com.sgauto.app.model.estoque.Peca;
 import com.sgauto.app.service.estoque.EstoqueService;
 import com.sgauto.app.util.AutoCompleteComboBox;

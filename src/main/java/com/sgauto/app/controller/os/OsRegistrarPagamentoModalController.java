@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.os;
 
-import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.service.OrdemServicoService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -13,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 @Component
 public class OsRegistrarPagamentoModalController {

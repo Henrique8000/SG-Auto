@@ -1,8 +1,6 @@
 package com.sgauto.app.service.backup;
 
-import com.sgauto.app.enums.TipoBackup;
-import com.sgauto.app.service.backup.BackupHistoricoService;
-import com.sgauto.app.service.backup.BackupService;
+import com.sgauto.app.enums.backup.TipoBackup;
 import com.sgauto.app.service.ConfigSistemaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

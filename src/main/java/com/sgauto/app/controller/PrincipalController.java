@@ -1,6 +1,6 @@
 package com.sgauto.app.controller;
 
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.SessaoUsuario;
 import com.sgauto.app.util.VerificaPermissaoUtil;

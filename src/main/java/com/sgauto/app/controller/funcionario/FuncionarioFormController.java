@@ -1,8 +1,8 @@
 package com.sgauto.app.controller.funcionario;
 
-import com.sgauto.app.enums.CargoFuncionario;
-import com.sgauto.app.enums.StatusFuncionario;
-import com.sgauto.app.enums.TipoContratoFuncionario;
+import com.sgauto.app.enums.funcionario.CargoFuncionario;
+import com.sgauto.app.enums.funcionario.StatusFuncionario;
+import com.sgauto.app.enums.funcionario.TipoContratoFuncionario;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.service.FuncionarioService;
 import com.sgauto.app.util.CepUtil;

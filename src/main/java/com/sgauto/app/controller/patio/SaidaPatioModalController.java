@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.patio;
 
 import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
-import com.sgauto.app.enums.FormaPagamento;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.service.PatioService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;

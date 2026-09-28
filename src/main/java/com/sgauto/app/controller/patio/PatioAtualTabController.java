@@ -3,7 +3,7 @@ package com.sgauto.app.controller.patio;
 import com.sgauto.app.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.dto.patio.PatioResumoDashboardDTO;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.patio.MotivoEstadia;
 import com.sgauto.app.service.MotivoEstadiaService;
 import com.sgauto.app.service.PatioService;
