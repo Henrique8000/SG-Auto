@@ -307,6 +307,7 @@ public class OrdemServicoService {
         novaOsPeca.setPeca(peca);
         novaOsPeca.setQuantidade(quantidade);
         novaOsPeca.setValorUnitario(valorUnitario);
+        novaOsPeca.setValorCustoUnitario(peca.getPrecoCusto());
         novaOsPeca.setValorTotal(valorTotal);
 
         novaOsPeca = osPecaRepository.save(novaOsPeca);
