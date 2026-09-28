@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -122,7 +123,18 @@ public class DataSeeder implements CommandLineRunner {
                     12500,
                     true
             );
-            veiculoRepository.save(veiculo1);
+
+            Veiculo veiculo2 = new Veiculo(
+                    cliente2,
+                    "JMN3963",
+                    "Lamborghini",
+                    "Aventador S",
+                    2022,
+                    9000,
+                    true
+            );
+
+            veiculoRepository.saveAll(Arrays.asList(veiculo1, veiculo2));
 
             log.info("[DEV] Banco de dados populado com sucesso!");
         }

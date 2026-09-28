@@ -26,6 +26,9 @@ public class OsPeca {
     @Column(name = "valor_unitario", nullable = false)
     private BigDecimal valorUnitario;
 
+    @Column(name = "valor_custo_unitario", nullable = false)
+    private BigDecimal valorCustoUnitario;
+
     @Column(name = "valor_total", nullable = false)
     private BigDecimal valorTotal;
 
@@ -34,12 +37,13 @@ public class OsPeca {
     }
 
     // Construtor com Argumentos
-    public OsPeca(Long id, OrdemServico ordemServico, Peca peca, Integer quantidade, BigDecimal valorUnitario, BigDecimal valorTotal) {
+    public OsPeca(Long id, OrdemServico ordemServico, Peca peca, Integer quantidade, BigDecimal valorUnitario, BigDecimal valorCustoUnitario, BigDecimal valorTotal) {
         this.id = id;
         this.ordemServico = ordemServico;
         this.peca = peca;
         this.quantidade = quantidade;
         this.valorUnitario = valorUnitario;
+        this.valorCustoUnitario = valorCustoUnitario;
         this.valorTotal = valorTotal;
     }
 
@@ -85,6 +89,14 @@ public class OsPeca {
 
     public void setValorUnitario(BigDecimal valorUnitario) {
         this.valorUnitario = valorUnitario;
+    }
+
+    public BigDecimal getValorCustoUnitario() {
+        return valorCustoUnitario;
+    }
+
+    public void setValorCustoUnitario(BigDecimal valorCustoUnitario) {
+        this.valorCustoUnitario = valorCustoUnitario;
     }
 
     public BigDecimal getValorTotal() {

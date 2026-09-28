@@ -40,17 +40,20 @@ public class Caixa {
     @Column(name = "caixa_total_saidas")
     private BigDecimal totalSaidas;
 
-    @Column(name = "caixa_total_vendas_pecas")
-    private BigDecimal totalVendasPecas;
+    @Column(name = "caixa_total_os")
+    private BigDecimal totalOs;
 
-    @Column(name = "caixa_total_servicos")
-    private BigDecimal totalServicos;
+    @Column(name = "caixa_total_patio")
+    private BigDecimal totalPatio;
 
     @Column(name = "caixa_total_avulso")
     private BigDecimal totalAvulso;
 
     @Column(name = "caixa_total_sangria")
     private BigDecimal totalSangria;
+
+    @Column(name = "caixa_total_despesas")
+    private BigDecimal totalDespesas;
 
     @Column(name = "caixa_total_suprimento")
     private BigDecimal totalSuprimento;
@@ -122,17 +125,20 @@ public class Caixa {
     public BigDecimal getTotalSaidas() { return totalSaidas; }
     public void setTotalSaidas(BigDecimal totalSaidas) { this.totalSaidas = totalSaidas; }
 
-    public BigDecimal getTotalVendasPecas() { return totalVendasPecas; }
-    public void setTotalVendasPecas(BigDecimal totalVendasPecas) { this.totalVendasPecas = totalVendasPecas; }
+    public BigDecimal getTotalOs() { return totalOs; }
+    public void setTotalOs(BigDecimal totalOs) { this.totalOs = totalOs; }
 
-    public BigDecimal getTotalServicos() { return totalServicos; }
-    public void setTotalServicos(BigDecimal totalServicos) { this.totalServicos = totalServicos; }
+    public BigDecimal getTotalPatio() { return totalPatio; }
+    public void setTotalPatio(BigDecimal totalPatio) { this.totalPatio = totalPatio; }
 
     public BigDecimal getTotalAvulso() { return totalAvulso; }
     public void setTotalAvulso(BigDecimal totalAvulso) { this.totalAvulso = totalAvulso; }
 
     public BigDecimal getTotalSangria() { return totalSangria; }
     public void setTotalSangria(BigDecimal totalSangria) { this.totalSangria = totalSangria; }
+
+    public BigDecimal getTotalDespesas() { return totalDespesas; }
+    public void setTotalDespesas(BigDecimal totalDespesas) { this.totalDespesas = totalDespesas; }
 
     public BigDecimal getTotalSuprimento() { return totalSuprimento; }
     public void setTotalSuprimento(BigDecimal totalSuprimento) { this.totalSuprimento = totalSuprimento; }

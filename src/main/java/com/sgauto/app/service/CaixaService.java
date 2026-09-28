@@ -8,6 +8,8 @@ import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.caixa.CaixaRepository;
 import com.sgauto.app.service.backup.BackupService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
+import com.sgauto.app.model.usuario.Usuario;
+import com.sgauto.app.util.SessaoUsuario;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -44,6 +46,12 @@ public class CaixaService {
         return caixaRepository.save(caixa);
     }
 
+    // Login (único e imutável) de quem executou a ação.
+    // "Sistema" é só um fallback, caso a ação ocorra sem usuário na sessão.
+    private String obterLoginUsuarioLogado() {
+        Usuario usuario = SessaoUsuario.getInstancia().getUsuarioLogado();
+        return usuario != null ? usuario.getLogin() : "Sistema";
+    }
 
     @Transactional(readOnly = true)
     public Caixa buscarCaixaAberto() {
@@ -157,7 +165,7 @@ public class CaixaService {
         caixa.setDiferenca(diferenca);
         caixa.setModoConferenciaUsado(config.getModoConferencia());
         caixa.setJustificativaDiferenca(justificativaDiferenca);
-        caixa.setUsuarioFechamento("Sistema"); // trocar quando existir usuário logado
+        caixa.setUsuarioFechamento(obterLoginUsuarioLogado());
         caixa.setDataFechamento(LocalDateTime.now());
         caixa.setStatus(StatusCaixa.FECHADO);
 
@@ -191,16 +199,28 @@ public class CaixaService {
         caixa.setTotalEntradas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA));
         caixa.setTotalSaidas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA));
 
-        caixa.setTotalVendasPecas(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.VENDA_PECA));
-        caixa.setTotalServicos(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SERVICO));
-        caixa.setTotalAvulso(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.AVULSO));
-        caixa.setTotalSangria(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SANGRIA));
-        caixa.setTotalSuprimento(somarPor(movimentacoes, m -> m.getOrigem() == OrigemMovimentacao.SUPRIMENTO));
+        // Categorias. Fecham a conta com os totais acima:
+        //   entradas = O.S. + pátio + avulso + suprimento
+        //   saídas   = sangria + despesas
+        caixa.setTotalOs(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.OS_PAGAMENTO));
+        caixa.setTotalPatio(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.PATIO));
+        caixa.setTotalAvulso(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.AVULSO));
+        caixa.setTotalSuprimento(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.SUPRIMENTO));
+        caixa.setTotalSangria(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.SANGRIA));
+        caixa.setTotalDespesas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.AVULSO));
 
-        caixa.setTotalDinheiro(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.DINHEIRO));
-        caixa.setTotalDebito(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.DEBITO));
-        caixa.setTotalCredito(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.CREDITO));
-        caixa.setTotalPix(somarPor(movimentacoes, m -> m.getFormaPagamento() == FormaPagamento.PIX));
+        // Formas de pagamento = recebimentos. O saldo físico da gaveta é o valorEsperado.
+        caixa.setTotalDinheiro(somarRecebimentosPor(movimentacoes, FormaPagamento.DINHEIRO));
+        caixa.setTotalDebito(somarRecebimentosPor(movimentacoes, FormaPagamento.DEBITO));
+        caixa.setTotalCredito(somarRecebimentosPor(movimentacoes, FormaPagamento.CREDITO));
+        caixa.setTotalPix(somarRecebimentosPor(movimentacoes, FormaPagamento.PIX));
+    }
+
+    // Recebimento = entrada que não seja suprimento (suprimento é troco colocado na gaveta, não receita)
+    private BigDecimal somarRecebimentosPor(List<CaixaMovimentacao> movimentacoes, FormaPagamento forma) {
+        return somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA
+                && m.getOrigem() != OrigemMovimentacao.SUPRIMENTO
+                && m.getFormaPagamento() == forma);
     }
 
     private BigDecimal somarPor(List<CaixaMovimentacao> movimentacoes, java.util.function.Predicate<CaixaMovimentacao> filtro) {
