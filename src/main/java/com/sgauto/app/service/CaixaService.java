@@ -193,7 +193,8 @@ public class CaixaService {
         }
     }
 
-    private void preencherTotais(Caixa caixa) {
+    // Público para o seeder de dev reaproveitar o cálculo real dos totais
+    public void preencherTotais(Caixa caixa) {
         List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixa.getId());
 
         caixa.setTotalEntradas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA));
