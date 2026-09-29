@@ -18,6 +18,8 @@ public interface CategoriaFinanceiraRepository extends JpaRepository<CategoriaFi
     @Override
     Optional<CategoriaFinanceira> findById(Long Id);
 
+    Optional<CategoriaFinanceira> findByNome(String Nome);
+
     List<CategoriaFinanceira> findAllByAtivoTrue();
 
     Page<CategoriaFinanceira> findByTipoInAndAtivoTrue(List<TipoCategoriaFinanceira> tipos, Pageable pageable);

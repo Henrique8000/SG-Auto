@@ -81,8 +81,13 @@ public class CategoriaFinanceiraService {
     }
 
     @Transactional(readOnly = true)
-    public CategoriaFinanceira procurarPeloId(Long id){
+    public Optional<CategoriaFinanceira> procurarPeloId(Long id){
         return repository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<CategoriaFinanceira> procurarPeloNome(String nome){
+        return repository.findByNome(nome);
     }
 
     private void validarCategoria(CategoriaFinanceira categoria) {

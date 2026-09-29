@@ -6,8 +6,11 @@ import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
 import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.Cliente;
+import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.model.financeiro.ContaReceber;
+import com.sgauto.app.repository.ClienteRepository;
+import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.financeiro.ContaReceberRepository;
 import com.sgauto.app.service.CaixaService;
 import com.sgauto.app.service.ClienteService;
@@ -28,13 +31,17 @@ public class ContaReceberService {
     private final ContaReceberRepository contaReceberRepository;
     private final CaixaService caixaService;
     private final ClienteService clienteService;
+    private final ClienteRepository clienteRepository;
     private final CategoriaFinanceiraService categoriaFinanceiraService;
+    private final OrdemServicoRepository ordemServicoRepository;
 
-    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, CategoriaFinanceiraService categoriaFinanceiraService) {
+    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, ClienteRepository clienteRepository, CategoriaFinanceiraService categoriaFinanceiraService, OrdemServicoRepository ordemServicoRepository) {
         this.contaReceberRepository = contaReceberRepository;
         this.caixaService = caixaService;
         this.clienteService = clienteService;
+        this.clienteRepository = clienteRepository;
         this.categoriaFinanceiraService = categoriaFinanceiraService;
+        this.ordemServicoRepository = ordemServicoRepository;
     }
 
     /**
@@ -84,38 +91,54 @@ public class ContaReceberService {
 
     // metodo para registrar contas marcadas como parcelas em outras telas do sistema
     @Transactional
-    public ContaReceber cadastrarDiretoPeloSistema(RequisicaoContaReceberDTO dto){
+    public List<ContaReceber> cadastrarDiretoPeloSistema(RequisicaoContaReceberDTO dto) {
         if (dto == null) {
             throw new IllegalArgumentException("Dados da conta a receber não informados.");
         }
 
-        ContaReceber conta = new ContaReceber();
+        ContaReceber contaBase = new ContaReceber();
 
-        conta.setDescricao(dto.getDescricao());
-        conta.setOrigem("Sistema");
-        conta.setDataVencimento(dto.getDataVencimentoInicial());
-        conta.setTotalParcelas(dto.getQuantidadeParcelas());
-        conta.setNumeroParcela(1);
-        conta.setStatus(StatusConta.PENDENTE);
+        contaBase.setDescricao(dto.getDescricao());
+        contaBase.setDataVencimento(dto.getDataVencimentoInicial());
+        contaBase.setTotalParcelas(dto.getQuantidadeParcelas());
+        contaBase.setStatus(StatusConta.PENDENTE);
+
+        String origemInferida = (dto.getOrdemServicoId() != null) ? "ORDEM_SERVICO" : "SISTEMA";
+        contaBase.setOrigem(origemInferida);
 
         BigDecimal valorEntrada = dto.getValorEntrada() != null ? dto.getValorEntrada() : BigDecimal.ZERO;
-        conta.setValorOriginal(dto.getValorTotal().subtract(valorEntrada));
+        contaBase.setValorOriginal(dto.getValorTotal().subtract(valorEntrada));
 
         String refOS = dto.getOrdemServicoId() != null ? " | Ref OS: " + dto.getOrdemServicoId() : "";
-        conta.setObservacoes("Parcelamento gerado automaticamente. Origem: " + "Sistema" + refOS);
+        contaBase.setObservacoes("Gerado automaticamente. Origem: " + origemInferida + refOS);
+
+        Cliente cliente = null;
 
         if (dto.getClienteId() != null) {
-            Cliente cliente;
-            cliente = clienteService.buscarPorId(dto.getClienteId());
-            conta.setCliente(cliente);
+            cliente = clienteRepository.findById(dto.getClienteId())
+                    .orElseThrow(() -> new IllegalArgumentException("Cliente informado não foi encontrado."));
         }
+        contaBase.setCliente(cliente);
 
         if (dto.getCategoriaFinanceiraId() != null) {
-            CategoriaFinanceira categoria;
-            categoria = categoriaFinanceiraService.procurarPeloId(dto.getCategoriaFinanceiraId());
-            conta.setCategoria(categoria);
+            CategoriaFinanceira categoria = categoriaFinanceiraService.procurarPeloId(dto.getCategoriaFinanceiraId())
+                    .orElseThrow(() -> new IllegalArgumentException("Categoria financeira não encontrada para o ID informado."));
+            contaBase.setCategoria(categoria);
         }
 
+        if (dto.getOrdemServicoId() != null) {
+            OrdemServico os = ordemServicoRepository.findById(dto.getOrdemServicoId())
+                    .orElseThrow(() -> new IllegalArgumentException("Ordem de Serviço não encontrada."));
+            contaBase.setOrdemServico(os);
+        }
+
+        List<ContaReceber> parcelasGeradas = gerarParcelas(
+                contaBase,
+                dto.getQuantidadeParcelas(),
+                dto.getIntervaloDias()
+        );
+
+        return contaReceberRepository.saveAll(parcelasGeradas);
     }
 
     /**

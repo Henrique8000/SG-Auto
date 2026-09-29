@@ -14,7 +14,6 @@ public class RequisicaoContaReceberDTO {
 
     // 1. RASTREABILIDADE E RELACIONAMENTOS
 
-    @NotNull(message = "O ID do cliente é obrigatório.")
     private Long clienteId;
 
     private Long ordemServicoId;

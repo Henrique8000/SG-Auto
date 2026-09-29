@@ -1014,8 +1014,7 @@ ScrollPane.modal-container {
     -fx-font-size: 14px;
 }
 
-/* ═══════════════ 25. SPINNER (Formato Industrial) ═══════════════ */
-.spinner.form-input {
+.spinner {
     -fx-background-color: -bg-input;
     -fx-border-color: -border-subtle;
     -fx-border-radius: 4;
@@ -1023,41 +1022,47 @@ ScrollPane.modal-container {
     -fx-padding: 0;
 }
 
-.spinner.form-input:focused {
+.spinner:focused {
     -fx-border-color: -border-focus;
     -fx-background-color: #181818;
 }
 
-/* Área de digitação do Spinner */
-.spinner.form-input .text-field {
+/* Área de digitação interna do Spinner (Garante fundo escuro) */
+.spinner .text-field {
     -fx-background-color: transparent;
     -fx-text-fill: -text-primary;
-    -fx-padding: 8 8;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-padding: 6 8;
+}
+
+/* Força o painel interno dos botões a ficar transparente para assumir o fundo escuro */
+.spinner .stack-pane {
+    -fx-background-color: transparent;
 }
 
 /* Botões de incremento/decremento (setas) */
-.spinner.form-input .increment-arrow-button,
-.spinner.form-input .decrement-arrow-button {
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent transparent -border-subtle;
     -fx-background-radius: 0;
     -fx-cursor: hand;
 }
 
-.spinner.form-input .increment-arrow-button:hover,
-.spinner.form-input .decrement-arrow-button:hover {
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
     -fx-background-color: -bg-card-hover;
 }
 
 /* Os ícones das setas */
-.spinner.form-input .increment-arrow-button .increment-arrow,
-.spinner.form-input .decrement-arrow-button .decrement-arrow {
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
     -fx-background-color: -text-muted;
 }
 
 /* Efeito Hover nas setinhas */
-.spinner.form-input .increment-arrow-button:hover .increment-arrow,
-.spinner.form-input .decrement-arrow-button:hover .decrement-arrow {
+.spinner .increment-arrow-button:hover .increment-arrow,
+.spinner .decrement-arrow-button:hover .decrement-arrow {
     -fx-background-color: -accent;
 }
 
