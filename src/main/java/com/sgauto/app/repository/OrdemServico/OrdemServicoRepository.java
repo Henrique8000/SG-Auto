@@ -52,8 +52,6 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
     @Query("SELECT os FROM OrdemServico os JOIN FETCH os.cliente JOIN FETCH os.veiculo JOIN FETCH os.funcionario WHERE os.id = :id")
     Optional<OrdemServico> findByIdDetalhado(@Param("id") Long id);
 
-
-
     // Métodos para o Dashboard
 
     @Query("""
@@ -69,4 +67,32 @@ public interface OrdemServicoRepository extends JpaRepository<OrdemServico, Long
             WHERE os.status NOT IN (:statusEncerrados)
             """)
     long contarOsAbertas(@Param("statusEncerrados") List<StatusOS> statusEncerrados);
+
+    // Relatório diário
+
+    @Query("""
+            SELECT os FROM OrdemServico os
+            JOIN FETCH os.cliente
+            JOIN FETCH os.veiculo
+            JOIN FETCH os.funcionario
+            WHERE (os.dataAbertura >= :inicio AND os.dataAbertura < :fim)
+               OR (os.dataConclusao >= :inicio AND os.dataConclusao < :fim)
+               OR (os.dataFinalizacao >= :inicio AND os.dataFinalizacao < :fim)
+               OR (os.dataCancelamento >= :inicio AND os.dataCancelamento < :fim)
+            ORDER BY os.id
+            """)
+    List<OrdemServico> buscarComEventoNoPeriodo(@Param("inicio") LocalDateTime inicio,
+                                                @Param("fim") LocalDateTime fim);
+
+    @Query("""
+            SELECT os FROM OrdemServico os
+            JOIN FETCH os.cliente
+            JOIN FETCH os.veiculo
+            JOIN FETCH os.funcionario
+            WHERE os.dataAbertura < :referencia
+              AND (os.dataFinalizacao IS NULL OR os.dataFinalizacao >= :referencia)
+              AND (os.dataCancelamento IS NULL OR os.dataCancelamento >= :referencia)
+            ORDER BY os.dataAbertura
+            """)
+    List<OrdemServico> buscarEmAbertoNaReferencia(@Param("referencia") LocalDateTime referencia);
 }
