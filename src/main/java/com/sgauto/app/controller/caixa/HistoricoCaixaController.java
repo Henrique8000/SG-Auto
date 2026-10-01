@@ -1,8 +1,7 @@
 package com.sgauto.app.controller.caixa;
 
-import com.sgauto.app.enums.financeiro.ModoConferencia;
 import com.sgauto.app.model.caixa.Caixa;
-import com.sgauto.app.service.CaixaService;
+import com.sgauto.app.service.financeiro.CaixaService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -85,9 +84,14 @@ public class HistoricoCaixaController {
                 super.updateItem(item, empty);
                 if (empty) { setGraphic(null); return; }
                 Caixa c = getTableView().getItems().get(getIndex());
-                ModoConferencia modo = c.getModoConferenciaUsado();
-                chip.setText(descreverModo(modo));
-                chip.getStyleClass().setAll(modo == ModoConferencia.SEM_CONFERENCIA ? "chip-neutral" : "chip");
+
+                // Correção: Agora usa String
+                String modoStr = c.getModoConferenciaUsado();
+                chip.setText(descreverModo(modoStr));
+
+                // Correção: Compara com String
+                chip.getStyleClass().setAll("SEM_CONFERENCIA".equals(modoStr) ? "chip-neutral" : "chip");
+
                 setGraphic(chip);
             }
         });
@@ -137,12 +141,15 @@ public class HistoricoCaixaController {
         return descreverModo(caixa.getModoConferenciaUsado()).equals(modoSelecionado);
     }
 
-    private String descreverModo(ModoConferencia modo) {
-        if (modo == null) return "-";
-        return switch (modo) {
-            case OBRIGATORIA -> "Obrigatória";
-            case OPCIONAL -> "Opcional";
-            case SEM_CONFERENCIA -> "Sem conferência";
+    // Correção: Alterado para receber String em vez do Enum
+    private String descreverModo(String modoStr) {
+        if (modoStr == null) return "-";
+
+        return switch (modoStr) {
+            case "OBRIGATORIA" -> "Obrigatória";
+            case "OPCIONAL" -> "Opcional";
+            case "SEM_CONFERENCIA" -> "Sem conferência";
+            default -> modoStr; // Fallback caso apareça algo inesperado na string
         };
     }
 

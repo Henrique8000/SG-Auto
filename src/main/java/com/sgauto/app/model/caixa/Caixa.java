@@ -76,9 +76,8 @@ public class Caixa {
     @Column(name = "caixa_diferenca")
     private BigDecimal diferenca;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "caixa_modo_conferencia_usado", length = 20)
-    private ModoConferencia modoConferenciaUsado;
+    private String modoConferenciaUsado;
 
     @Column(name = "caixa_justificativa_diferenca", columnDefinition = "TEXT")
     private String justificativaDiferenca;
@@ -158,8 +157,8 @@ public class Caixa {
     public BigDecimal getDiferenca() { return diferenca; }
     public void setDiferenca(BigDecimal diferenca) { this.diferenca = diferenca; }
 
-    public ModoConferencia getModoConferenciaUsado() { return modoConferenciaUsado; }
-    public void setModoConferenciaUsado(ModoConferencia modoConferenciaUsado) { this.modoConferenciaUsado = modoConferenciaUsado; }
+    public String getModoConferenciaUsado() { return modoConferenciaUsado; }
+    public void setModoConferenciaUsado(String modoConferenciaUsado) { this.modoConferenciaUsado = modoConferenciaUsado; }
 
     public String getJustificativaDiferenca() { return justificativaDiferenca; }
     public void setJustificativaDiferenca(String justificativaDiferenca) { this.justificativaDiferenca = justificativaDiferenca; }

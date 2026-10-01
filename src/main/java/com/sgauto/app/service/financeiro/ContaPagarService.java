@@ -6,7 +6,6 @@ import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.financeiro.ContaPagar;
 import com.sgauto.app.repository.financeiro.ContaPagarRepository;
-import com.sgauto.app.service.CaixaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

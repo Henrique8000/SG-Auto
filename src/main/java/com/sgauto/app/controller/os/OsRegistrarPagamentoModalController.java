@@ -101,8 +101,9 @@ public class OsRegistrarPagamentoModalController {
                 Long catId = categoriaAvulsa.getId();
                 String descricao = "Pagamento de O.S. #" + osId;
 
-                // 1. Abate o saldo devedor na OS usando "OUTROS", já que a cobrança ocorrerá via Contas a Receber
-                ordemServicoService.registrarPagamento(osId, FormaPagamento.OUTROS, valorDigitado);
+                // CORREÇÃO: Adicionado o "false" no final para não lançar os 40,00 no caixa!
+                ordemServicoService.registrarPagamento(osId, FormaPagamento.OUTROS, valorDigitado, false);
+
                 aoConfirmar.run();
 
                 // 2. Fecha a janela atual (Pagamento de OS)

@@ -20,6 +20,7 @@ import com.sgauto.app.repository.OrdemServico.OsPecaRepository;
 import com.sgauto.app.repository.OrdemServico.OsServicoRepository;
 import com.sgauto.app.repository.estoque.PecaRepository;
 import com.sgauto.app.service.estoque.EstoqueService;
+import com.sgauto.app.service.financeiro.CaixaService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.hibernate.Hibernate;
@@ -48,8 +49,6 @@ public class OrdemServicoService {
     private final CaixaService caixaService;
     private final VerificaPermissaoUtil permissaoUtil;
 
-    // CONSTRUTOR MANUAL (Substitui o @RequiredArgsConstructor do Lombok)
-    // O Spring injeta automaticamente as dependências aqui.
     public OrdemServicoService(OrdemServicoRepository ordemServicoRepository,
                                OsPecaRepository osPecaRepository,
                                OsServicoRepository osServicoRepository,
@@ -223,6 +222,11 @@ public class OrdemServicoService {
 
     @Transactional
     public OsPagamento registrarPagamento(Long osId, FormaPagamento formaPagamento, BigDecimal valor) {
+        return registrarPagamento(osId, formaPagamento, valor, true);
+    }
+
+    @Transactional
+    public OsPagamento registrarPagamento(Long osId, FormaPagamento formaPagamento, BigDecimal valor, boolean registrarNoCaixa) {
         if(!permissaoUtil.verificar(PermissaoChave.OS_EDITAR)){
             throw new IllegalStateException("Seu usuário não possui permissão para cadastrar pagamento de O.S.");
         }
@@ -251,20 +255,22 @@ public class OrdemServicoService {
         pagamento = osPagamentoRepository.save(pagamento);
         os.getPagamentos().add(pagamento);
 
-        Long clienteId = os.getCliente() != null ? os.getCliente().getId() : null;
-        String placa = os.getVeiculo() != null ? os.getVeiculo().getPlaca() : null;
-        String descricao = "Pagamento O.S. #" + os.getId();
+        if (registrarNoCaixa) {
+            Long clienteId = os.getCliente() != null ? os.getCliente().getId() : null;
+            String placa = os.getVeiculo() != null ? os.getVeiculo().getPlaca() : null;
+            String descricao = "Pagamento O.S. #" + os.getId();
 
-        CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
-                TipoMovimentacao.ENTRADA,
-                OrigemMovimentacao.OS_PAGAMENTO,
-                formaPagamento,
-                valor,
-                descricao,
-                clienteId,
-                placa
-        );
-        movimentacao.setReferenciaId(pagamento.getId());
+            CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
+                    TipoMovimentacao.ENTRADA,
+                    OrigemMovimentacao.OS_PAGAMENTO,
+                    formaPagamento,
+                    valor,
+                    descricao,
+                    clienteId,
+                    placa
+            );
+            movimentacao.setReferenciaId(pagamento.getId());
+        }
 
         return pagamento;
     }

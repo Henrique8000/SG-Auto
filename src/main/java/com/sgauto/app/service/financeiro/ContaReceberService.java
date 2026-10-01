@@ -12,9 +12,7 @@ import com.sgauto.app.model.financeiro.ContaReceber;
 import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.financeiro.ContaReceberRepository;
-import com.sgauto.app.service.CaixaService;
 import com.sgauto.app.service.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,6 +113,27 @@ public class ContaReceberService {
 
         BigDecimal valorEntrada = dto.getValorEntrada() != null ? dto.getValorEntrada() : BigDecimal.ZERO;
         contaBase.setValorOriginal(dto.getValorTotal().subtract(valorEntrada));
+
+        if (valorEntrada.compareTo(BigDecimal.ZERO) > 0) {
+            if (dto.getFormaPagamentoEntrada() == null) {
+                throw new IllegalArgumentException("A forma de pagamento da entrada não foi informada.");
+            }
+
+            OrigemMovimentacao origemEntrada = (dto.getOrdemServicoId() != null)
+                    ? OrigemMovimentacao.OS_PAGAMENTO
+                    : OrigemMovimentacao.CONTA_RECEBER;
+
+            caixaService.registrarMovimentacao(
+                    TipoMovimentacao.ENTRADA,
+                    origemEntrada,
+                    dto.getFormaPagamentoEntrada(),
+                    valorEntrada,
+                    "Entrada/Sinal: " + dto.getDescricao(),
+                    dto.getClienteId(),
+                    null,
+                    dto.getOrdemServicoId()
+            );
+        }
 
         String refOS = dto.getOrdemServicoId() != null ? " | Ref OS: " + dto.getOrdemServicoId() : "";
         contaBase.setObservacoes("Gerado automaticamente. Origem: " + origemInferida + refOS);

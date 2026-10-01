@@ -53,6 +53,8 @@
                 <ComboBox fx:id="cmbFiltroOrigem" promptText="Todas as origens" styleClass="search-field"/>
                 <ComboBox fx:id="cmbFiltroFormaPagamento" promptText="Todas as formas" styleClass="search-field"/>
 
+                <Button text="Limpar Filtros" styleClass="btn-secondary" onAction="#limparFiltrosCompletos"/>
+
                 <Region HBox.hgrow="ALWAYS"/>
                 <Label fx:id="lblContagem" styleClass="results-count"/>
             </HBox>

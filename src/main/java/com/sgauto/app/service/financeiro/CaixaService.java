@@ -1,5 +1,6 @@
-package com.sgauto.app.service;
+package com.sgauto.app.service.financeiro;
 
+import com.sgauto.app.enums.backup.ConfigChave;
 import com.sgauto.app.enums.backup.TipoBackup;
 import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
@@ -8,10 +9,12 @@ import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.caixa.Caixa;
 import com.sgauto.app.model.caixa.CaixaMovimentacao;
-import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
+import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.repository.caixa.CaixaMovimentacaoRepository;
 import com.sgauto.app.repository.caixa.CaixaRepository;
+import com.sgauto.app.service.ConfigSistemaService;
 import com.sgauto.app.service.backup.BackupService;
+import com.sgauto.app.util.SessaoUsuario;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +27,15 @@ public class CaixaService {
 
     private final CaixaRepository caixaRepository;
     private final CaixaMovimentacaoRepository caixaMovimentacaoRepository;
-    private final ConfiguracaoCaixaService configuracaoCaixaService;
     private final ConfigSistemaService configSistemaService;
     private final BackupService backupService;
     private final VerificaPermissaoUtil permissaoUtil;
 
     public CaixaService(CaixaRepository caixaRepository,
                         CaixaMovimentacaoRepository caixaMovimentacaoRepository,
-                        ConfiguracaoCaixaService configuracaoCaixaService, ConfigSistemaService configSistemaService, BackupService backupService, VerificaPermissaoUtil permissaoUtil) {
+                        ConfigSistemaService configSistemaService, BackupService backupService, VerificaPermissaoUtil permissaoUtil) {
         this.caixaRepository = caixaRepository;
         this.caixaMovimentacaoRepository = caixaMovimentacaoRepository;
-        this.configuracaoCaixaService = configuracaoCaixaService;
         this.configSistemaService = configSistemaService;
         this.backupService = backupService;
         this.permissaoUtil = permissaoUtil;
@@ -133,19 +134,20 @@ public class CaixaService {
             throw new IllegalStateException("Seu usuário não possui permissão fechar o caixa.");
         }
 
-        ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
+        String c = configSistemaService.obterValor(ConfigChave.CAIXA_MODO_CONFERENCIA);
+
         Caixa caixa = buscarCaixaAberto();
 
         BigDecimal valorEsperado = calcularValorEsperado(caixa.getId());
         BigDecimal valorContadoFinal;
         BigDecimal diferenca;
 
-        switch (config.getModoConferencia()) {
-            case SEM_CONFERENCIA -> {
+        switch (c) {
+            case "SEM_CONFERENCIA" -> {
                 valorContadoFinal = valorEsperado;
                 diferenca = BigDecimal.ZERO;
             }
-            case OBRIGATORIA -> {
+            case "OBRIGATORIA" -> {
                 if (valorContado == null) {
                     throw new IllegalArgumentException("Informe o valor contado para fechar o caixa.");
                 }
@@ -153,7 +155,7 @@ public class CaixaService {
                 diferenca = calcularDiferenca(valorEsperado, valorContadoFinal);
                 validarJustificativaSeNecessario(diferenca, justificativaDiferenca);
             }
-            case OPCIONAL -> {
+            case "OPCIONAL" -> {
                 valorContadoFinal = valorContado;
                 if (valorContadoFinal != null) {
                     diferenca = calcularDiferenca(valorEsperado, valorContadoFinal);
@@ -170,9 +172,12 @@ public class CaixaService {
         caixa.setValorEsperado(valorEsperado);
         caixa.setValorContado(valorContadoFinal);
         caixa.setDiferenca(diferenca);
-        caixa.setModoConferenciaUsado(config.getModoConferencia());
+        caixa.setModoConferenciaUsado(c);
         caixa.setJustificativaDiferenca(justificativaDiferenca);
-        caixa.setUsuarioFechamento("Sistema"); // trocar quando existir usuário logado
+        Usuario usuarioAtivo = SessaoUsuario.getInstancia().getUsuarioLogado();
+        String nomeUsuarioFechamento = (usuarioAtivo != null) ? usuarioAtivo.getLogin() : "Sistema (Não Logado)";
+
+        caixa.setUsuarioFechamento(nomeUsuarioFechamento);
         caixa.setDataFechamento(LocalDateTime.now());
         caixa.setStatus(StatusCaixa.FECHADO);
 

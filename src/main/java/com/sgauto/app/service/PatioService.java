@@ -19,6 +19,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
+import com.sgauto.app.service.financeiro.CaixaService;
 import com.sgauto.app.specifications.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;

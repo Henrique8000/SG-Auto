@@ -62,6 +62,13 @@ public class CategoriaFinanceiraService {
     public void desativar(Long id) {
         CategoriaFinanceira categoria = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
+
+        CategoriaFinanceira cat = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
+
+        if(cat.getNome().equals("Receita Automática (Sistema)"))
+            throw new IllegalArgumentException("Não é possível desativar a categoria de Receitas Automáticas do sistema");
+
         categoria.setAtivo(false);
         repository.save(categoria);
     }
