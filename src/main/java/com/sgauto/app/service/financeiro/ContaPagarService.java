@@ -169,7 +169,7 @@ public class ContaPagarService {
 
     @Transactional(readOnly = true)
     public List<ContaPagar> listarPorStatus(StatusConta status) {
-        return contaPagarRepository.findByStatus(status);
+        return contaPagarRepository.findByStatusComRelacionamentos(status);
     }
 
     @Transactional(readOnly = true)
@@ -190,7 +190,7 @@ public class ContaPagarService {
     @Transactional(readOnly = true)
     public List<ContaPagar> listarVencidas() {
         atualizarStatusVencidas();
-        return contaPagarRepository.findByStatus(StatusConta.ATRASADO);
+        return contaPagarRepository.findByStatusComRelacionamentos(StatusConta.ATRASADO);
     }
 
     /**

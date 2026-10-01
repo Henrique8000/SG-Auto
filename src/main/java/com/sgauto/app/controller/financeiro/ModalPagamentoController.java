@@ -8,6 +8,7 @@ import com.sgauto.app.service.financeiro.ContaReceberService;
 import com.sgauto.app.util.SelecaoClienteUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Controller;
 
@@ -33,7 +34,11 @@ public class ModalPagamentoController {
     @FXML private Spinner<Integer> spnParcelas;
     @FXML private Spinner<Integer> spnIntervaloDias;
     @FXML private DatePicker dpVencimentoInicial;
+
+    // Componentes FXML Novos (1ª Parcela)
     @FXML private CheckBox chkPrimeiraAVista;
+    @FXML private VBox boxFormaPgtoPrimeira;
+    @FXML private ComboBox<FormaPagamento> cbFormaPagamentoPrimeiraParcela;
 
     // Dados Ocultos
     private BigDecimal valorTotalOriginal;
@@ -55,9 +60,12 @@ public class ModalPagamentoController {
         spnParcelas.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 120, 1));
         spnIntervaloDias.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 365, 30));
 
-        // Inicializa ComboBox e desabilita (só habilita se houver entrada)
+        // Inicializa ComboBoxes
         cbFormaPagamentoEntrada.getItems().setAll(FormaPagamento.values());
         cbFormaPagamentoEntrada.setDisable(true);
+
+        cbFormaPagamentoPrimeiraParcela.getItems().setAll(FormaPagamento.values());
+
         dpVencimentoInicial.setValue(LocalDate.now());
 
         // Listener reativo: Habilita Forma de Pagamento se Valor Entrada > 0
@@ -74,27 +82,31 @@ public class ModalPagamentoController {
                 cbFormaPagamentoEntrada.setDisable(true);
             }
         });
+
+        // Listener reativo: Mostra/Oculta forma de pagamento da 1ª parcela
+        chkPrimeiraAVista.selectedProperty().addListener((obs, oldVal, isSelected) -> {
+            boxFormaPgtoPrimeira.setVisible(isSelected);
+            boxFormaPgtoPrimeira.setManaged(isSelected);
+            if (!isSelected) {
+                cbFormaPagamentoPrimeiraParcela.setValue(null); // Limpa ao ocultar
+            }
+        });
     }
 
-    /**
-     * MÉTODO DE CONFIGURAÇÃO (Chamado por quem abre o modal)
-     */
     public void configurarPagamento(BigDecimal valorTotal, Long clienteId, Long osId, Long categoriaId, String descricao) {
         this.valorTotalOriginal = valorTotal;
-        this.txtValorTotal.setText(valorTotal.toString()); // Aqui você pode usar um formatador de moeda
+        this.txtValorTotal.setText(valorTotal.toString());
         this.ordemServicoId = osId;
         this.categoriaFinanceiraId = categoriaId;
         this.descricao = descricao;
 
         if (osId != null && clienteId != null) {
-            // Vem da O.S: Cliente obrigatório, bloqueia botão de buscar/remover
             vincularCliente(clienteId);
             btnBuscarCliente.setVisible(false);
             btnBuscarCliente.setManaged(false);
             btnRemoverCliente.setVisible(false);
             btnRemoverCliente.setManaged(false);
         } else {
-            // Vem de Caixa (Avulso): Permite alteração
             if (clienteId != null) {
                 vincularCliente(clienteId);
             } else {
@@ -103,14 +115,9 @@ public class ModalPagamentoController {
         }
     }
 
-    // GERENCIAMENTO DE CLIENTE
-
     @FXML
     public void abrirBuscaCliente() {
-        // Abre a janela de pesquisa e aguarda o resultado
         Cliente clienteEscolhido = selecaoClienteUtil.abrirModalSelecao();
-
-        // Se o utilizador não cancelou a janela, vinculamos o ID
         if (clienteEscolhido != null) {
             vincularCliente(clienteEscolhido.getId());
         }
@@ -137,7 +144,6 @@ public class ModalPagamentoController {
                 this.txtNomeCliente.setText(cliente.getNome());
             }
 
-            // Só habilita o botão de remover se NÃO estivermos atrelados a uma O.S.
             if (this.ordemServicoId == null && this.btnRemoverCliente != null) {
                 this.btnRemoverCliente.setVisible(true);
                 this.btnRemoverCliente.setManaged(true);
@@ -147,21 +153,18 @@ public class ModalPagamentoController {
         }
     }
 
-    // ==========================================
-
     @FXML
     public void confirmar() {
         try {
             RequisicaoContaReceberDTO dto = new RequisicaoContaReceberDTO();
 
-            // Atribui contexto oculto
             dto.setValorTotal(valorTotalOriginal);
-            dto.setClienteId(clienteIdSelecionado); // ATUALIZADO: Pega o ID dinâmico da interface
+            dto.setClienteId(clienteIdSelecionado);
             dto.setOrdemServicoId(ordemServicoId);
             dto.setCategoriaFinanceiraId(categoriaFinanceiraId);
             dto.setDescricao(descricao);
 
-            // Coleta dados da interface
+            // Validação de Entrada
             String entradaTexto = txtValorEntrada.getText() != null ? txtValorEntrada.getText().replace(",", ".") : "0";
             BigDecimal entrada = entradaTexto.isEmpty() ? BigDecimal.ZERO : new BigDecimal(entradaTexto);
 
@@ -178,10 +181,21 @@ public class ModalPagamentoController {
                 dto.setFormaPagamentoEntrada(cbFormaPagamentoEntrada.getValue());
             }
 
+            // Validação de Parcelas e Vencimento
             dto.setQuantidadeParcelas(spnParcelas.getValue());
             dto.setIntervaloDias(spnIntervaloDias.getValue());
             dto.setDataVencimentoInicial(dpVencimentoInicial.getValue());
-            dto.setPrimeiraParcelaAVista(chkPrimeiraAVista.isSelected());
+
+            // Validação da 1ª Parcela à Vista
+            boolean primeiraAVista = chkPrimeiraAVista.isSelected();
+            dto.setPrimeiraParcelaAVista(primeiraAVista);
+
+            if (primeiraAVista) {
+                if (cbFormaPagamentoPrimeiraParcela.getValue() == null) {
+                    throw new IllegalArgumentException("Selecione a forma de pagamento da 1ª parcela à vista.");
+                }
+                dto.setFormaPagamentoPrimeiraParcela(cbFormaPagamentoPrimeiraParcela.getValue());
+            }
 
             contaReceberService.cadastrarDiretoPeloSistema(dto);
 
@@ -194,7 +208,6 @@ public class ModalPagamentoController {
             mostrarErro("Erro interno ao processar pagamento: " + e.getMessage());
         }
     }
-
 
     @FXML
     public void cancelar() {

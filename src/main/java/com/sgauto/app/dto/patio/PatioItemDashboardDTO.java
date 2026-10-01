@@ -9,6 +9,7 @@ public class PatioItemDashboardDTO {
 
     private final Long estadiaId;
     private final String placa;
+    private final Long clienteId; // <-- Movido para cá e transformado em final
     private final String clienteNome;
     private final String motivoNome;
     private final Long ordemServicoId;
@@ -18,11 +19,13 @@ public class PatioItemDashboardDTO {
     private final BigDecimal valorEstimadoOuFinal;
     private final String localizacao;
 
-    public PatioItemDashboardDTO(Long estadiaId, String placa, String clienteNome, String motivoNome,
+    // Construtor ATUALIZADO recebendo o clienteId
+    public PatioItemDashboardDTO(Long estadiaId, String placa, Long clienteId, String clienteNome, String motivoNome,
                                  Long ordemServicoId, LocalDateTime dataEntrada, LocalDateTime dataSaida,
                                  StatusEstadiaPatio status, BigDecimal valorEstimadoOuFinal, String localizacao) {
         this.estadiaId = estadiaId;
         this.placa = placa;
+        this.clienteId = clienteId; // <-- Setando o valor
         this.clienteNome = clienteNome;
         this.motivoNome = motivoNome;
         this.ordemServicoId = ordemServicoId;
@@ -35,6 +38,7 @@ public class PatioItemDashboardDTO {
 
     public Long getEstadiaId() { return estadiaId; }
     public String getPlaca() { return placa; }
+    public Long getClienteId() { return clienteId; } // <-- Getter
     public String getClienteNome() { return clienteNome; }
     public String getMotivoNome() { return motivoNome; }
     public Long getOrdemServicoId() { return ordemServicoId; }

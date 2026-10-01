@@ -82,7 +82,14 @@ public class ContaReceberService {
         conta.setValorJuros(contaReceber.getValorJuros() != null ? contaReceber.getValorJuros() : BigDecimal.ZERO);
         conta.setValorMulta(contaReceber.getValorMulta() != null ? contaReceber.getValorMulta() : BigDecimal.ZERO);
         conta.setDataVencimento(contaReceber.getDataVencimento());
-        conta.setStatus(StatusConta.PENDENTE);
+
+
+        conta.setStatus(contaReceber.getStatus() != null ? contaReceber.getStatus() : StatusConta.PENDENTE);
+        conta.setDataRecebimento(contaReceber.getDataRecebimento());
+        conta.setValorRecebido(contaReceber.getValorRecebido());
+        conta.setFormaRecebimento(contaReceber.getFormaRecebimento());
+
+
         conta.setOrigem(contaReceber.getOrigem() != null ? contaReceber.getOrigem() : "MANUAL");
         conta.setObservacoes(contaReceber.getObservacoes());
 
@@ -135,7 +142,9 @@ public class ContaReceberService {
         List<ContaReceber> parcelasGeradas = gerarParcelas(
                 contaBase,
                 dto.getQuantidadeParcelas(),
-                dto.getIntervaloDias()
+                dto.getIntervaloDias(),
+                dto.isPrimeiraParcelaAVista(),
+                dto.getFormaPagamentoPrimeiraParcela()
         );
 
         return contaReceberRepository.saveAll(parcelasGeradas);
@@ -146,8 +155,12 @@ public class ContaReceberService {
      * sobra de arredondamento (centavos) na última parcela, para a soma nunca fugir do valor total.
      * dataVencimentoBase é a data da 1ª parcela; as seguintes somam intervaloDias a cada uma.
      */
-    @Transactional
     public List<ContaReceber> gerarParcelas(ContaReceber dadosBase, int totalParcelas, int intervaloDias) {
+        return gerarParcelas(dadosBase, totalParcelas, intervaloDias, false, null);
+    }
+
+    @Transactional
+    public List<ContaReceber> gerarParcelas(ContaReceber dadosBase, int totalParcelas, int intervaloDias, boolean primeiraPaga, FormaPagamento formaPagamentoPrimeiraParcela) {
         if (dadosBase == null) {
             throw new IllegalArgumentException("Dados base da conta a receber não informados.");
         }
@@ -161,14 +174,20 @@ public class ContaReceberService {
             throw new IllegalArgumentException("Informe a data de vencimento da 1ª parcela.");
         }
 
+        if (primeiraPaga && formaPagamentoPrimeiraParcela == null) {
+            throw new IllegalArgumentException("Informe a forma de pagamento utilizada para a 1ª parcela.");
+        }
+
         BigDecimal valorParcela = dadosBase.getValorOriginal()
                 .divide(BigDecimal.valueOf(totalParcelas), 2, RoundingMode.HALF_UP);
         BigDecimal somaParcelas = valorParcela.multiply(BigDecimal.valueOf(totalParcelas));
         BigDecimal diferencaArredondamento = dadosBase.getValorOriginal().subtract(somaParcelas);
 
         List<ContaReceber> parcelasGeradas = new ArrayList<>();
+
         for (int numero = 1; numero <= totalParcelas; numero++) {
             ContaReceber parcela = new ContaReceber();
+
             parcela.setDescricao(dadosBase.getDescricao());
             parcela.setCategoria(dadosBase.getCategoria());
             parcela.setCliente(dadosBase.getCliente());
@@ -180,13 +199,36 @@ public class ContaReceberService {
             if (numero == totalParcelas) {
                 valorDaParcela = valorDaParcela.add(diferencaArredondamento);
             }
+
             parcela.setValorOriginal(valorDaParcela);
             parcela.setDataVencimento(dadosBase.getDataVencimento().plusDays((long) intervaloDias * (numero - 1)));
             parcela.setOrigem(dadosBase.getOrigem());
             parcela.setObservacoes(dadosBase.getObservacoes());
 
+            if (numero == 1 && primeiraPaga) {
+                parcela.setStatus(StatusConta.PAGO);
+                parcela.setDataRecebimento(LocalDate.now());
+                parcela.setValorRecebido(valorDaParcela);
+
+                // Lança APENAS o valor da 1ª parcela no caixa com a sua forma de pagamento específica
+                if (caixaService != null) {
+                    caixaService.registrarMovimentacao(
+                            TipoMovimentacao.ENTRADA,
+                            OrigemMovimentacao.CONTA_RECEBER,
+                            formaPagamentoPrimeiraParcela, // Forma de pagamento exclusiva desta parcela
+                            valorDaParcela,
+                            "Recebimento 1ª parcela: " + parcela.getDescricao(),
+                            dadosBase.getCliente() != null ? dadosBase.getCliente().getId() : null,
+                            null
+                    );
+                }
+            } else {
+                parcela.setStatus(StatusConta.PENDENTE);
+            }
+
             parcelasGeradas.add(cadastrar(parcela));
         }
+
         return parcelasGeradas;
     }
 

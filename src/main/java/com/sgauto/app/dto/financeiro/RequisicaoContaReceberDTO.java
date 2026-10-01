@@ -1,7 +1,6 @@
 package com.sgauto.app.dto.financeiro;
 
 import com.sgauto.app.enums.financeiro.FormaPagamento;
-import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -49,8 +48,10 @@ public class RequisicaoContaReceberDTO {
 
     private boolean primeiraParcelaAVista = false;
 
-    // CONSTRUTORES, GETTERS E SETTERS
+    // NOVO: Forma de pagamento exclusiva para a 1ª parcela (caso seja à vista)
+    private FormaPagamento formaPagamentoPrimeiraParcela;
 
+    // CONSTRUTORES, GETTERS E SETTERS
 
     public RequisicaoContaReceberDTO() {
     }
@@ -141,5 +142,14 @@ public class RequisicaoContaReceberDTO {
 
     public void setPrimeiraParcelaAVista(boolean primeiraParcelaAVista) {
         this.primeiraParcelaAVista = primeiraParcelaAVista;
+    }
+
+    // NOVOS GETTERS E SETTERS
+    public FormaPagamento getFormaPagamentoPrimeiraParcela() {
+        return formaPagamentoPrimeiraParcela;
+    }
+
+    public void setFormaPagamentoPrimeiraParcela(FormaPagamento formaPagamentoPrimeiraParcela) {
+        this.formaPagamentoPrimeiraParcela = formaPagamentoPrimeiraParcela;
     }
 }

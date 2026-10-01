@@ -277,10 +277,14 @@ public class PatioService {
                 ? calcularValorEstadia(estadia)
                 : estadia.getValorTotal();
 
+        Long clienteId = estadia.getCliente() != null ? estadia.getCliente().getId() : null;
+        String clienteNome = estadia.getCliente() != null ? estadia.getCliente().getNome() : "Desconhecido";
+
         return new PatioItemDashboardDTO(
                 estadia.getId(),
                 estadia.getPlaca(),
-                estadia.getCliente().getNome(),
+                clienteId,
+                clienteNome,
                 estadia.getMotivo() != null ? estadia.getMotivo().getNome() : null,
                 estadia.getOrdemServico() != null ? estadia.getOrdemServico().getId() : null,
                 estadia.getDataEntrada(),

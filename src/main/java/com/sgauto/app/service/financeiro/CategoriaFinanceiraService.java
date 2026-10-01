@@ -36,6 +36,9 @@ public class CategoriaFinanceiraService {
         CategoriaFinanceira categoriaExistente = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
+        if(categoriaExistente.getNome().equals("Receita Automática (Sistema)"))
+            throw new IllegalArgumentException("Não é possível alterar a categoria de Receitas Automáticas do sistema");
+
         validarCategoria(dadosAtualizados);
 
         categoriaExistente.setNome(dadosAtualizados.getNome());

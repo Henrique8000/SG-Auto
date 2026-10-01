@@ -56,6 +56,8 @@
             </Button>
 
             <VBox fx:id="submenuFinanceiro" spacing="2" styleClass="nav-submenu">
+                <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button, nav-button-sub"
+                              toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
                 <ToggleButton fx:id="btnContasReceber" text="Contas a Receber" styleClass="nav-button, nav-button-sub"
                               toggleGroup="$menuLateral" onAction="#irParaContasReceber"/>
                 <ToggleButton fx:id="btnContasPagar" text="Contas a Pagar" styleClass="nav-button, nav-button-sub"
@@ -63,8 +65,6 @@
                 <ToggleButton fx:id="btnCategoriasFinanceiras" text="Categorias Financeiras" styleClass="nav-button, nav-button-sub"
                               toggleGroup="$menuLateral" onAction="#irParaCategoriasFinanceiras"/>
             </VBox>
-            <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button"
-                          toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
