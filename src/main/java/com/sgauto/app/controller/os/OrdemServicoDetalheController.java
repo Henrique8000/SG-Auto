@@ -127,6 +127,15 @@ public class OrdemServicoDetalheController {
 
     @FXML
     private void alterarStatus() {
+        if (cmbNovoStatus.getValue() == null) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Aviso de Validação");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Por favor, selecione um novo status antes de prosseguir.");
+            alerta.showAndWait();
+            return;
+        }
+
         StatusOS novoStatus = mapaStatus.get(cmbNovoStatus.getValue());
         if (novoStatus == null) return;
 

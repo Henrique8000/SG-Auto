@@ -2,9 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
@@ -13,16 +11,37 @@
             prefWidth="900" prefHeight="560">
 
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT">
-            <padding><Insets top="0" right="0" bottom="20" left="0"/></padding>
-            <Label text="Contas a Receber" styleClass="page-title"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label text="Status:" styleClass="form-label"/>
-            <ComboBox fx:id="filtroStatus" promptText="Todos" styleClass="search-field"/>
-            <Button fx:id="btnNovaConta" text="Nova conta" styleClass="btn-primary"/>
-            <Button fx:id="btnDarBaixa" text="Dar baixa" styleClass="btn-secondary"/>
-            <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-secondary"/>
-        </HBox>
+        <VBox spacing="14">
+            <padding><Insets top="0" right="0" bottom="16" left="0"/></padding>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Contas a Receber" styleClass="page-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnNovaConta" text="Nova conta" styleClass="btn-primary"/>
+                <Button fx:id="btnDarBaixa" text="Dar baixa" styleClass="btn-secondary"/>
+                <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-secondary"/>
+            </HBox>
+
+            <HBox spacing="12" alignment="BOTTOM_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Cliente" styleClass="form-label"/>
+                    <TextField fx:id="txtCliente" promptText="Buscar por nome do cliente" styleClass="search-field"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Status" styleClass="form-label"/>
+                    <ComboBox fx:id="filtroStatus" promptText="Todos os status" prefWidth="170" styleClass="search-field"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Vencimento de" styleClass="form-label"/>
+                    <DatePicker fx:id="dpVencimentoDe" prefWidth="150" styleClass="form-input"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Vencimento até" styleClass="form-label"/>
+                    <DatePicker fx:id="dpVencimentoAte" prefWidth="150" styleClass="form-input"/>
+                </VBox>
+                <Button fx:id="btnLimpar" text="Limpar filtros" styleClass="btn-secondary"/>
+            </HBox>
+        </VBox>
     </top>
 
     <center>
@@ -39,9 +58,13 @@
     </center>
 
     <bottom>
-        <Label fx:id="lblMensagem" styleClass="form-error">
-            <padding><Insets top="8" right="0" bottom="0" left="0"/></padding>
-        </Label>
+        <VBox>
+            <Label fx:id="lblMensagem" styleClass="form-error">
+                <padding><Insets top="8" right="0" bottom="0" left="0"/></padding>
+            </Label>
+            <!-- AJUSTE o caminho para onde está o seu FXML de paginação -->
+            <fx:include fx:id="paginacao" source="/com/sgauto/app/view/paginacao-controle.fxml"/>
+        </VBox>
     </bottom>
 
 </BorderPane>

@@ -6,7 +6,13 @@ import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.financeiro.ContaPagar;
 import com.sgauto.app.repository.financeiro.ContaPagarRepository;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -182,10 +188,43 @@ public class ContaPagarService {
     }
 
     /**
+     * Busca paginada com filtros opcionais (qualquer um pode vir null/vazio).
+     * O LEFT JOIN FETCH do fornecedor só é aplicado na query de dados, nunca na de count.
+     */
+    @Transactional(readOnly = true)
+    public Page<ContaPagar> buscarComFiltros(StatusConta status, String nomeFornecedor,
+                                             LocalDate vencimentoDe, LocalDate vencimentoAte,
+                                             Pageable pageable) {
+        Specification<ContaPagar> spec = (root, query, cb) -> {
+            boolean isCount = Long.class.equals(query.getResultType()) || long.class.equals(query.getResultType());
+            List<Predicate> predicados = new ArrayList<>();
+
+            From<?, ?> fornecedor = isCount
+                    ? root.join("fornecedor", JoinType.LEFT)
+                    : (From<?, ?>) root.fetch("fornecedor", JoinType.LEFT);
+
+            if (status != null) {
+                predicados.add(cb.equal(root.get("status"), status));
+            }
+            if (nomeFornecedor != null && !nomeFornecedor.isBlank()) {
+                predicados.add(cb.like(cb.lower(fornecedor.<String>get("nomeFantasia")),
+                        "%" + nomeFornecedor.trim().toLowerCase() + "%"));
+            }
+            if (vencimentoDe != null) {
+                predicados.add(cb.greaterThanOrEqualTo(root.<LocalDate>get("dataVencimento"), vencimentoDe));
+            }
+            if (vencimentoAte != null) {
+                predicados.add(cb.lessThanOrEqualTo(root.<LocalDate>get("dataVencimento"), vencimentoAte));
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+        return contaPagarRepository.findAll(spec, pageable);
+    }
+
+    /**
      * Lista as contas vencidas, atualizando o status delas para ATRASADO antes de retornar
      * (garante que a tela sempre reflita o status real, mesmo sem job agendado rodando).
      */
-
     @Transactional(readOnly = true)
     public List<ContaPagar> listarVencidas() {
         atualizarStatusVencidas();

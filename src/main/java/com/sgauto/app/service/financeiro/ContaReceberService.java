@@ -23,6 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+
 @Service
 public class ContaReceberService {
 
@@ -329,6 +336,36 @@ public class ContaReceberService {
     @Transactional(readOnly = true)
     public List<ContaReceber> listarPorPeriodo(LocalDate inicio, LocalDate fim) {
         return contaReceberRepository.findByDataVencimentoBetween(inicio, fim);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ContaReceber> buscarComFiltros(StatusConta status, String nomeCliente,
+                                               LocalDate vencimentoDe, LocalDate vencimentoAte,
+                                               Pageable pageable) {
+        Specification<ContaReceber> spec = (root, query, cb) -> {
+            boolean isCount = Long.class.equals(query.getResultType()) || long.class.equals(query.getResultType());
+            List<Predicate> predicados = new ArrayList<>();
+
+            From<?, ?> cliente = isCount
+                    ? root.join("cliente", JoinType.LEFT)
+                    : (From<?, ?>) root.fetch("cliente", JoinType.LEFT);
+
+            if (status != null) {
+                predicados.add(cb.equal(root.get("status"), status));
+            }
+            if (nomeCliente != null && !nomeCliente.isBlank()) {
+                predicados.add(cb.like(cb.lower(cliente.<String>get("nome")),
+                        "%" + nomeCliente.trim().toLowerCase() + "%"));
+            }
+            if (vencimentoDe != null) {
+                predicados.add(cb.greaterThanOrEqualTo(root.<LocalDate>get("dataVencimento"), vencimentoDe));
+            }
+            if (vencimentoAte != null) {
+                predicados.add(cb.lessThanOrEqualTo(root.<LocalDate>get("dataVencimento"), vencimentoAte));
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+        return contaReceberRepository.findAll(spec, pageable);
     }
 
     /**

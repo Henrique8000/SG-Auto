@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CaixaService {
@@ -46,7 +49,9 @@ public class CaixaService {
     }
 
     private Caixa abrirNovoCaixa() {
-        Caixa caixa = new Caixa("Sistema", BigDecimal.ZERO);
+        Usuario usuarioAtivo = SessaoUsuario.getInstancia().getUsuarioLogado();
+        String nomeUsuarioFechamento = (usuarioAtivo != null) ? usuarioAtivo.getLogin() : "Sistema (Não Logado)";
+        Caixa caixa = new Caixa(nomeUsuarioFechamento, BigDecimal.ZERO);
         return caixaRepository.save(caixa);
     }
 
@@ -89,17 +94,33 @@ public class CaixaService {
                 .orElseThrow(() -> new IllegalArgumentException("Caixa não encontrado: " + caixaId));
         List<CaixaMovimentacao> movimentacoes = caixaMovimentacaoRepository.findByCaixaId(caixa.getId());
 
-        BigDecimal entradasDinheiro = movimentacoes.stream()
-                .filter(m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getFormaPagamento() == FormaPagamento.DINHEIRO)
+        String formasBrutas = configSistemaService.obterValor(ConfigChave.CAIXA_FORMAS_PAGAMENTO_FECHAMENTO);
+
+        List<FormaPagamento> formasValidas;
+        if (formasBrutas != null && !formasBrutas.isBlank()) {
+            formasValidas = Arrays.stream(formasBrutas.split(","))
+                    .map(String::trim)
+                    .map(FormaPagamento::valueOf)
+                    .collect(Collectors.toList());
+        } else {
+            formasValidas = new ArrayList<>();
+        }
+
+        if (formasValidas.isEmpty()) {
+            return caixa.getValorAbertura();
+        }
+
+        BigDecimal totalEntradasConsideradas = movimentacoes.stream()
+                .filter(m -> m.getTipo() == TipoMovimentacao.ENTRADA && formasValidas.contains(m.getFormaPagamento()))
                 .map(CaixaMovimentacao::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal saidasDinheiro = movimentacoes.stream()
-                .filter(m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getFormaPagamento() == FormaPagamento.DINHEIRO)
+        BigDecimal totalSaidasConsideradas = movimentacoes.stream()
+                .filter(m -> m.getTipo() == TipoMovimentacao.SAIDA && formasValidas.contains(m.getFormaPagamento()))
                 .map(CaixaMovimentacao::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return caixa.getValorAbertura().add(entradasDinheiro).subtract(saidasDinheiro);
+        return caixa.getValorAbertura().add(totalEntradasConsideradas).subtract(totalSaidasConsideradas);
     }
     @Transactional(readOnly = true)
     public BigDecimal calcularValorBruto(Long caixaId) {
