@@ -5,6 +5,7 @@ import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
 import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
@@ -13,6 +14,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.financeiro.ContaReceberRepository;
 import com.sgauto.app.service.ClienteService;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,14 +41,16 @@ public class ContaReceberService {
     private final ClienteRepository clienteRepository;
     private final CategoriaFinanceiraService categoriaFinanceiraService;
     private final OrdemServicoRepository ordemServicoRepository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, ClienteRepository clienteRepository, CategoriaFinanceiraService categoriaFinanceiraService, OrdemServicoRepository ordemServicoRepository) {
+    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, ClienteRepository clienteRepository, CategoriaFinanceiraService categoriaFinanceiraService, OrdemServicoRepository ordemServicoRepository, VerificaPermissaoUtil permissaoUtil) {
         this.contaReceberRepository = contaReceberRepository;
         this.caixaService = caixaService;
         this.clienteService = clienteService;
         this.clienteRepository = clienteRepository;
         this.categoriaFinanceiraService = categoriaFinanceiraService;
         this.ordemServicoRepository = ordemServicoRepository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     /**
@@ -281,6 +285,10 @@ public class ContaReceberService {
      */
     @Transactional
     public ContaReceber atualizar(Long id, ContaReceber dadosAtualizados) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para editar contas a receber.");
+        }
+
         ContaReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a receber não encontrada: " + id));
 
@@ -384,6 +392,10 @@ public class ContaReceberService {
      */
     @Transactional
     public ContaReceber darBaixa(Long id, BigDecimal valorRecebido, LocalDate dataRecebimento, FormaPagamento formaRecebimento) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_BAIXAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para dar baixa em contas a receber.");
+        }
+
         ContaReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a receber não encontrada: " + id));
 
@@ -438,6 +450,10 @@ public class ContaReceberService {
      */
     @Transactional
     public ContaReceber cancelar(Long id, String motivo) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cancelar contas a receber.");
+        }
+
         ContaReceber conta = contaReceberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a receber não encontrada: " + id));
 

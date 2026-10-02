@@ -2,9 +2,12 @@ package com.sgauto.app.controller.financeiro;
 
 import com.sgauto.app.controller.PaginacaoController;
 import com.sgauto.app.enums.financeiro.StatusConta;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.financeiro.ContaReceber;
 import com.sgauto.app.service.financeiro.ContaReceberService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.ModalUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -55,6 +58,9 @@ public class ContaReceberListagemController {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private VerificaPermissaoUtil permissaoUtil;
 
     private final PauseTransition debounceBusca = new PauseTransition(Duration.millis(400));
     private boolean atualizandoFiltros = false;
@@ -147,6 +153,11 @@ public class ContaReceberListagemController {
     }
 
     private void abrirModalIncluir() {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_GERENCIAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/financeiro/incluir-conta-receber.fxml"));
             loader.setControllerFactory(applicationContext::getBean);
@@ -162,6 +173,11 @@ public class ContaReceberListagemController {
     }
 
     private void abrirModalDarBaixa() {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_BAIXAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         ContaReceber selecionada = tabela.getSelectionModel().getSelectedItem();
         if (selecionada == null) {
             mostrarErro("Selecione uma conta na lista para dar baixa.");
@@ -190,6 +206,11 @@ public class ContaReceberListagemController {
     }
 
     private void cancelarSelecionada() {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_RECEBER_GERENCIAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         ContaReceber selecionada = tabela.getSelectionModel().getSelectedItem();
         if (selecionada == null) {
             mostrarErro("Selecione uma conta na lista para cancelar.");

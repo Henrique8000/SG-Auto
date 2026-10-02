@@ -1,8 +1,10 @@
 package com.sgauto.app.service.financeiro;
 
 import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.repository.financeiro.CategoriaFinanceiraRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class CategoriaFinanceiraService {
 
     private final CategoriaFinanceiraRepository repository;
+    private final VerificaPermissaoUtil permissaoUtil;
 
-    public CategoriaFinanceiraService(CategoriaFinanceiraRepository repository) {
+    public CategoriaFinanceiraService(CategoriaFinanceiraRepository repository, VerificaPermissaoUtil permissaoUtil) {
         this.repository = repository;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Transactional
@@ -33,6 +37,10 @@ public class CategoriaFinanceiraService {
 
     @Transactional
     public CategoriaFinanceira atualizar(Long id, CategoriaFinanceira dadosAtualizados) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para gerenciar categorias financeiras.");
+        }
+
         CategoriaFinanceira categoriaExistente = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
@@ -60,6 +68,10 @@ public class CategoriaFinanceiraService {
      */
     @Transactional
     public void desativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para gerenciar categorias financeiras.");
+        }
+
         CategoriaFinanceira categoria = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
 
@@ -75,6 +87,10 @@ public class CategoriaFinanceiraService {
 
     @Transactional
     public void reativar(Long id) {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para gerenciar categorias financeiras.");
+        }
+
         CategoriaFinanceira categoria = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada."));
         categoria.setAtivo(true);

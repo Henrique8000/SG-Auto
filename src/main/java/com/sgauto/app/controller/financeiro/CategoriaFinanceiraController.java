@@ -2,8 +2,11 @@ package com.sgauto.app.controller.financeiro;
 
 import com.sgauto.app.controller.PaginacaoController;
 import com.sgauto.app.enums.financeiro.TipoCategoriaFinanceira;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.financeiro.CategoriaFinanceira;
 import com.sgauto.app.service.financeiro.CategoriaFinanceiraService;
+import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,11 +38,13 @@ public class CategoriaFinanceiraController implements Initializable {
     @FXML private PaginacaoController paginacaoController;
 
     private final CategoriaFinanceiraService service;
+    private final VerificaPermissaoUtil permissaoUtil;
     private ObservableList<CategoriaFinanceira> categoriasObservable;
     private CategoriaFinanceira categoriaSelecionada;
 
-    public CategoriaFinanceiraController(CategoriaFinanceiraService service) {
+    public CategoriaFinanceiraController(CategoriaFinanceiraService service, VerificaPermissaoUtil permissaoUtil) {
         this.service = service;
+        this.permissaoUtil = permissaoUtil;
     }
 
     @Override
@@ -104,6 +109,11 @@ public class CategoriaFinanceiraController implements Initializable {
 
     @FXML
     private void salvarCategoria() {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         try {
             if (categoriaSelecionada == null) {
                 CategoriaFinanceira nova = new CategoriaFinanceira(txtNome.getText(), cbTipo.getValue());
@@ -125,6 +135,11 @@ public class CategoriaFinanceiraController implements Initializable {
 
     @FXML
     private void desativarCategoria() {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         if (categoriaSelecionada != null) {
             try {
                 service.desativar(categoriaSelecionada.getId());
@@ -140,6 +155,11 @@ public class CategoriaFinanceiraController implements Initializable {
 
     @FXML
     private void alternarStatusCategoria() {
+        if (!permissaoUtil.verificar(PermissaoChave.CATEGORIA_CONTA_GERENCIAR)) {
+            ExibirMensagemBloqueioUtil.exibir();
+            return;
+        }
+
         if (categoriaSelecionada != null) {
             boolean isAtiva = categoriaSelecionada.getAtivo();
             String acaoTexto = isAtiva ? "desativar" : "reativar";

@@ -4,8 +4,10 @@ import com.sgauto.app.enums.financeiro.FormaPagamento;
 import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
 import com.sgauto.app.enums.financeiro.StatusConta;
 import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.financeiro.ContaPagar;
 import com.sgauto.app.repository.financeiro.ContaPagarRepository;
+import com.sgauto.app.util.VerificaPermissaoUtil;
 import jakarta.persistence.criteria.From;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -31,6 +33,9 @@ public class ContaPagarService {
 
     @Autowired
     private CaixaService caixaService;
+
+    @Autowired
+    private VerificaPermissaoUtil permissaoUtil;
 
     /**
      * Cadastra uma única linha de conta a pagar (uma parcela). Sempre nasce como PENDENTE,
@@ -130,6 +135,10 @@ public class ContaPagarService {
      */
     @Transactional
     public ContaPagar atualizar(Long id, ContaPagar dadosAtualizados) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_PAGAR_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para editar contas a pagar.");
+        }
+
         ContaPagar conta = contaPagarRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a pagar não encontrada: " + id));
 
@@ -238,6 +247,10 @@ public class ContaPagarService {
      */
     @Transactional
     public ContaPagar darBaixa(Long id, BigDecimal valorPago, LocalDate dataPagamento, FormaPagamento formaPagamento) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_PAGAR_BAIXAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para dar baixa em contas a pagar.");
+        }
+
         ContaPagar conta = contaPagarRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a pagar não encontrada: " + id));
 
@@ -291,6 +304,10 @@ public class ContaPagarService {
      */
     @Transactional
     public ContaPagar cancelar(Long id, String motivo) {
+        if (!permissaoUtil.verificar(PermissaoChave.CONTA_PAGAR_GERENCIAR)) {
+            throw new IllegalStateException("Seu usuário não possui permissão para cancelar contas a pagar.");
+        }
+
         ContaPagar conta = contaPagarRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Conta a pagar não encontrada: " + id));
 
