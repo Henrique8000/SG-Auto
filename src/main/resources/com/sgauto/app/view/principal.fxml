@@ -35,6 +35,7 @@
             <ToggleButton fx:id="btnCatalogoServicos" text="Catálogo de Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCatalogoServicos"/>
             <ToggleButton fx:id="btnFuncionarios" text="Funcionários" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaFuncionarios"/>
             <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
+            <ToggleButton fx:id="btnRelatorioDiario" text="Relatório Diário" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaRelatorioDiario"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 

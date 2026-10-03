@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!-- As colunas das tabelas são montadas no controller (RelatorioDiarioController) -->
+<ScrollPane fitToWidth="true" styleClass="scroll-pane-form" style="-fx-background-color: transparent;"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.sgauto.app.controller.relatorio.RelatorioDiarioController">
+
+    <VBox spacing="16">
+        <padding><Insets right="12" bottom="16"/></padding>
+
+        <!-- ===================== FILTRO ===================== -->
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Button fx:id="btnDiaAnterior" text="◀" styleClass="btn-secondary"/>
+            <DatePicker fx:id="dpData" styleClass="form-input" prefWidth="170"/>
+            <Button fx:id="btnDiaSeguinte" text="▶" styleClass="btn-secondary"/>
+            <Button fx:id="btnHoje" text="Hoje" styleClass="btn-secondary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblGeradoEm" styleClass="results-count"/>
+            <Button fx:id="btnAtualizar" text="Atualizar" styleClass="btn-primary"/>
+        </HBox>
+
+        <!-- ===================== KPIs ===================== -->
+        <HBox spacing="10">
+            <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Recebido no dia" styleClass="card-title"/>
+                    <Label text="ⓘ" styleClass="info-icon">
+                        <tooltip><Tooltip text="Tudo o que entrou no caixa no dia (O.S., pátio e vendas avulsas). Não inclui suprimento."/></tooltip>
+                    </Label>
+                </HBox>
+                <Label fx:id="lblRecebido" text="R$ 0,00" styleClass="card-value-accent"/>
+                <Label fx:id="lblResultado" styleClass="card-sublabel"/>
+            </VBox>
+
+            <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Produzido no dia" styleClass="card-title"/>
+                    <Label text="ⓘ" styleClass="info-icon">
+                        <tooltip><Tooltip text="Valor das O.S. concluídas no dia, pagas ou não."/></tooltip>
+                    </Label>
+                </HBox>
+                <Label fx:id="lblProduzido" text="R$ 0,00" styleClass="card-value"/>
+                <Label fx:id="lblProduzidoDetalhe" styleClass="card-sublabel"/>
+            </VBox>
+
+            <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="Margem bruta" styleClass="card-title"/>
+                    <Label text="ⓘ" styleClass="info-icon">
+                        <tooltip><Tooltip text="Produzido no dia menos o custo das peças usadas (custo do momento em que a peça entrou na O.S.)."/></tooltip>
+                    </Label>
+                </HBox>
+                <Label fx:id="lblMargem" text="R$ 0,00" styleClass="card-value"/>
+                <Label fx:id="lblMargemDetalhe" styleClass="card-sublabel"/>
+            </VBox>
+
+            <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="A receber" styleClass="card-title"/>
+                    <Label text="ⓘ" styleClass="info-icon">
+                        <tooltip><Tooltip text="Saldo das O.S. já concluídas e ainda não pagas por completo, na posição indicada abaixo."/></tooltip>
+                    </Label>
+                </HBox>
+                <Label fx:id="lblAReceber" text="R$ 0,00" styleClass="card-value-warning"/>
+                <Label fx:id="lblAReceberDetalhe" styleClass="card-sublabel"/>
+            </VBox>
+
+            <VBox styleClass="card" HBox.hgrow="ALWAYS" minWidth="0">
+                <HBox spacing="5" alignment="CENTER_LEFT">
+                    <Label text="O.S. atrasadas" styleClass="card-title"/>
+                    <Label text="ⓘ" styleClass="info-icon">
+                        <tooltip><Tooltip text="O.S. ainda não concluídas com a previsão de entrega vencida, na posição indicada abaixo."/></tooltip>
+                    </Label>
+                </HBox>
+                <Label fx:id="lblAtrasadas" text="0" styleClass="card-value-danger"/>
+                <Label fx:id="lblEmAndamento" styleClass="card-sublabel"/>
+            </VBox>
+        </HBox>
+
+        <Label fx:id="lblPosicao" styleClass="results-count"/>
+
+        <!-- ===================== FINANCEIRO ===================== -->
+        <HBox spacing="12">
+            <VBox styleClass="chart-card" prefWidth="320" minWidth="300">
+                <Label text="Recebimentos e saídas" styleClass="section-title"/>
+                <GridPane fx:id="gridFinanceiro" hgap="24" vgap="6">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints halignment="RIGHT"/>
+                    </columnConstraints>
+                </GridPane>
+            </VBox>
+
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" minWidth="0">
+                <Label text="Fechamentos de caixa no dia" styleClass="section-title"/>
+                <TableView fx:id="tabelaFechamentos" styleClass="modern-table" prefHeight="160" VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </HBox>
+
+        <!-- ===================== O.S. DO DIA ===================== -->
+        <VBox styleClass="chart-card">
+            <Label text="Ordens de serviço do dia" styleClass="section-title"/>
+            <TableView fx:id="tabelaOsDia" styleClass="modern-table" prefHeight="220"/>
+        </VBox>
+
+        <!-- ===================== PENDÊNCIAS ===================== -->
+        <VBox styleClass="chart-card">
+            <Label text="Pendências" styleClass="section-title"/>
+            <TableView fx:id="tabelaPendencias" styleClass="modern-table" prefHeight="220"/>
+        </VBox>
+
+        <!-- ===================== MECÂNICOS E PÁTIO ===================== -->
+        <HBox spacing="12">
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="400">
+                <Label text="Produção por mecânico" styleClass="section-title"/>
+                <TableView fx:id="tabelaMecanicos" styleClass="modern-table" prefHeight="180"/>
+            </VBox>
+
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="600">
+                <Label text="Pátio" styleClass="section-title"/>
+                <TableView fx:id="tabelaPatio" styleClass="modern-table" prefHeight="180"/>
+            </VBox>
+        </HBox>
+
+        <!-- ===================== MOVIMENTAÇÕES E ESTOQUE ===================== -->
+        <HBox spacing="12">
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="700">
+                <Label text="Movimentações do caixa" styleClass="section-title"/>
+                <TableView fx:id="tabelaMovimentacoes" styleClass="modern-table" prefHeight="240"/>
+            </VBox>
+
+            <VBox styleClass="chart-card" HBox.hgrow="ALWAYS" minWidth="0" prefWidth="300">
+                <Label text="Estoque crítico (posição atual)" styleClass="section-title"/>
+                <TableView fx:id="tabelaEstoque" styleClass="modern-table" prefHeight="240"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>
