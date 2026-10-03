@@ -221,6 +221,24 @@ public class PrincipalController {
     }
 
     @FXML
+    private void irParaRelatorioDiario() {
+        try {
+            if(permissaoUtil.verificar(PermissaoChave.RELATORIO_DIARIO_VISUALIZAR)){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/sgauto/app/view/relatorio/relatorio-diario.fxml"));
+                loader.setControllerFactory(applicationContext::getBean);
+                Parent tela = loader.load();
+                mostrarTela("Relatório Diário", "Resumo financeiro e operacional de um dia", tela);
+            }
+            else{
+                ExibirMensagemBloqueioUtil.exibir();
+            }
+        }
+        catch (IOException e) {
+            throw new RuntimeException("Erro ao carregar tela de Relatório Diário", e);
+        }
+    }
+
+    @FXML
     private void irParaConfiguracoes() {
         try {
             if(permissaoUtil.verificar(PermissaoChave.CONFIGURACOES_VISUALIZAR)){
