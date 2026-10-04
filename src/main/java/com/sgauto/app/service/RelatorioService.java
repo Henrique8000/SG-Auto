@@ -2,10 +2,10 @@ package com.sgauto.app.service;
 
 import com.sgauto.app.dto.relatorio.RelatorioDiarioDTO;
 import com.sgauto.app.dto.relatorio.RelatorioDiarioDTO.*;
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.OrdemServico.OsPeca;
 import com.sgauto.app.model.caixa.Caixa;

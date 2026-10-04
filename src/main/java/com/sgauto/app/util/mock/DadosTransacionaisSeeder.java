@@ -1,6 +1,12 @@
 package com.sgauto.app.util.mock;
 
-import com.sgauto.app.enums.*;
+import com.sgauto.app.enums.financeiro.*;
+import com.sgauto.app.enums.funcionario.CargoFuncionario;
+import com.sgauto.app.enums.funcionario.StatusFuncionario;
+import com.sgauto.app.enums.funcionario.TipoContratoFuncionario;
+import com.sgauto.app.enums.os.StatusOS;
+import com.sgauto.app.enums.patio.CategoriaVeiculoPatio;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.ClientePF;
 import com.sgauto.app.model.Funcionario;
@@ -27,7 +33,7 @@ import com.sgauto.app.repository.estoque.PecaRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
-import com.sgauto.app.service.CaixaService;
+import com.sgauto.app.service.financeiro.CaixaService;
 import com.sgauto.app.service.PatioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -406,7 +412,7 @@ public class DadosTransacionaisSeeder implements CommandLineRunner {
         caixa.setValorEsperado(esperado);
         caixa.setValorContado(contado);
         caixa.setDiferenca(contado.subtract(esperado));
-        caixa.setModoConferenciaUsado(ModoConferencia.OBRIGATORIA);
+        caixa.setModoConferenciaUsado(ModoConferencia.OBRIGATORIA.name());
         caixa.setJustificativaDiferenca(justificativa);
         caixa.setUsuarioFechamento(usuario);
         caixa.setDataFechamento(fechamento);
