@@ -4,8 +4,11 @@ import com.sgauto.app.enums.patio.StatusEstadiaPatio;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +34,18 @@ public interface EstadiaPatioRepository extends JpaRepository<EstadiaPatio, Long
     List<EstadiaPatio> findByStatusOrderByDataEntradaAsc(StatusEstadiaPatio status);
 
     long countByStatus(StatusEstadiaPatio status);
+
+    // Relatório diário: estadias com entrada ou saída no intervalo [inicio, fim), ou no pátio na referência
+    @Query("""
+            SELECT e FROM EstadiaPatio e
+            JOIN FETCH e.cliente
+            JOIN FETCH e.motivo
+            WHERE (e.dataEntrada >= :inicio AND e.dataEntrada < :fim)
+               OR (e.dataSaida >= :inicio AND e.dataSaida < :fim)
+               OR (e.dataEntrada < :referencia AND (e.dataSaida IS NULL OR e.dataSaida >= :referencia))
+            ORDER BY e.dataEntrada
+            """)
+    List<EstadiaPatio> buscarParaRelatorio(@Param("inicio") LocalDateTime inicio,
+                                           @Param("fim") LocalDateTime fim,
+                                           @Param("referencia") LocalDateTime referencia);
 }

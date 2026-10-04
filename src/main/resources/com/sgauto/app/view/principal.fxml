@@ -36,7 +36,6 @@
             <ToggleButton fx:id="btnPatioAtual" text="Pátio" styleClass="nav-button"
                           toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
 
-            <!-- GESTÃO: recursos de apoio à operação (estoque, equipe, caixa) -->
             <Label text="GESTÃO" styleClass="sidebar-section-label"/>
             <ToggleButton fx:id="btnEstoque" text="Estoque" styleClass="nav-button"
                           toggleGroup="$menuLateral" onAction="#irParaEstoque"/>
@@ -65,10 +64,10 @@
                 <ToggleButton fx:id="btnCategoriasFinanceiras" text="Categorias Financeiras" styleClass="nav-button, nav-button-sub"
                               toggleGroup="$menuLateral" onAction="#irParaCategoriasFinanceiras"/>
             </VBox>
+            <ToggleButton fx:id="btnRelatorioDiario" text="Relatório Diário" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaRelatorioDiario"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <!-- SISTEMA: administração do próprio sistema -->
             <Label text="SISTEMA" styleClass="sidebar-section-label"/>
             <ToggleButton fx:id="btnUsuarios" text="Usuários" styleClass="nav-button"
                           toggleGroup="$menuLateral" onAction="#irParaUsuarios"/>

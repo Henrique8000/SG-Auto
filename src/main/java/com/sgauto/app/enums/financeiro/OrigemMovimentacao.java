@@ -1,8 +1,6 @@
 package com.sgauto.app.enums.financeiro;
 
 public enum OrigemMovimentacao {
-    VENDA_PECA,
-    SERVICO,
     AVULSO,
     SANGRIA,
     SUPRIMENTO,

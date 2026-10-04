@@ -163,6 +163,8 @@ public class OrdemServicoService {
             throw new IllegalStateException("Não é possível alterar de ABERTA direto para FINALIZADA. O serviço precisa ser executado.");
         }
 
+        LocalDateTime agora = LocalDateTime.now();
+
         if(novoStatus == StatusOS.FINALIZADA){
             BigDecimal totalPago = osPagamentoRepository.somarPagamentosPorOsId(osId);
             BigDecimal totalOs = os.getValorTotalOs();
@@ -175,12 +177,20 @@ public class OrdemServicoService {
             os.setFicarNoPatio(false);
 
             if(os.getDataConclusao() == null) {
-                os.setDataConclusao(LocalDateTime.now());
+                os.setDataConclusao(agora);
             }
+
+            os.setDataFinalizacao(agora);
         }
 
         if(novoStatus == StatusOS.CONCLUIDA && os.getDataConclusao() == null) {
-            os.setDataConclusao(LocalDateTime.now());
+            os.setDataConclusao(agora);
+        }
+
+        // Voltou para uma etapa de trabalho (ex.: CONCLUIDA -> EM_EXECUCAO): a conclusão
+        // anterior deixa de valer e será registrada de novo quando concluir outra vez.
+        if(novoStatus != StatusOS.CONCLUIDA && novoStatus != StatusOS.FINALIZADA) {
+            os.setDataConclusao(null);
         }
 
         os.setStatus(novoStatus);
@@ -215,6 +225,7 @@ public class OrdemServicoService {
         }
 
         os.setFicarNoPatio(false);
+        os.setDataCancelamento(LocalDateTime.now());
 
         os.setStatus(StatusOS.CANCELADA);
         ordemServicoRepository.save(os);
@@ -307,6 +318,7 @@ public class OrdemServicoService {
         novaOsPeca.setPeca(peca);
         novaOsPeca.setQuantidade(quantidade);
         novaOsPeca.setValorUnitario(valorUnitario);
+        novaOsPeca.setValorCustoUnitario(peca.getPrecoCusto());
         novaOsPeca.setValorTotal(valorTotal);
 
         novaOsPeca = osPecaRepository.save(novaOsPeca);

@@ -54,6 +54,12 @@ public class OrdemServico {
     @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
 
+    @Column(name = "data_finalizacao")
+    private LocalDateTime dataFinalizacao;
+
+    @Column(name = "data_cancelamento")
+    private LocalDateTime dataCancelamento;
+
     // Financeiro
     @Column(name = "valor_total_pecas", nullable = false)
     private BigDecimal valorTotalPecas = BigDecimal.ZERO;
@@ -82,7 +88,7 @@ public class OrdemServico {
     }
 
     // Construtor com Argumentos (Mantido com a sua assinatura original)
-    public OrdemServico(BigDecimal valorDesconto, BigDecimal valorTotalOs, BigDecimal valorTotalPecas, BigDecimal valorTotalServicos, Veiculo veiculo, StatusOS status, String sintomasRelatados, List<OsServico> servicos, List<OsPagamento> pagamentos, List<OsPeca> pecas, String observacoesInternas, String motivoPausa, Long id, Funcionario funcionario, boolean ficarNoPatio, LocalDateTime dataPrevisao, LocalDateTime dataConclusao, LocalDateTime dataAbertura, Cliente cliente) {
+    public OrdemServico(BigDecimal valorDesconto, BigDecimal valorTotalOs, BigDecimal valorTotalPecas, BigDecimal valorTotalServicos, Veiculo veiculo, StatusOS status, String sintomasRelatados, List<OsServico> servicos, List<OsPagamento> pagamentos, List<OsPeca> pecas, String observacoesInternas, String motivoPausa, Long id, Funcionario funcionario, boolean ficarNoPatio, LocalDateTime dataPrevisao, LocalDateTime dataConclusao, LocalDateTime dataFinalizacao, LocalDateTime dataCancelamento, LocalDateTime dataAbertura, Cliente cliente) {
         this.valorDesconto = valorDesconto;
         this.valorTotalOs = valorTotalOs;
         this.valorTotalPecas = valorTotalPecas;
@@ -100,6 +106,8 @@ public class OrdemServico {
         this.ficarNoPatio = ficarNoPatio;
         this.dataPrevisao = dataPrevisao;
         this.dataConclusao = dataConclusao;
+        this.dataFinalizacao = dataFinalizacao;
+        this.dataCancelamento = dataCancelamento;
         this.dataAbertura = dataAbertura;
         this.cliente = cliente;
     }
@@ -258,5 +266,21 @@ public class OrdemServico {
 
     public void setPagamentos(List<OsPagamento> pagamentos) {
         this.pagamentos = pagamentos;
+    }
+
+    public LocalDateTime getDataFinalizacao() {
+        return dataFinalizacao;
+    }
+
+    public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
+        this.dataFinalizacao = dataFinalizacao;
+    }
+
+    public LocalDateTime getDataCancelamento() {
+        return dataCancelamento;
+    }
+
+    public void setDataCancelamento(LocalDateTime dataCancelamento) {
+        this.dataCancelamento = dataCancelamento;
     }
 }

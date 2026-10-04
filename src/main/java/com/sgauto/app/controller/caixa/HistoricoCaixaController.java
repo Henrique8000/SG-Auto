@@ -177,15 +177,16 @@ public class HistoricoCaixaController {
                         "Fechamento: " + (caixa.getDataFechamento() != null ? caixa.getDataFechamento().format(FORMATADOR) : "-") + "\n\n" +
                         "Total de entradas: " + formatarMoedaOuTraco(caixa.getTotalEntradas()) + "\n" +
                         "Total de saídas: " + formatarMoedaOuTraco(caixa.getTotalSaidas()) + "\n" +
-                        "Vendas de peças: " + formatarMoedaOuTraco(caixa.getTotalVendasPecas()) + "\n" +
-                        "Serviços: " + formatarMoedaOuTraco(caixa.getTotalServicos()) + "\n" +
-                        "Avulso: " + formatarMoedaOuTraco(caixa.getTotalAvulso()) + "\n" +
+                        "Ordens de serviço: " + formatarMoedaOuTraco(caixa.getTotalOs()) + "\n" +
+                        "Pátio: " + formatarMoedaOuTraco(caixa.getTotalPatio()) + "\n" +
+                        "Vendas avulsas: " + formatarMoedaOuTraco(caixa.getTotalAvulso()) + "\n" +
+                        "Suprimento: " + formatarMoedaOuTraco(caixa.getTotalSuprimento()) + "\n" +
                         "Sangria: " + formatarMoedaOuTraco(caixa.getTotalSangria()) + "\n" +
-                        "Suprimento: " + formatarMoedaOuTraco(caixa.getTotalSuprimento()) + "\n\n" +
-                        "Dinheiro: " + formatarMoedaOuTraco(caixa.getTotalDinheiro()) + "\n" +
-                        "Débito: " + formatarMoedaOuTraco(caixa.getTotalDebito()) + "\n" +
-                        "Crédito: " + formatarMoedaOuTraco(caixa.getTotalCredito()) + "\n" +
-                        "Pix: " + formatarMoedaOuTraco(caixa.getTotalPix()) + "\n\n" +
+                        "Despesas: " + formatarMoedaOuTraco(caixa.getTotalDespesas()) + "\n\n" +
+                        "Recebido em dinheiro: " + formatarMoedaOuTraco(caixa.getTotalDinheiro()) + "\n" +
+                        "Recebido em débito: " + formatarMoedaOuTraco(caixa.getTotalDebito()) + "\n" +
+                        "Recebido em crédito: " + formatarMoedaOuTraco(caixa.getTotalCredito()) + "\n" +
+                        "Recebido em Pix: " + formatarMoedaOuTraco(caixa.getTotalPix()) + "\n\n" +
                         "Valor esperado: " + formatarMoedaOuTraco(caixa.getValorEsperado()) + "\n" +
                         "Valor contado: " + formatarMoedaOuTraco(caixa.getValorContado()) + "\n" +
                         "Diferença: " + formatarMoedaOuTraco(caixa.getDiferenca()) +

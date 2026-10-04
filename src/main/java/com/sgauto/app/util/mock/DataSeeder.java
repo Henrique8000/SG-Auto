@@ -11,14 +11,17 @@ import com.sgauto.app.repository.estoque.ModeloRepository;
 import com.sgauto.app.repository.estoque.PecaRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
 @Profile("dev")
+@Order(1)
 public class DataSeeder implements CommandLineRunner {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataSeeder.class);
 
@@ -122,7 +125,18 @@ public class DataSeeder implements CommandLineRunner {
                     12500,
                     true
             );
-            veiculoRepository.save(veiculo1);
+
+            Veiculo veiculo2 = new Veiculo(
+                    cliente2,
+                    "JMN3963",
+                    "Lamborghini",
+                    "Aventador S",
+                    2022,
+                    9000,
+                    true
+            );
+
+            veiculoRepository.saveAll(Arrays.asList(veiculo1, veiculo2));
 
             log.info("[DEV] Banco de dados populado com sucesso!");
         }
