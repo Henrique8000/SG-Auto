@@ -33,9 +33,9 @@ public class SaidaPatioModalController {
     @FXML private Button btnConfirmar;
 
     private final PatioService patioService;
-    private final ParcelasUtil parcelasUtil; // NOVO: Injeção do Utilitário
+    private final ParcelasUtil parcelasUtil;
     private final CategoriaFinanceiraService categoriaFinanceiraService;
-    private final String nomeCategoriaAutomatica =  "Receita Automática (Sistema)";
+    private final String nomeCategoriaAutomatica = "Receita Automática (Sistema)";
 
     private Long estadiaId;
     private Runnable aoConfirmar;
@@ -113,32 +113,26 @@ public class SaidaPatioModalController {
         try {
             // FLUXO 1: PARCELAMENTO
             if (chkParcelar.isSelected()) {
-                // Fechamos a tela do pátio ANTES de abrir a de pagamento, igual fizemos no Caixa
-                fecharModal();
-
-                // ID sugerido para a categoria de Estadia de Pátio (ajuste conforme o seu banco)
                 CategoriaFinanceira categoriaAvulsa = categoriaFinanceiraService.procurarPeloNome(nomeCategoriaAutomatica)
                         .orElseThrow(() -> new IllegalArgumentException("A categoria financeira '" + nomeCategoriaAutomatica + "' não foi encontrada no sistema."));
-                Long catId = categoriaAvulsa.getId();
 
-                // Nota: Assumi que o seu DTO tem um "getClienteId()".
-                // Se não tiver, pode passar null que o modal vai deixar buscar.
-                Long clienteId = null;
-                try {
-                    // Tenta usar o método se ele existir no seu DTO, senão apague este try-catch e mande null direto.
-                    clienteId = (Long) itemAtual.getClass().getMethod("getClienteId").invoke(itemAtual);
-                } catch (Exception ignored) {}
-
-                parcelasUtil.abrirTelaPagamento(
+                boolean confirmou = parcelasUtil.abrirTelaPagamento(
                         itemAtual.getValorEstimadoOuFinal(),
-                        clienteId,
+                        itemAtual.getClienteId(),
                         null, // osId
-                        catId,
+                        categoriaAvulsa.getId(),
                         "Estadia Pátio - Placa: " + itemAtual.getPlaca()
                 );
 
-                patioService.registrarSaida(estadiaId, FormaPagamento.OUTROS);
+                if (!confirmou) {
+                    return; // cancelou: o veículo continua no pátio e nada é registrado
+                }
+
+                // Parcelas gravadas: dá a saída SEM lançar entrada no caixa
+                // (o dinheiro entra quando cada parcela for baixada)
+                patioService.registrarSaida(estadiaId, null, false);
                 aoConfirmar.run();
+                fecharModal();
                 return;
             }
 

@@ -99,26 +99,20 @@ public class OsRegistrarPagamentoModalController {
                 CategoriaFinanceira categoriaAvulsa = categoriaFinanceiraService.procurarPeloNome(nomeCategoriaAutomatica)
                         .orElseThrow(() -> new IllegalArgumentException("A categoria financeira '" + nomeCategoriaAutomatica + "' não foi encontrada no sistema."));
                 Long catId = categoriaAvulsa.getId();
+                final Long finalClienteId = clienteId;
                 String descricao = "Pagamento de O.S. #" + osId;
 
-                // CORREÇÃO: Adicionado o "false" no final para não lançar os 40,00 no caixa!
-                ordemServicoService.registrarPagamento(osId, FormaPagamento.OUTROS, valorDigitado, false);
-
-                aoConfirmar.run();
-
-                // 2. Fecha a janela atual (Pagamento de OS)
+                // Fecha a janela atual (Pagamento de OS)
                 fecharModal();
 
-                // 3. Abre a janela de Parcelamento numa nova thread gráfica
-                final Long finalClienteId = clienteId;
+                // Abre a janela de Parcelamento numa nova thread gráfica
                 Platform.runLater(() -> {
-                    parcelasUtil.abrirTelaPagamento(
-                            valorDigitado,
-                            finalClienteId,
-                            osId,
-                            catId,
-                            descricao
-                    );
+                    boolean confirmou = parcelasUtil.abrirTelaPagamento(
+                            valorDigitado, finalClienteId, osId, catId, descricao, valorDigitado);
+
+                    if (confirmou) {
+                        aoConfirmar.run();
+                    }
                 });
                 return;
             }

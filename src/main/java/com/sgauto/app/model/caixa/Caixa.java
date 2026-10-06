@@ -46,6 +46,9 @@ public class Caixa {
     @Column(name = "caixa_total_patio")
     private BigDecimal totalPatio;
 
+    @Column(name = "caixa_total_conta_receber")
+    private BigDecimal totalContaReceber = BigDecimal.ZERO;
+
     @Column(name = "caixa_total_avulso")
     private BigDecimal totalAvulso;
 
@@ -171,4 +174,7 @@ public class Caixa {
 
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
+
+    public BigDecimal getTotalContaReceber() { return totalContaReceber; }
+    public void setTotalContaReceber(BigDecimal totalContaReceber) { this.totalContaReceber = totalContaReceber; }
 }

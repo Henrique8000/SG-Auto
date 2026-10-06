@@ -14,6 +14,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.financeiro.ContaReceberRepository;
 import com.sgauto.app.service.ClienteService;
+import com.sgauto.app.service.OrdemServicoService;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,15 +42,17 @@ public class ContaReceberService {
     private final ClienteRepository clienteRepository;
     private final CategoriaFinanceiraService categoriaFinanceiraService;
     private final OrdemServicoRepository ordemServicoRepository;
+    private final OrdemServicoService ordemServicoService;
     private final VerificaPermissaoUtil permissaoUtil;
 
-    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, ClienteRepository clienteRepository, CategoriaFinanceiraService categoriaFinanceiraService, OrdemServicoRepository ordemServicoRepository, VerificaPermissaoUtil permissaoUtil) {
+    public ContaReceberService(ContaReceberRepository contaReceberRepository, CaixaService caixaService, ClienteService clienteService, ClienteRepository clienteRepository, CategoriaFinanceiraService categoriaFinanceiraService, OrdemServicoRepository ordemServicoRepository, OrdemServicoService ordemServicoService, VerificaPermissaoUtil permissaoUtil) {
         this.contaReceberRepository = contaReceberRepository;
         this.caixaService = caixaService;
         this.clienteService = clienteService;
         this.clienteRepository = clienteRepository;
         this.categoriaFinanceiraService = categoriaFinanceiraService;
         this.ordemServicoRepository = ordemServicoRepository;
+        this.ordemServicoService = ordemServicoService;
         this.permissaoUtil = permissaoUtil;
     }
 
@@ -105,9 +108,16 @@ public class ContaReceberService {
         return contaReceberRepository.save(conta);
     }
 
+
     // metodo para registrar contas marcadas como parcelas em outras telas do sistema
+
     @Transactional
     public List<ContaReceber> cadastrarDiretoPeloSistema(RequisicaoContaReceberDTO dto) {
+        return cadastrarDiretoPeloSistema(dto, null);
+    }
+
+    @Transactional
+    public List<ContaReceber> cadastrarDiretoPeloSistema(RequisicaoContaReceberDTO dto, BigDecimal valorDigitado) {
         if (dto == null) {
             throw new IllegalArgumentException("Dados da conta a receber não informados.");
         }
@@ -167,6 +177,10 @@ public class ContaReceberService {
             OrdemServico os = ordemServicoRepository.findById(dto.getOrdemServicoId())
                     .orElseThrow(() -> new IllegalArgumentException("Ordem de Serviço não encontrada."));
             contaBase.setOrdemServico(os);
+
+            if(valorDigitado != null){
+                ordemServicoService.registrarPagamento(dto.getOrdemServicoId(), FormaPagamento.OUTROS, valorDigitado, false);
+            }
         }
 
         List<ContaReceber> parcelasGeradas = gerarParcelas(

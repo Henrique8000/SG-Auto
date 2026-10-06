@@ -245,8 +245,10 @@ public class CaixaService {
         caixa.setTotalPatio(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.PATIO));
         caixa.setTotalAvulso(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.AVULSO));
         caixa.setTotalSuprimento(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.SUPRIMENTO));
+        caixa.setTotalContaReceber(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.CONTA_RECEBER));
         caixa.setTotalSangria(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.SANGRIA));
         caixa.setTotalDespesas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.AVULSO));
+
 
         // Formas de pagamento = recebimentos. O saldo físico da gaveta é o valorEsperado.
         caixa.setTotalDinheiro(somarRecebimentosPor(movimentacoes, FormaPagamento.DINHEIRO));

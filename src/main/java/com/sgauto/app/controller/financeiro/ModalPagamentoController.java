@@ -47,6 +47,11 @@ public class ModalPagamentoController {
     private Long categoriaFinanceiraId;
     private String descricao;
 
+    // Indica se as parcelas foram realmente gravadas (false se cancelou/fechou no X)
+    private boolean confirmado = false;
+
+    private BigDecimal vd;
+
     // Injeção de dependência dupla
     public ModalPagamentoController(ContaReceberService contaReceberService, ClienteService clienteService, SelecaoClienteUtil selecaoClienteUtil) {
         this.contaReceberService = contaReceberService;
@@ -93,12 +98,14 @@ public class ModalPagamentoController {
         });
     }
 
-    public void configurarPagamento(BigDecimal valorTotal, Long clienteId, Long osId, Long categoriaId, String descricao) {
+    public void configurarPagamento(BigDecimal valorTotal, Long clienteId, Long osId, Long categoriaId, String descricao, BigDecimal valorDigitado) {
+        this.confirmado = false; // reseta (o controller é singleton no Spring)
         this.valorTotalOriginal = valorTotal;
         this.txtValorTotal.setText(valorTotal.toString());
         this.ordemServicoId = osId;
         this.categoriaFinanceiraId = categoriaId;
         this.descricao = descricao;
+        this.vd = valorDigitado;
 
         if (osId != null && clienteId != null) {
             vincularCliente(clienteId);
@@ -113,6 +120,10 @@ public class ModalPagamentoController {
                 removerCliente();
             }
         }
+    }
+
+    public boolean isConfirmado() {
+        return confirmado;
     }
 
     @FXML
@@ -197,7 +208,10 @@ public class ModalPagamentoController {
                 dto.setFormaPagamentoPrimeiraParcela(cbFormaPagamentoPrimeiraParcela.getValue());
             }
 
-            contaReceberService.cadastrarDiretoPeloSistema(dto);
+            contaReceberService.cadastrarDiretoPeloSistema(dto, vd);
+
+            // Só marca como confirmado depois que as parcelas foram gravadas
+            confirmado = true;
 
             mostrarSucesso("Pagamento processado com sucesso!");
             fecharModal();
@@ -211,6 +225,7 @@ public class ModalPagamentoController {
 
     @FXML
     public void cancelar() {
+        confirmado = false;
         fecharModal();
     }
 

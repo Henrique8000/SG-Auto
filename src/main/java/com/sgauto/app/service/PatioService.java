@@ -140,6 +140,11 @@ public class PatioService {
 
     @Transactional
     public EstadiaPatio registrarSaida(Long estadiaId, FormaPagamento formaPagamento) {
+        return registrarSaida(estadiaId, formaPagamento, true);
+    }
+
+    @Transactional
+    public EstadiaPatio registrarSaida(Long estadiaId, FormaPagamento formaPagamento, boolean registrarNoCaixa) {
         if(!permissaoUtil.verificar(PermissaoChave.PATIO_SAIDA)){
             throw new IllegalStateException("Seu usuário não possui permissão para dar saídas no pátio.");
         }
@@ -155,22 +160,24 @@ public class PatioService {
 
         BigDecimal valorTotal = calcularValorEstadia(es);
 
-        FormaPagamento formaPagamentoFinal;
-        if (valorTotal.compareTo(BigDecimal.ZERO) == 0) {
-            formaPagamentoFinal = FormaPagamento.ISENTO;
-        } else {
-            if (formaPagamento == null || formaPagamento == FormaPagamento.ISENTO)
-                throw new IllegalArgumentException("É necessário informar a forma de pagamento para dar saída de uma estadia com valor devido.");
-            formaPagamentoFinal = formaPagamento;
+        if(registrarNoCaixa){
+            FormaPagamento formaPagamentoFinal;
+            if (valorTotal.compareTo(BigDecimal.ZERO) == 0) {
+                formaPagamentoFinal = FormaPagamento.ISENTO;
+            } else {
+                if (formaPagamento == null || formaPagamento == FormaPagamento.ISENTO)
+                    throw new IllegalArgumentException("É necessário informar a forma de pagamento para dar saída de uma estadia com valor devido.");
+                formaPagamentoFinal = formaPagamento;
+            }
+
+            String descricao = "Pátio - saída do veículo placa " + es.getPlaca();
+            Long clienteId = es.getCliente() != null ? es.getCliente().getId() : null;
+
+            CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
+                    TipoMovimentacao.ENTRADA, OrigemMovimentacao.PATIO, formaPagamentoFinal,
+                    valorTotal, descricao, clienteId, es.getPlaca());
+            movimentacao.setReferenciaId(es.getId());
         }
-
-        String descricao = "Pátio - saída do veículo placa " + es.getPlaca();
-        Long clienteId = es.getCliente() != null ? es.getCliente().getId() : null;
-
-        CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
-                TipoMovimentacao.ENTRADA, OrigemMovimentacao.PATIO, formaPagamentoFinal,
-                valorTotal, descricao, clienteId, es.getPlaca());
-        movimentacao.setReferenciaId(es.getId());
 
         es.setValorTotal(valorTotal);
         es.setDataSaida(LocalDateTime.now());
