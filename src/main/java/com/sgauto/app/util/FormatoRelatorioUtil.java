@@ -69,8 +69,8 @@ public final class FormatoRelatorioUtil {
             case AVULSO -> "Avulso";
             case SUPRIMENTO -> "Suprimento";
             case SANGRIA -> "Sangria";
-            case CONTA_RECEBER -> "Conta-Receber";
-            case CONTA_PAGAR -> "Conta-Pagar";
+            case CONTA_RECEBER -> "Conta a receber";
+            case CONTA_PAGAR -> "Conta a pagar";
         };
     }
 

@@ -239,8 +239,8 @@ public class CaixaService {
         caixa.setTotalSaidas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA));
 
         // Categorias. Fecham a conta com os totais acima:
-        //   entradas = O.S. + pátio + avulso + suprimento
-        //   saídas   = sangria + despesas
+        //   entradas = O.S. + pátio + avulso + suprimento + contas a receber
+        //   saídas   = sangria + despesas + contas pagas
         caixa.setTotalOs(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.OS_PAGAMENTO));
         caixa.setTotalPatio(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.PATIO));
         caixa.setTotalAvulso(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.AVULSO));
@@ -248,7 +248,7 @@ public class CaixaService {
         caixa.setTotalContaReceber(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.CONTA_RECEBER));
         caixa.setTotalSangria(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.SANGRIA));
         caixa.setTotalDespesas(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.AVULSO));
-
+        caixa.setTotalContaPagar(somarPor(movimentacoes, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.CONTA_PAGAR));
 
         // Formas de pagamento = recebimentos. O saldo físico da gaveta é o valorEsperado.
         caixa.setTotalDinheiro(somarRecebimentosPor(movimentacoes, FormaPagamento.DINHEIRO));

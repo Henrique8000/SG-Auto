@@ -180,9 +180,11 @@ public class HistoricoCaixaController {
                         "Ordens de serviço: " + formatarMoedaOuTraco(caixa.getTotalOs()) + "\n" +
                         "Pátio: " + formatarMoedaOuTraco(caixa.getTotalPatio()) + "\n" +
                         "Vendas avulsas: " + formatarMoedaOuTraco(caixa.getTotalAvulso()) + "\n" +
+                        "Contas a receber: " + formatarMoedaOuTraco(caixa.getTotalContaReceber()) + "\n" +
                         "Suprimento: " + formatarMoedaOuTraco(caixa.getTotalSuprimento()) + "\n" +
                         "Sangria: " + formatarMoedaOuTraco(caixa.getTotalSangria()) + "\n" +
-                        "Despesas: " + formatarMoedaOuTraco(caixa.getTotalDespesas()) + "\n\n" +
+                        "Despesas: " + formatarMoedaOuTraco(caixa.getTotalDespesas()) + "\n" +
+                        "Contas pagas: " + formatarMoedaOuTraco(caixa.getTotalContaPagar()) + "\n\n" +
                         "Recebido em dinheiro: " + formatarMoedaOuTraco(caixa.getTotalDinheiro()) + "\n" +
                         "Recebido em débito: " + formatarMoedaOuTraco(caixa.getTotalDebito()) + "\n" +
                         "Recebido em crédito: " + formatarMoedaOuTraco(caixa.getTotalCredito()) + "\n" +

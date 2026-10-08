@@ -80,6 +80,13 @@
             <version>2.18.2</version>
         </dependency>
 
+        <!-- PDF (relatório diário) -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

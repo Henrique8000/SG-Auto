@@ -3,20 +3,27 @@ package com.sgauto.app.controller.relatorio;
 import com.sgauto.app.dto.dashboard.PecaEstoqueCriticoDTO;
 import com.sgauto.app.dto.relatorio.RelatorioDiarioDTO;
 import com.sgauto.app.dto.relatorio.RelatorioDiarioDTO.*;
+import com.sgauto.app.service.RelatorioDiarioPdfService;
 import com.sgauto.app.service.RelatorioService;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import org.springframework.stereotype.Component;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
 import static com.sgauto.app.util.FormatoRelatorioUtil.*;
 
 @Component
@@ -30,6 +37,7 @@ public class RelatorioDiarioController {
     @FXML private Button btnHoje;
     @FXML private Label lblGeradoEm;
     @FXML private Button btnAtualizar;
+    @FXML private Button btnExportarPdf;
 
     // ---- KPIs ----
     @FXML private Label lblRecebido;
@@ -60,12 +68,18 @@ public class RelatorioDiarioController {
     private record LinhaPatio(String movimento, EstadiaResumo estadia) {}
 
     private final RelatorioService relatorioService;
+    private final RelatorioDiarioPdfService relatorioDiarioPdfService;
 
-    // Último relatório exibido (será usado pela exportação em PDF)
+    // Último relatório exibido: é ele que vai para o PDF
     private RelatorioDiarioDTO relatorioAtual;
 
-    public RelatorioDiarioController(RelatorioService relatorioService) {
+    // Lembra a pasta do último PDF salvo enquanto o sistema estiver aberto
+    private File ultimoDiretorio;
+
+    public RelatorioDiarioController(RelatorioService relatorioService,
+                                     RelatorioDiarioPdfService relatorioDiarioPdfService) {
         this.relatorioService = relatorioService;
+        this.relatorioDiarioPdfService = relatorioDiarioPdfService;
     }
 
     @FXML
@@ -74,6 +88,7 @@ public class RelatorioDiarioController {
         configurarTabelas();
 
         relatorioAtual = null;
+        btnExportarPdf.setDisable(true);
         dpData.setValue(LocalDate.now()); // dispara o carregamento pelo listener
     }
 
@@ -102,6 +117,7 @@ public class RelatorioDiarioController {
         btnDiaSeguinte.setOnAction(e -> dpData.setValue(dpData.getValue().plusDays(1)));
         btnHoje.setOnAction(e -> dpData.setValue(LocalDate.now()));
         btnAtualizar.setOnAction(e -> carregar());
+        btnExportarPdf.setOnAction(e -> exportarPdf());
     }
 
     // ===================== CARREGAMENTO =====================
@@ -147,6 +163,7 @@ public class RelatorioDiarioController {
     }
 
     private void preencher(RelatorioDiarioDTO r) {
+        btnExportarPdf.setDisable(false);
         relatorioAtual = r;
         lblGeradoEm.setText("Gerado às " + hora(r.geradoEm()));
 
@@ -195,6 +212,7 @@ public class RelatorioDiarioController {
         linha = linhaFinanceiro(linha, "Ordens de serviço", f.recebidoOs(), false);
         linha = linhaFinanceiro(linha, "Pátio", f.recebidoPatio(), false);
         linha = linhaFinanceiro(linha, "Vendas avulsas", f.recebidoAvulso(), false);
+        linha = linhaFinanceiro(linha, "Contas a receber", f.recebidoContaReceber(), false);
         linha = linhaFinanceiro(linha, "Total recebido", f.totalRecebido(), true);
         linha = separador(linha);
         linha = linhaFinanceiro(linha, "Dinheiro", f.dinheiro(), false);
@@ -206,6 +224,7 @@ public class RelatorioDiarioController {
         }
         linha = separador(linha);
         linha = linhaFinanceiro(linha, "Despesas", f.despesas(), false);
+        linha = linhaFinanceiro(linha, "Contas pagas", f.contasPagas(), false);
         linha = linhaFinanceiro(linha, "Resultado", f.resultado(), true);
         linha = separador(linha);
         linha = linhaFinanceiro(linha, "Suprimentos (troco)", f.suprimentos(), false);
@@ -350,6 +369,88 @@ public class RelatorioDiarioController {
         Label placeholder = new Label(texto);
         placeholder.getStyleClass().add("placeholder-text");
         tabela.setPlaceholder(placeholder);
+    }
+
+    // ===================== EXPORTAÇÃO EM PDF =====================
+
+    private void exportarPdf() {
+        // O PDF é gerado a partir do relatório que está na tela: o que o usuário vê é o que vai para o arquivo
+        RelatorioDiarioDTO relatorio = relatorioAtual;
+        if (relatorio == null) return;
+
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Salvar relatório diário");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Arquivo PDF", "*.pdf"));
+        chooser.setInitialFileName("relatorio-diario-" + relatorio.data() + ".pdf");
+        if (ultimoDiretorio != null && ultimoDiretorio.isDirectory()) {
+            chooser.setInitialDirectory(ultimoDiretorio);
+        }
+
+        File destino = chooser.showSaveDialog(btnExportarPdf.getScene().getWindow());
+        if (destino == null) return;
+        ultimoDiretorio = destino.getParentFile();
+
+        btnExportarPdf.setDisable(true);
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                try (OutputStream saida = new FileOutputStream(destino)) {
+                    relatorioDiarioPdfService.gerar(relatorio, saida);
+                } catch (Exception e) {
+                    destino.delete(); // não deixa um PDF pela metade no disco
+                    throw e;
+                }
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(e -> {
+            btnExportarPdf.setDisable(false);
+            log.info("Relatório diário de {} exportado em PDF", relatorio.data());
+            oferecerAbrir(destino);
+        });
+
+        task.setOnFailed(e -> {
+            btnExportarPdf.setDisable(false);
+            log.error("Erro ao exportar relatório diário de {} em PDF", relatorio.data(), task.getException());
+            mostrarAlerta(Alert.AlertType.ERROR,
+                    "Não foi possível salvar o PDF. Verifique se o arquivo não está aberto em outro programa.");
+        });
+
+        Thread thread = new Thread(task, "relatorio-diario-pdf");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void oferecerAbrir(File arquivo) {
+        ButtonType abrir = new ButtonType("Abrir", ButtonBar.ButtonData.OK_DONE);
+        ButtonType fechar = new ButtonType("Fechar", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION, "PDF salvo em:\n" + arquivo.getAbsolutePath(), abrir, fechar);
+        alerta.setTitle("Relatório diário");
+        alerta.setHeaderText(null);
+        alerta.showAndWait()
+                .filter(botao -> botao == abrir)
+                .ifPresent(botao -> abrirNoSistema(arquivo));
+    }
+
+    // Desktop (AWT) roda fora da thread do JavaFX para não travar a tela
+    private void abrirNoSistema(File arquivo) {
+        Thread thread = new Thread(() -> {
+            try {
+                if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.OPEN)) {
+                    throw new IOException("Abertura de arquivos não suportada neste sistema");
+                }
+                Desktop.getDesktop().open(arquivo);
+            } catch (IOException e) {
+                log.warn("Não foi possível abrir o PDF {}", arquivo, e);
+                Platform.runLater(() -> mostrarAlerta(Alert.AlertType.WARNING,
+                        "O PDF foi salvo, mas não foi possível abri-lo automaticamente.\nAbra pelo caminho:\n" + arquivo.getAbsolutePath()));
+            }
+        }, "relatorio-diario-abrir-pdf");
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String mensagem) {

@@ -20,6 +20,7 @@
             <Button fx:id="btnHoje" text="Hoje" styleClass="btn-secondary"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblGeradoEm" styleClass="results-count"/>
+            <Button fx:id="btnExportarPdf" text="Exportar PDF" styleClass="btn-secondary"/>
             <Button fx:id="btnAtualizar" text="Atualizar" styleClass="btn-primary"/>
         </HBox>
 
@@ -29,7 +30,7 @@
                 <HBox spacing="5" alignment="CENTER_LEFT">
                     <Label text="Recebido no dia" styleClass="card-title"/>
                     <Label text="ⓘ" styleClass="info-icon">
-                        <tooltip><Tooltip text="Tudo o que entrou no caixa no dia (O.S., pátio e vendas avulsas). Não inclui suprimento."/></tooltip>
+                        <tooltip><Tooltip text="Tudo o que entrou no caixa no dia (O.S., pátio, vendas avulsas e parcelas de contas a receber). Não inclui suprimento."/></tooltip>
                     </Label>
                 </HBox>
                 <Label fx:id="lblRecebido" text="R$ 0,00" styleClass="card-value-accent"/>
