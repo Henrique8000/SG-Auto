@@ -49,6 +49,9 @@ public class Caixa {
     @Column(name = "caixa_total_conta_receber")
     private BigDecimal totalContaReceber = BigDecimal.ZERO;
 
+    @Column(name = "caixa_total_conta_pagar")
+    private BigDecimal totalContaPagar = BigDecimal.ZERO;
+
     @Column(name = "caixa_total_avulso")
     private BigDecimal totalAvulso;
 
@@ -177,4 +180,7 @@ public class Caixa {
 
     public BigDecimal getTotalContaReceber() { return totalContaReceber; }
     public void setTotalContaReceber(BigDecimal totalContaReceber) { this.totalContaReceber = totalContaReceber; }
+
+    public BigDecimal getTotalContaPagar() { return totalContaPagar; }
+    public void setTotalContaPagar(BigDecimal totalContaPagar) { this.totalContaPagar = totalContaPagar; }
 }

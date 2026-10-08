@@ -115,19 +115,22 @@ public class RelatorioService {
 
         BigDecimal totalRecebido = somar(movs, recebimento);
         BigDecimal despesas = somar(movs, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.AVULSO);
+        BigDecimal contasPagas = somar(movs, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.CONTA_PAGAR);
 
         return new Financeiro(
                 totalRecebido,
                 somar(movs, recebimento.and(m -> m.getOrigem() == OrigemMovimentacao.OS_PAGAMENTO)),
                 somar(movs, recebimento.and(m -> m.getOrigem() == OrigemMovimentacao.PATIO)),
                 somar(movs, recebimento.and(m -> m.getOrigem() == OrigemMovimentacao.AVULSO)),
+                somar(movs, recebimento.and(m -> m.getOrigem() == OrigemMovimentacao.CONTA_RECEBER)),
                 somar(movs, recebimento.and(m -> m.getFormaPagamento() == FormaPagamento.DINHEIRO)),
                 somar(movs, recebimento.and(m -> m.getFormaPagamento() == FormaPagamento.DEBITO)),
                 somar(movs, recebimento.and(m -> m.getFormaPagamento() == FormaPagamento.CREDITO)),
                 somar(movs, recebimento.and(m -> m.getFormaPagamento() == FormaPagamento.PIX)),
                 somar(movs, recebimento.and(m -> m.getFormaPagamento() == FormaPagamento.OUTROS)),
                 despesas,
-                totalRecebido.subtract(despesas),
+                contasPagas,
+                totalRecebido.subtract(despesas).subtract(contasPagas),
                 somar(movs, m -> m.getTipo() == TipoMovimentacao.ENTRADA && m.getOrigem() == OrigemMovimentacao.SUPRIMENTO),
                 somar(movs, m -> m.getTipo() == TipoMovimentacao.SAIDA && m.getOrigem() == OrigemMovimentacao.SANGRIA)
         );

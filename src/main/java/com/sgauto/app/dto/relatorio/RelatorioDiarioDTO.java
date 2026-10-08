@@ -34,18 +34,24 @@ public record RelatorioDiarioDTO(
         List<PecaEstoqueCriticoDTO> estoqueCritico
 ) {
 
-    /** Regime de caixa: o que entrou e saiu do caixa no dia. Recebido = entradas, exceto suprimento. */
+    /**
+     * Regime de caixa: o que entrou e saiu do caixa no dia. Recebido = entradas, exceto suprimento.
+     * recebidoOs + recebidoPatio + recebidoAvulso + recebidoContaReceber = totalRecebido.
+     * Então resultado = totalRecebido - despesas - contasPagas.
+     */
     public record Financeiro(
             BigDecimal totalRecebido,
             BigDecimal recebidoOs,
             BigDecimal recebidoPatio,
             BigDecimal recebidoAvulso,
+            BigDecimal recebidoContaReceber,
             BigDecimal dinheiro,
             BigDecimal debito,
             BigDecimal credito,
             BigDecimal pix,
             BigDecimal outros,
             BigDecimal despesas,
+            BigDecimal contasPagas,
             BigDecimal resultado,
             BigDecimal suprimentos,
             BigDecimal sangrias
