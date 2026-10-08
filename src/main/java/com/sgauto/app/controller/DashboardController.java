@@ -1,9 +1,9 @@
 package com.sgauto.app.controller;
 
 import com.sgauto.app.dto.dashboard.*;
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.PeriodoDashboard;
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.dashboard.PeriodoDashboard;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.service.DashboardService;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;

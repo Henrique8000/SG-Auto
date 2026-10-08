@@ -34,6 +34,20 @@
                    styleClass="config-option-desc" wrapText="true"/>
         </VBox>
 
+        <!-- NOVO: Formas de Pagamento do Caixa -->
+        <VBox styleClass="config-option" spacing="12">
+            <Label text="Formas de Pagamento (Cálculo do Valor Esperado)" styleClass="config-option-title"/>
+            <Label text="Selecione quais métodos de pagamento o sistema deve somar para exigir na contagem física do fechamento."
+                   styleClass="config-option-desc" wrapText="true"/>
+
+            <HBox spacing="20" style="-fx-padding: 5 0 0 0;">
+                <CheckBox fx:id="chkDinheiro" text="Dinheiro" styleClass="config-option-title"/>
+                <CheckBox fx:id="chkPix" text="Pix" styleClass="config-option-title"/>
+                <CheckBox fx:id="chkDebito" text="Débito" styleClass="config-option-title"/>
+                <CheckBox fx:id="chkCredito" text="Crédito" styleClass="config-option-title"/>
+            </HBox>
+        </VBox>
+
         <Separator/>
 
         <!-- ======================= BACKUP ======================= -->

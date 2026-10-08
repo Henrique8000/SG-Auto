@@ -59,6 +59,15 @@
         <TextField fx:id="txtPlaca" styleClass="form-input"/>
     </VBox>
 
+    <!-- CHECKBOX DE PARCELAMENTO -->
+    <CheckBox fx:id="chkParcelar" text="Deseja parcelar este pagamento?"
+              visible="false" managed="false"
+              styleClass="form-checkbox">
+        <VBox.margin>
+            <Insets top="8" bottom="8"/>
+        </VBox.margin>
+    </CheckBox>
+
     <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
 
     <HBox spacing="12" alignment="CENTER_RIGHT">

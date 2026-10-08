@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16" styleClass="modal-container" prefWidth="480"
+      xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.sgauto.app.controller.financeiro.ModalPagamentoController">
+
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <Label text="Condições de Pagamento / Parcelamento" styleClass="page-title" />
+    <Separator styleClass="border-subtle" />
+
+    <VBox spacing="12">
+        <!-- Bloco de Cliente -->
+        <VBox spacing="4" fx:id="boxCliente">
+            <Label text="Cliente vinculado (Opcional):" styleClass="form-label"/>
+            <HBox spacing="8">
+                <TextField fx:id="txtNomeCliente" promptText="Nenhum cliente vinculado (Venda Avulsa)" styleClass="form-input" editable="false" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnBuscarCliente" text="Buscar" styleClass="btn-secondary" onAction="#abrirBuscaCliente"/>
+                <Button fx:id="btnRemoverCliente" text="X" styleClass="btn-secondary" onAction="#removerCliente" visible="false" managed="false"/>
+            </HBox>
+        </VBox>
+
+        <!-- Valor Total -->
+        <VBox spacing="4">
+            <Label text="Valor Total da Negociação (R$):" styleClass="form-label"/>
+            <TextField fx:id="txtValorTotal" disable="true" styleClass="form-input"/>
+        </VBox>
+
+        <!-- Entrada -->
+        <VBox spacing="4">
+            <Label text="Valor de Entrada (R$):" styleClass="form-label"/>
+            <TextField fx:id="txtValorEntrada" promptText="0,00" styleClass="form-input"/>
+        </VBox>
+
+        <!-- Forma Pgto Entrada -->
+        <VBox spacing="4">
+            <Label text="Forma Pgto. da Entrada:" styleClass="form-label"/>
+            <ComboBox fx:id="cbFormaPagamentoEntrada" maxWidth="Infinity" styleClass="form-input"/>
+        </VBox>
+
+        <!-- Parcelas -->
+        <VBox spacing="4">
+            <Label text="Qtd. de Parcelas:" styleClass="form-label"/>
+            <Spinner fx:id="spnParcelas" maxWidth="Infinity" styleClass="spinner form-input"/>
+        </VBox>
+
+        <!-- Intervalo -->
+        <VBox spacing="4">
+            <Label text="Intervalo entre Parcelas (Dias):" styleClass="form-label"/>
+            <Spinner fx:id="spnIntervaloDias" maxWidth="Infinity" styleClass="spinner form-input"/>
+        </VBox>
+
+        <!-- Vencimento Inicial -->
+        <VBox spacing="4">
+            <Label text="Data 1º Vencimento:" styleClass="form-label"/>
+            <DatePicker fx:id="dpVencimentoInicial" maxWidth="Infinity" styleClass="date-picker, form-input"/>
+        </VBox>
+    </VBox>
+
+    <!-- NOVO: Grupo da 1ª Parcela à Vista -->
+    <VBox spacing="8">
+        <CheckBox fx:id="chkPrimeiraAVista" text="1ª Parcela será paga hoje (À Vista)"/>
+
+        <!-- Campo Oculto (Só aparece se o CheckBox for marcado) -->
+        <VBox fx:id="boxFormaPgtoPrimeira" spacing="4" visible="false" managed="false">
+            <Label text="Forma Pgto. da 1ª Parcela:" styleClass="form-label"/>
+            <ComboBox fx:id="cbFormaPagamentoPrimeiraParcela" maxWidth="Infinity" styleClass="form-input"/>
+        </VBox>
+    </VBox>
+
+    <Separator styleClass="border-subtle" />
+
+    <!-- Botões de Ação -->
+    <HBox spacing="12" alignment="CENTER_RIGHT">
+        <Button text="Cancelar" onAction="#cancelar" styleClass="btn-secondary" />
+        <Button text="Confirmar Pagamento" onAction="#confirmar" styleClass="btn-primary" />
+    </HBox>
+</VBox>

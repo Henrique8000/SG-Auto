@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.sgauto.app.controller.financeiro.IncluirContaReceberController"
+      styleClass="modal-container"
+      spacing="6" prefWidth="420">
+
+    <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+
+    <Label text="Nova conta a receber" styleClass="page-title"/>
+
+    <Label text="Descrição" styleClass="form-label"/>
+    <TextField fx:id="txtDescricao" styleClass="form-input"/>
+
+    <Label text="Categoria" styleClass="form-label"/>
+    <ComboBox fx:id="cmbCategoria" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label text="Cliente" styleClass="form-label"/>
+    <ComboBox fx:id="cmbCliente" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label text="Valor total" styleClass="form-label"/>
+    <TextField fx:id="txtValorTotal" promptText="Ex: 900,00" styleClass="form-input"/>
+
+    <Label text="Valor de entrada (opcional)" styleClass="form-label"/>
+    <TextField fx:id="txtValorEntrada" promptText="Ex: 200,00 — deixe em branco se não houver" styleClass="form-input"/>
+
+    <Label text="Quantidade de parcelas" styleClass="form-label"/>
+    <Spinner fx:id="spnQuantidadeParcelas" editable="true" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label text="Vencimento da 1ª parcela" styleClass="form-label"/>
+    <DatePicker fx:id="dtPrimeiraParcela" maxWidth="Infinity" styleClass="form-input"/>
+
+    <CheckBox fx:id="chkJaRecebeuPrimeira" text="Já recebeu a 1ª parcela?">
+        <VBox.margin><Insets top="6" bottom="0"/></VBox.margin>
+    </CheckBox>
+
+    <Label text="Forma de pagamento (entrada / 1ª parcela)" styleClass="form-label"/>
+    <ComboBox fx:id="cmbFormaPagamento" maxWidth="Infinity" styleClass="form-input"/>
+
+    <Label fx:id="lblErro" styleClass="form-error" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <VBox.margin><Insets top="10"/></VBox.margin>
+        <Button fx:id="btnCancelar" text="Cancelar" styleClass="btn-secondary"/>
+        <Button fx:id="btnConfirmar" text="Salvar" styleClass="btn-primary" defaultButton="true"/>
+    </HBox>
+
+</VBox>

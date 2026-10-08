@@ -1,0 +1,15 @@
+package com.sgauto.app.enums.backup;
+
+public enum ConfigChave {
+    // Backup
+    BACKUP_PASTA_LOCAL,
+    BACKUP_PASTA_NUVEM,
+    BACKUP_AUTOMATICO_ATIVO,
+    BACKUP_INTERVALO_DIAS,
+    BACKUP_APOS_FECHAMENTO_CAIXA,
+    BACKUP_DIRETORIO_PG_DUMP,
+
+    // Configurações do Caixa
+    CAIXA_MODO_CONFERENCIA,
+    CAIXA_FORMAS_PAGAMENTO_FECHAMENTO
+}

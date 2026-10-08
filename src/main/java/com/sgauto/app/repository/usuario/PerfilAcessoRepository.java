@@ -1,8 +1,6 @@
 package com.sgauto.app.repository.usuario;
 
-import com.sgauto.app.enums.PermissaoChave;
 import com.sgauto.app.model.usuario.PerfilAcesso;
-import com.sgauto.app.model.usuario.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

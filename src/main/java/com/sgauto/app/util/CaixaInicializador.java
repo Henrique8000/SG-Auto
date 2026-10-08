@@ -1,6 +1,6 @@
 package com.sgauto.app.util;
 
-import com.sgauto.app.service.CaixaService;
+import com.sgauto.app.service.financeiro.CaixaService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;

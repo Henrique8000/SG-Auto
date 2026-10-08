@@ -1,14 +1,12 @@
 package com.sgauto.app.controller.configuracoes;
 
-import com.sgauto.app.enums.ConfigChave;
-import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.backup.ConfigChave;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.BackupHistorico;
-import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
 import com.sgauto.app.service.backup.BackupHistoricoService;
 import com.sgauto.app.service.backup.BackupService;
 import com.sgauto.app.service.ConfigSistemaService;
-import com.sgauto.app.service.ConfiguracaoCaixaService;
 import com.sgauto.app.util.ExibirMensagemBloqueioUtil;
 import com.sgauto.app.util.VerificaPermissaoUtil;
 import javafx.fxml.FXML;
@@ -19,7 +17,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class ConfiguracoesController {
@@ -29,6 +30,12 @@ public class ConfiguracoesController {
     @FXML private RadioButton radioObrigatoria;
     @FXML private RadioButton radioOpcional;
     @FXML private RadioButton radioSemConferencia;
+
+    // --- NOVO: Checkboxes para Formas de Pagamento no Caixa ---
+    @FXML private CheckBox chkDinheiro;
+    @FXML private CheckBox chkPix;
+    @FXML private CheckBox chkDebito;
+    @FXML private CheckBox chkCredito;
 
     // --- Elementos do Backup ---
     @FXML private Label lblUltimoBackup;
@@ -41,19 +48,15 @@ public class ConfiguracoesController {
 
     @FXML private Label lblMensagem;
 
-    private final ConfiguracaoCaixaService configuracaoCaixaService;
     private final ConfigSistemaService configSistemaService;
     private final BackupHistoricoService backupHistoricoService;
     private final BackupService backupService;
     private final VerificaPermissaoUtil permissaoUtil;
 
-    private ModoConferencia modoOriginal;
-
-    public ConfiguracoesController(ConfiguracaoCaixaService configuracaoCaixaService,
-                                   ConfigSistemaService configSistemaService,
+    public ConfiguracoesController(ConfigSistemaService configSistemaService,
                                    BackupHistoricoService backupHistoricoService, BackupService backupService,
                                    VerificaPermissaoUtil permissaoUtil) {
-        this.configuracaoCaixaService = configuracaoCaixaService;
+        // Removido o ConfiguracaoCaixaService antigo
         this.configSistemaService = configSistemaService;
         this.backupHistoricoService = backupHistoricoService;
         this.backupService = backupService;
@@ -68,14 +71,24 @@ public class ConfiguracoesController {
     }
 
     private void carregarConfiguracoesCaixa() {
-        ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
-        modoOriginal = config.getModoConferencia();
+        // 1. Carregar Modo de Conferência via T_CONFIG
+        String modoStr = configSistemaService.obterValor(ConfigChave.CAIXA_MODO_CONFERENCIA);
+        if (modoStr == null) modoStr = "SEM_CONFERENCIA";
 
-        switch (modoOriginal) {
-            case OBRIGATORIA -> radioObrigatoria.setSelected(true);
-            case OPCIONAL -> radioOpcional.setSelected(true);
-            case SEM_CONFERENCIA -> radioSemConferencia.setSelected(true);
+        switch (modoStr) {
+            case "OBRIGATORIA" -> radioObrigatoria.setSelected(true);
+            case "OPCIONAL" -> radioOpcional.setSelected(true);
+            case "SEM_CONFERENCIA" -> radioSemConferencia.setSelected(true);
         }
+
+        // 2. Carregar Formas de Pagamento via T_CONFIG
+        String formasStr = configSistemaService.obterValor(ConfigChave.CAIXA_FORMAS_PAGAMENTO_FECHAMENTO);
+        if (formasStr == null) formasStr = "DINHEIRO"; // Padrão
+
+        chkDinheiro.setSelected(formasStr.contains("DINHEIRO"));
+        chkPix.setSelected(formasStr.contains("PIX"));
+        chkDebito.setSelected(formasStr.contains("DEBITO"));
+        chkCredito.setSelected(formasStr.contains("CREDITO"));
     }
 
     private void carregarConfiguracoesBackup() {
@@ -121,7 +134,6 @@ public class ConfiguracoesController {
     private void escolherPastaPgDump() {
         selecionarDiretorio(txtPastaPgDump);
     }
-
 
     private void selecionarDiretorio(TextField targetField) {
         DirectoryChooser chooser = new DirectoryChooser();
@@ -171,30 +183,37 @@ public class ConfiguracoesController {
         if (pastaSelecionada != null) {
             String caminhoPendrive = pastaSelecionada.getAbsolutePath();
 
-            // Dá feedback imediato na tela
             mostrarMensagem("Gerando backup e copiando para o pendrive, aguarde...");
 
-            // Roda em background para não travar a interface do JavaFX
             java.util.concurrent.CompletableFuture.runAsync(() -> {
-
-                // Chama o motor de backup
                 backupService.executarBackupManual(caminhoPendrive);
 
-                // Como estamos em outra thread, usamos o Platform.runLater para voltar a mexer na tela
                 javafx.application.Platform.runLater(() -> {
                     mostrarMensagem("Backup exportado para " + caminhoPendrive + " com sucesso!");
-                    carregarHistoricoBackup(); // Atualiza a label mostrando que acabou de ser feito
+                    carregarHistoricoBackup();
                 });
             });
         }
     }
 
     private void salvarCaixa() {
-        ModoConferencia modoSelecionado = obterModoSelecionado();
-        if (modoSelecionado != modoOriginal) {
-            configuracaoCaixaService.atualizarModoConferencia(modoSelecionado);
-            modoOriginal = modoSelecionado;
-        }
+        // 1. Salvar o modo de conferência como String na T_CONFIG
+        String modoSelecionado = "SEM_CONFERENCIA";
+        if (radioObrigatoria.isSelected()) modoSelecionado = "OBRIGATORIA";
+        else if (radioOpcional.isSelected()) modoSelecionado = "OPCIONAL";
+
+        configSistemaService.salvarValor(ConfigChave.CAIXA_MODO_CONFERENCIA, modoSelecionado);
+
+        // 2. Montar e salvar a lista de formas de pagamento permitidas no caixa
+        List<String> formasSelecionadas = new ArrayList<>();
+        if (chkDinheiro.isSelected()) formasSelecionadas.add("DINHEIRO");
+        if (chkPix.isSelected()) formasSelecionadas.add("PIX");
+        if (chkDebito.isSelected()) formasSelecionadas.add("DEBITO");
+        if (chkCredito.isSelected()) formasSelecionadas.add("CREDITO");
+
+        // Converte a lista para uma string (Ex: "DINHEIRO,PIX")
+        String formasString = String.join(",", formasSelecionadas);
+        configSistemaService.salvarValor(ConfigChave.CAIXA_FORMAS_PAGAMENTO_FECHAMENTO, formasString);
     }
 
     private void salvarBackup() {
@@ -204,12 +223,6 @@ public class ConfiguracoesController {
         configSistemaService.salvarValor(ConfigChave.BACKUP_PASTA_LOCAL, txtPastaLocal.getText());
         configSistemaService.salvarValor(ConfigChave.BACKUP_PASTA_NUVEM, txtPastaNuvem.getText());
         configSistemaService.salvarValor(ConfigChave.BACKUP_DIRETORIO_PG_DUMP, txtPastaPgDump.getText());
-    }
-
-    private ModoConferencia obterModoSelecionado() {
-        if (radioObrigatoria.isSelected()) return ModoConferencia.OBRIGATORIA;
-        if (radioOpcional.isSelected()) return ModoConferencia.OPCIONAL;
-        return ModoConferencia.SEM_CONFERENCIA;
     }
 
     private void mostrarMensagem(String texto) {

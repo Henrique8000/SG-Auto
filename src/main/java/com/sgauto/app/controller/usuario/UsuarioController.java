@@ -2,7 +2,7 @@ package com.sgauto.app.controller.usuario;
 
 import com.sgauto.app.controller.PaginacaoController;
 import com.sgauto.app.dto.usuario.FiltroUsuarioDTO;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Usuario;
 import com.sgauto.app.service.usuario.PerfilAcessoService;

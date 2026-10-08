@@ -1,6 +1,6 @@
 package com.sgauto.app.repository.patio;
 
-import com.sgauto.app.enums.StatusEstadiaPatio;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

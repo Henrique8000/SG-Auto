@@ -6,24 +6,33 @@
 
 <VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.sgauto.app.controller.os.OsRegistrarPagamentoModalController"
-      styleClass="modal-container" spacing="16" prefWidth="380">
+      styleClass="modal-container" spacing="16" prefWidth="420">
 
     <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
 
     <Label text="Registrar Pagamento" styleClass="page-title"/>
     <Label fx:id="lblSaldoAtual" styleClass="page-subtitle"/>
 
-    <VBox spacing="4">
-        <Label text="Forma de Pagamento" styleClass="form-label"/>
-        <ComboBox fx:id="cmbForma" styleClass="form-input" maxWidth="Infinity"/>
+    <Separator styleClass="border-subtle" />
+
+    <VBox spacing="12">
+        <VBox spacing="4">
+            <Label text="Valor (R$)" styleClass="form-label"/>
+            <TextField fx:id="txtValor" styleClass="form-input"/>
+        </VBox>
+
+        <VBox spacing="4">
+            <Label text="Forma de Pagamento" styleClass="form-label"/>
+            <ComboBox fx:id="cmbForma" styleClass="form-input" maxWidth="Infinity"/>
+        </VBox>
     </VBox>
 
-    <VBox spacing="4">
-        <Label text="Valor (R\$)" styleClass="form-label"/>
-        <TextField fx:id="txtValor" styleClass="form-input"/>
-    </VBox>
+    <!-- NOVO: Checkbox de Parcelamento -->
+    <CheckBox fx:id="chkParcelar" text="Parcelar este valor (Conta a Receber)" styleClass="check-box"/>
 
     <Label fx:id="lblErro" styleClass="form-error" managed="false" visible="false" wrapText="true"/>
+
+    <Separator styleClass="border-subtle" />
 
     <HBox spacing="12" alignment="CENTER_RIGHT">
         <Button text="Cancelar" styleClass="btn-secondary" onAction="#cancelar"/>

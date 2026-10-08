@@ -3,7 +3,11 @@ package com.sgauto.app.service;
 import com.sgauto.app.dto.patio.PatioFiltroDTO;
 import com.sgauto.app.dto.patio.PatioItemDashboardDTO;
 import com.sgauto.app.dto.patio.PatioResumoDashboardDTO;
-import com.sgauto.app.enums.*;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.caixa.CaixaMovimentacao;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
@@ -15,6 +19,7 @@ import com.sgauto.app.repository.ClienteRepository;
 import com.sgauto.app.repository.OrdemServico.OrdemServicoRepository;
 import com.sgauto.app.repository.VeiculoRepository;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
+import com.sgauto.app.service.financeiro.CaixaService;
 import com.sgauto.app.specifications.patio.EstadiaPatioSpecifications;
 import com.sgauto.app.repository.patio.MotivoEstadiaRepository;
 import com.sgauto.app.repository.patio.TabelaPrecoPatioRepository;
@@ -135,6 +140,11 @@ public class PatioService {
 
     @Transactional
     public EstadiaPatio registrarSaida(Long estadiaId, FormaPagamento formaPagamento) {
+        return registrarSaida(estadiaId, formaPagamento, true);
+    }
+
+    @Transactional
+    public EstadiaPatio registrarSaida(Long estadiaId, FormaPagamento formaPagamento, boolean registrarNoCaixa) {
         if(!permissaoUtil.verificar(PermissaoChave.PATIO_SAIDA)){
             throw new IllegalStateException("Seu usuário não possui permissão para dar saídas no pátio.");
         }
@@ -150,22 +160,24 @@ public class PatioService {
 
         BigDecimal valorTotal = calcularValorEstadia(es);
 
-        FormaPagamento formaPagamentoFinal;
-        if (valorTotal.compareTo(BigDecimal.ZERO) == 0) {
-            formaPagamentoFinal = FormaPagamento.ISENTO;
-        } else {
-            if (formaPagamento == null || formaPagamento == FormaPagamento.ISENTO)
-                throw new IllegalArgumentException("É necessário informar a forma de pagamento para dar saída de uma estadia com valor devido.");
-            formaPagamentoFinal = formaPagamento;
+        if(registrarNoCaixa){
+            FormaPagamento formaPagamentoFinal;
+            if (valorTotal.compareTo(BigDecimal.ZERO) == 0) {
+                formaPagamentoFinal = FormaPagamento.ISENTO;
+            } else {
+                if (formaPagamento == null || formaPagamento == FormaPagamento.ISENTO)
+                    throw new IllegalArgumentException("É necessário informar a forma de pagamento para dar saída de uma estadia com valor devido.");
+                formaPagamentoFinal = formaPagamento;
+            }
+
+            String descricao = "Pátio - saída do veículo placa " + es.getPlaca();
+            Long clienteId = es.getCliente() != null ? es.getCliente().getId() : null;
+
+            CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
+                    TipoMovimentacao.ENTRADA, OrigemMovimentacao.PATIO, formaPagamentoFinal,
+                    valorTotal, descricao, clienteId, es.getPlaca());
+            movimentacao.setReferenciaId(es.getId());
         }
-
-        String descricao = "Pátio - saída do veículo placa " + es.getPlaca();
-        Long clienteId = es.getCliente() != null ? es.getCliente().getId() : null;
-
-        CaixaMovimentacao movimentacao = caixaService.registrarMovimentacao(
-                TipoMovimentacao.ENTRADA, OrigemMovimentacao.PATIO, formaPagamentoFinal,
-                valorTotal, descricao, clienteId, es.getPlaca());
-        movimentacao.setReferenciaId(es.getId());
 
         es.setValorTotal(valorTotal);
         es.setDataSaida(LocalDateTime.now());
@@ -273,10 +285,14 @@ public class PatioService {
                 ? calcularValorEstadia(estadia)
                 : estadia.getValorTotal();
 
+        Long clienteId = estadia.getCliente() != null ? estadia.getCliente().getId() : null;
+        String clienteNome = estadia.getCliente() != null ? estadia.getCliente().getNome() : "Desconhecido";
+
         return new PatioItemDashboardDTO(
                 estadia.getId(),
                 estadia.getPlaca(),
-                estadia.getCliente().getNome(),
+                clienteId,
+                clienteNome,
                 estadia.getMotivo() != null ? estadia.getMotivo().getNome() : null,
                 estadia.getOrdemServico() != null ? estadia.getOrdemServico().getId() : null,
                 estadia.getDataEntrada(),

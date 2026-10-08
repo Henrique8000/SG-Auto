@@ -1,6 +1,5 @@
 package com.sgauto.app.controller.os;
 
-import com.sgauto.app.enums.FormaPagamento;
 import com.sgauto.app.model.OrdemServico.OsPagamento;
 import com.sgauto.app.service.OrdemServicoService;
 import com.sgauto.app.util.ModalUtil;

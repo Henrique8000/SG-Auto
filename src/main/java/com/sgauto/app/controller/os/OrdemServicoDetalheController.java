@@ -1,9 +1,9 @@
 package com.sgauto.app.controller.os;
 
 import com.sgauto.app.controller.patio.SaidaPatioModalController;
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.StatusEstadiaPatio;
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import com.sgauto.app.repository.patio.EstadiaPatioRepository;
@@ -15,7 +15,6 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import java.math.BigDecimal;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -129,6 +127,15 @@ public class OrdemServicoDetalheController {
 
     @FXML
     private void alterarStatus() {
+        if (cmbNovoStatus.getValue() == null) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Aviso de Validação");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Por favor, selecione um novo status antes de prosseguir.");
+            alerta.showAndWait();
+            return;
+        }
+
         StatusOS novoStatus = mapaStatus.get(cmbNovoStatus.getValue());
         if (novoStatus == null) return;
 

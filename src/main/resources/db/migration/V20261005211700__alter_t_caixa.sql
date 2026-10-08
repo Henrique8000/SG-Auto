@@ -1,0 +1,1 @@
+ALTER TABLE t_caixa ADD COLUMN caixa_total_conta_receber DECIMAL(15,2) NOT NULL DEFAULT 0;

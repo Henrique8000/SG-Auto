@@ -1,7 +1,7 @@
 package com.sgauto.app.controller.estoque;
 
 import com.sgauto.app.controller.estoque.fornecedor.SelecaoFornecedorModalController;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.model.estoque.Peca;
 import com.sgauto.app.service.estoque.EstoqueService;

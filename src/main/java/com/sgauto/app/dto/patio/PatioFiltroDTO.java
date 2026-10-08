@@ -1,6 +1,6 @@
 package com.sgauto.app.dto.patio;
 
-import com.sgauto.app.enums.StatusEstadiaPatio;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
 
 import java.time.LocalDate;
 

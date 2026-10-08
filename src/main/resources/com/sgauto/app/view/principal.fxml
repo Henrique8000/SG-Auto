@@ -23,26 +23,58 @@
                 </Label>
             </VBox>
 
+            <!-- OPERAÇÃO: rotina do dia a dia com cliente/veículo -->
             <Label text="OPERAÇÃO" styleClass="sidebar-section-label"/>
-            <ToggleButton fx:id="btnDashboard" text="Dashboard" styleClass="nav-button" toggleGroup="$menuLateral" selected="true" onAction="#irParaDashboard"/>
-            <ToggleButton fx:id="btnOrdens" text="Ordens de Serviço" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaOrdens"/>
-            <ToggleButton fx:id="btnClientes" text="Clientes" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaClientes"/>
-            <ToggleButton fx:id="btnVeiculos" text="Veículos" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaVeiculos"/>
-            <ToggleButton fx:id="btnPatioAtual" text="Pátio" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
+            <ToggleButton fx:id="btnDashboard" text="Dashboard" styleClass="nav-button"
+                          toggleGroup="$menuLateral" selected="true" onAction="#irParaDashboard"/>
+            <ToggleButton fx:id="btnOrdens" text="Ordens de Serviço" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaOrdens"/>
+            <ToggleButton fx:id="btnClientes" text="Clientes" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaClientes"/>
+            <ToggleButton fx:id="btnVeiculos" text="Veículos" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaVeiculos"/>
+            <ToggleButton fx:id="btnPatioAtual" text="Pátio" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaPatioAtual"/>
 
             <Label text="GESTÃO" styleClass="sidebar-section-label"/>
-            <ToggleButton fx:id="btnEstoque" text="Estoque" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaEstoque"/>
-            <ToggleButton fx:id="btnCatalogoServicos" text="Catálogo de Serviços" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCatalogoServicos"/>
-            <ToggleButton fx:id="btnFuncionarios" text="Funcionários" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaFuncionarios"/>
-            <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
+            <ToggleButton fx:id="btnEstoque" text="Estoque" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaEstoque"/>
+            <ToggleButton fx:id="btnCatalogoServicos" text="Catálogo de Serviços" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaCatalogoServicos"/>
+            <ToggleButton fx:id="btnFuncionarios" text="Funcionários" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaFuncionarios"/>
+            <Button fx:id="btnFinanceiroToggle" styleClass="nav-button, nav-button-expansivel" maxWidth="Infinity">
+                <graphic>
+                    <!-- Removido o styleClass do Label para evitar o padding duplo -->
+                    <HBox alignment="CENTER_LEFT" maxWidth="Infinity">
+                        <Label text="Financeiro" style="-fx-text-fill: -text-secondary; -fx-font-size: 13.5px;" HBox.hgrow="ALWAYS"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="lblFinanceiroChevron" text="▸" style="-fx-text-fill: -text-muted;"/>
+                    </HBox>
+                </graphic>
+            </Button>
+
+            <VBox fx:id="submenuFinanceiro" spacing="2" styleClass="nav-submenu">
+                <ToggleButton fx:id="btnCaixa" text="Caixa" styleClass="nav-button, nav-button-sub"
+                              toggleGroup="$menuLateral" onAction="#irParaCaixa"/>
+                <ToggleButton fx:id="btnContasReceber" text="Contas a Receber" styleClass="nav-button, nav-button-sub"
+                              toggleGroup="$menuLateral" onAction="#irParaContasReceber"/>
+                <ToggleButton fx:id="btnContasPagar" text="Contas a Pagar" styleClass="nav-button, nav-button-sub"
+                              toggleGroup="$menuLateral" onAction="#irParaContasPagar"/>
+                <ToggleButton fx:id="btnCategoriasFinanceiras" text="Categorias Financeiras" styleClass="nav-button, nav-button-sub"
+                              toggleGroup="$menuLateral" onAction="#irParaCategoriasFinanceiras"/>
+            </VBox>
             <ToggleButton fx:id="btnRelatorioDiario" text="Relatório Diário" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaRelatorioDiario"/>
 
             <Region VBox.vgrow="ALWAYS"/>
 
             <Label text="SISTEMA" styleClass="sidebar-section-label"/>
-            <ToggleButton fx:id="btnUsuarios" text="Usuários" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaUsuarios"/>
-            <ToggleButton fx:id="btnConfiguracoes" text="Configurações" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#irParaConfiguracoes"/>
-            <ToggleButton fx:id="btnLogoff" text="Logoff" styleClass="nav-button" toggleGroup="$menuLateral" onAction="#fazerLogoff"/>
+            <ToggleButton fx:id="btnUsuarios" text="Usuários" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaUsuarios"/>
+            <ToggleButton fx:id="btnConfiguracoes" text="Configurações" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#irParaConfiguracoes"/>
+            <ToggleButton fx:id="btnLogoff" text="Logoff" styleClass="nav-button"
+                          toggleGroup="$menuLateral" onAction="#fazerLogoff"/>
         </VBox>
     </left>
 

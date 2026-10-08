@@ -1,7 +1,7 @@
 package com.sgauto.app.specifications.patio;
 
 import com.sgauto.app.dto.patio.PatioFiltroDTO;
-import com.sgauto.app.enums.StatusEstadiaPatio;
+import com.sgauto.app.enums.patio.StatusEstadiaPatio;
 import com.sgauto.app.model.patio.EstadiaPatio;
 import org.springframework.data.jpa.domain.Specification;
 

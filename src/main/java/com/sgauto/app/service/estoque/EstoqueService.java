@@ -1,8 +1,8 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.enums.CampoPreco;
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.TipoAjustePreco;
+import com.sgauto.app.enums.estoque_servico.CampoPreco;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.estoque_servico.TipoAjustePreco;
 import com.sgauto.app.model.estoque.Fornecedor;
 import com.sgauto.app.model.estoque.Modelo;
 import com.sgauto.app.model.estoque.Peca;

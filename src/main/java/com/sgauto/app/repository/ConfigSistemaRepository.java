@@ -1,6 +1,6 @@
 package com.sgauto.app.repository;
 
-import com.sgauto.app.enums.ConfigChave;
+import com.sgauto.app.enums.backup.ConfigChave;
 import com.sgauto.app.model.ConfigSistema;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,9 +1,9 @@
 package com.sgauto.app.util;
 
-import com.sgauto.app.enums.FormaPagamento;
-import com.sgauto.app.enums.OrigemMovimentacao;
-import com.sgauto.app.enums.StatusOS;
-import com.sgauto.app.enums.TipoMovimentacao;
+import com.sgauto.app.enums.financeiro.FormaPagamento;
+import com.sgauto.app.enums.financeiro.OrigemMovimentacao;
+import com.sgauto.app.enums.os.StatusOS;
+import com.sgauto.app.enums.financeiro.TipoMovimentacao;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -69,6 +69,8 @@ public final class FormatoRelatorioUtil {
             case AVULSO -> "Avulso";
             case SUPRIMENTO -> "Suprimento";
             case SANGRIA -> "Sangria";
+            case CONTA_RECEBER -> "Conta-Receber";
+            case CONTA_PAGAR -> "Conta-Pagar";
         };
     }
 

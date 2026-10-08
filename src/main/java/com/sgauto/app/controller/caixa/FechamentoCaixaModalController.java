@@ -1,10 +1,10 @@
-package com.sgauto.app.controller;
+package com.sgauto.app.controller.caixa;
 
-import com.sgauto.app.enums.ModoConferencia;
+import com.sgauto.app.enums.backup.ConfigChave;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
 import com.sgauto.app.model.caixa.Caixa;
-import com.sgauto.app.model.caixa.ConfiguracaoCaixa;
-import com.sgauto.app.service.CaixaService;
-import com.sgauto.app.service.ConfiguracaoCaixaService;
+import com.sgauto.app.service.ConfigSistemaService;
+import com.sgauto.app.service.financeiro.CaixaService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -26,24 +26,29 @@ public class FechamentoCaixaModalController {
     @FXML private Button btnConfirmar;
 
     private final CaixaService caixaService;
-    private final ConfiguracaoCaixaService configuracaoCaixaService;
+    private final ConfigSistemaService configSistemaService;
 
     private Caixa caixaAtual;
     private ModoConferencia modo;
     private BigDecimal valorEsperado;
     private Runnable aoFechar;
 
-    public FechamentoCaixaModalController(CaixaService caixaService, ConfiguracaoCaixaService configuracaoCaixaService) {
+    public FechamentoCaixaModalController(CaixaService caixaService, ConfigSistemaService configSistemaService) {
         this.caixaService = caixaService;
-        this.configuracaoCaixaService = configuracaoCaixaService;
+        this.configSistemaService = configSistemaService;
     }
 
     public void configurar(Caixa caixaAtual, Runnable aoFechar) {
         this.caixaAtual = caixaAtual;
         this.aoFechar = aoFechar;
 
-        ConfiguracaoCaixa config = configuracaoCaixaService.buscarConfiguracao();
-        this.modo = config.getModoConferencia();
+        String modoStr = configSistemaService.obterValor(ConfigChave.CAIXA_MODO_CONFERENCIA);
+
+        if (modoStr == null) {
+            modoStr = "OBRIGATORIA";
+        }
+
+        this.modo = ModoConferencia.valueOf(modoStr);
 
         this.valorEsperado = caixaService.calcularValorEsperado(caixaAtual.getId());
         lblValorEsperado.setText(formatarMoeda(valorEsperado));

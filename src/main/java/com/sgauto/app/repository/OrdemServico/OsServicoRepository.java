@@ -2,6 +2,7 @@ package com.sgauto.app.repository.OrdemServico;
 
 import com.sgauto.app.dto.dashboard.ComissaoFuncionarioDTO;
 import com.sgauto.app.dto.dashboard.ServicoMaisRealizadoDTO;
+import com.sgauto.app.enums.os.StatusOS; // Confirme se este é o import correto do seu enum
 import com.sgauto.app.model.OrdemServico.OsServico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,24 +26,26 @@ public interface OsServicoRepository extends JpaRepository<OsServico, Long> {
             FROM OsServico os
             JOIN os.ordemServico o
             JOIN o.funcionario f
-            WHERE o.status = com.sgauto.app.enums.StatusOS.FINALIZADA
+            WHERE o.status = :status
             AND o.dataConclusao BETWEEN :inicio AND :fim
             GROUP BY f.id, f.nomeCompleto
             ORDER BY SUM(os.valorTotal * f.comissaoPercentual / 100) DESC
             """)
     List<ComissaoFuncionarioDTO> comissaoPorFuncionario(@Param("inicio") LocalDateTime inicio,
-                                                        @Param("fim") LocalDateTime fim);
+                                                        @Param("fim") LocalDateTime fim,
+                                                        @Param("status") StatusOS status);
 
     @Query("""
         SELECT new com.sgauto.app.dto.dashboard.ServicoMaisRealizadoDTO(s.id, s.nome, SUM(os.quantidade))
         FROM OsServico os
         JOIN os.servico s
         JOIN os.ordemServico o
-        WHERE o.status = com.sgauto.app.enums.StatusOS.FINALIZADA
+        WHERE o.status = :status
         AND o.dataConclusao BETWEEN :inicio AND :fim
         GROUP BY s.id, s.nome
         ORDER BY SUM(os.quantidade) DESC
         """)
     List<ServicoMaisRealizadoDTO> servicosMaisRealizados(@Param("inicio") LocalDateTime inicio,
-                                                         @Param("fim") LocalDateTime fim);
+                                                         @Param("fim") LocalDateTime fim,
+                                                         @Param("status") StatusOS status);
 }

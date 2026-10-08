@@ -1,6 +1,6 @@
 package com.sgauto.app.service.estoque;
 
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.estoque.Modelo;
 import com.sgauto.app.repository.estoque.ModeloRepository;
 import com.sgauto.app.repository.estoque.PecaRepository;

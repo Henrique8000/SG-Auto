@@ -1,7 +1,7 @@
 package com.sgauto.app.service.usuario;
 
 import com.sgauto.app.dto.usuario.FiltroPerfilAcessoDTO;
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.usuario.PerfilAcesso;
 import com.sgauto.app.model.usuario.Permissao;
 import com.sgauto.app.specifications.usuario.PerfilAcessoSpecification;

@@ -1,7 +1,7 @@
 package com.sgauto.app.model;
 
-import com.sgauto.app.enums.StatusBackup;
-import com.sgauto.app.enums.TipoBackup;
+import com.sgauto.app.enums.backup.StatusBackup;
+import com.sgauto.app.enums.backup.TipoBackup;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package com.sgauto.app.model.caixa;
 
-import com.sgauto.app.enums.ModoConferencia;
-import com.sgauto.app.enums.StatusCaixa;
+import com.sgauto.app.enums.financeiro.ModoConferencia;
+import com.sgauto.app.enums.financeiro.StatusCaixa;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -46,6 +46,9 @@ public class Caixa {
     @Column(name = "caixa_total_patio")
     private BigDecimal totalPatio;
 
+    @Column(name = "caixa_total_conta_receber")
+    private BigDecimal totalContaReceber = BigDecimal.ZERO;
+
     @Column(name = "caixa_total_avulso")
     private BigDecimal totalAvulso;
 
@@ -79,9 +82,8 @@ public class Caixa {
     @Column(name = "caixa_diferenca")
     private BigDecimal diferenca;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "caixa_modo_conferencia_usado", length = 20)
-    private ModoConferencia modoConferenciaUsado;
+    private String modoConferenciaUsado;
 
     @Column(name = "caixa_justificativa_diferenca", columnDefinition = "TEXT")
     private String justificativaDiferenca;
@@ -164,12 +166,15 @@ public class Caixa {
     public BigDecimal getDiferenca() { return diferenca; }
     public void setDiferenca(BigDecimal diferenca) { this.diferenca = diferenca; }
 
-    public ModoConferencia getModoConferenciaUsado() { return modoConferenciaUsado; }
-    public void setModoConferenciaUsado(ModoConferencia modoConferenciaUsado) { this.modoConferenciaUsado = modoConferenciaUsado; }
+    public String getModoConferenciaUsado() { return modoConferenciaUsado; }
+    public void setModoConferenciaUsado(String modoConferenciaUsado) { this.modoConferenciaUsado = modoConferenciaUsado; }
 
     public String getJustificativaDiferenca() { return justificativaDiferenca; }
     public void setJustificativaDiferenca(String justificativaDiferenca) { this.justificativaDiferenca = justificativaDiferenca; }
 
     public String getObservacoes() { return observacoes; }
     public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
+
+    public BigDecimal getTotalContaReceber() { return totalContaReceber; }
+    public void setTotalContaReceber(BigDecimal totalContaReceber) { this.totalContaReceber = totalContaReceber; }
 }

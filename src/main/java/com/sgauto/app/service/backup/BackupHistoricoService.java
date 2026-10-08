@@ -1,7 +1,7 @@
 package com.sgauto.app.service.backup;
 
-import com.sgauto.app.enums.StatusBackup;
-import com.sgauto.app.enums.TipoBackup;
+import com.sgauto.app.enums.backup.StatusBackup;
+import com.sgauto.app.enums.backup.TipoBackup;
 import com.sgauto.app.model.BackupHistorico;
 import com.sgauto.app.repository.BackupHistoricoRepository;
 import com.sgauto.app.service.ConfigSistemaService;

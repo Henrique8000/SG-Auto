@@ -1,6 +1,6 @@
 package com.sgauto.app.controller.patio;
 
-import com.sgauto.app.enums.StatusOS;
+import com.sgauto.app.enums.os.StatusOS;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.OrdemServico.OrdemServico;
 import com.sgauto.app.model.Veiculo;

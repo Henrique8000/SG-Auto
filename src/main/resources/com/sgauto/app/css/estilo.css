@@ -1014,8 +1014,7 @@ ScrollPane.modal-container {
     -fx-font-size: 14px;
 }
 
-/* ═══════════════ 25. SPINNER (Formato Industrial) ═══════════════ */
-.spinner.form-input {
+.spinner {
     -fx-background-color: -bg-input;
     -fx-border-color: -border-subtle;
     -fx-border-radius: 4;
@@ -1023,40 +1022,103 @@ ScrollPane.modal-container {
     -fx-padding: 0;
 }
 
-.spinner.form-input:focused {
+.spinner:focused {
     -fx-border-color: -border-focus;
     -fx-background-color: #181818;
 }
 
-/* Área de digitação do Spinner */
-.spinner.form-input .text-field {
+/* Área de digitação interna do Spinner (Garante fundo escuro) */
+.spinner .text-field {
     -fx-background-color: transparent;
     -fx-text-fill: -text-primary;
-    -fx-padding: 8 8;
+    -fx-prompt-text-fill: -text-muted;
+    -fx-padding: 6 8;
+}
+
+/* Força o painel interno dos botões a ficar transparente para assumir o fundo escuro */
+.spinner .stack-pane {
+    -fx-background-color: transparent;
 }
 
 /* Botões de incremento/decremento (setas) */
-.spinner.form-input .increment-arrow-button,
-.spinner.form-input .decrement-arrow-button {
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent transparent transparent -border-subtle;
     -fx-background-radius: 0;
     -fx-cursor: hand;
 }
 
-.spinner.form-input .increment-arrow-button:hover,
-.spinner.form-input .decrement-arrow-button:hover {
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
     -fx-background-color: -bg-card-hover;
 }
 
 /* Os ícones das setas */
-.spinner.form-input .increment-arrow-button .increment-arrow,
-.spinner.form-input .decrement-arrow-button .decrement-arrow {
+.spinner .increment-arrow-button .increment-arrow,
+.spinner .decrement-arrow-button .decrement-arrow {
     -fx-background-color: -text-muted;
 }
 
 /* Efeito Hover nas setinhas */
-.spinner.form-input .increment-arrow-button:hover .increment-arrow,
-.spinner.form-input .decrement-arrow-button:hover .decrement-arrow {
+.spinner .increment-arrow-button:hover .increment-arrow,
+.spinner .decrement-arrow-button:hover .decrement-arrow {
     -fx-background-color: -accent;
 }
+
+/* ═══════════════ DESTAQUE DE SELEÇÃO NAS TABELAS ═══════════════ */
+
+/* Altera a cor de fundo da linha selecionada na tabela */
+.modern-table .table-row-cell:filled:selected {
+    -fx-background-color: -accent-soft; /* Fundo translúcido com ocre anodizado */
+    -fx-border-color: transparent transparent -accent transparent; /* Linha de reforço na parte inferior */
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Mantém o texto perfeitamente legível e em destaque na linha selecionada */
+.modern-table .table-row-cell:filled:selected .text,
+.modern-table .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: -text-white;
+    -fx-font-weight: bold;
+}
+
+/* Efeito ao passar o mouse por cima das linhas (Hover) */
+.modern-table .table-row-cell:filled:hover {
+    -fx-background-color: -bg-card-hover;
+}
+
+/* ═══════════════ SUBMENU EXPANSÍVEL (FINANCEIRO) ═══════════════ */
+
+/* Remove qualquer preenchimento extra que o botão pai possa gerar */
+.nav-button-expansivel {
+    -fx-padding: 8 16;
+}
+
+/* Cria uma "caixa" sutilmente mais escura para abrigar os itens filhos */
+.nav-submenu {
+    -fx-background-color: -bg-input; /* Fundo mais profundo/escuro que o Sidebar (#121212) */
+    -fx-background-radius: 4;
+    -fx-margin: 0 12 8 12; /* Margem para alinhar perfeitamente com os botões normais */
+    -fx-padding: 6 0;
+
+    /* Fio guia à esquerda para indicar hierarquia (Tree-line) */
+    -fx-border-color: transparent transparent transparent #222222;
+    -fx-border-width: 0 0 0 2;
+    -fx-border-insets: 0 0 0 16;
+}
+
+/* Estilo específico para os botões filhos (dentro do submenu) */
+.nav-button-sub {
+    -fx-padding: 8 16 8 36; /* Padding esquerdo (36) faz a indentação do texto */
+    -fx-margin: 0 8; /* Margem reduzida para caber no bloco escuro */
+    -fx-pref-width: 200;
+    -fx-font-size: 12.5px; /* Fonte levemente menor para distinguir do pai */
+}
+
+/* Comportamento de seleção do filho (mais discreto que o principal) */
+.nav-button-sub:selected {
+    -fx-background-color: rgba(198, 138, 60, 0.10); /* Ocre super suave */
+    -fx-text-fill: -text-white; /* Branco para destacar bem no fundo escuro */
+    -fx-border-width: 0; /* Remove a barra grossa lateral para manter o visual limpo */
+}
+

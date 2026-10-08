@@ -1,7 +1,7 @@
 package com.sgauto.app.repository;
 
-import com.sgauto.app.enums.StatusBackup;
-import com.sgauto.app.enums.TipoBackup;
+import com.sgauto.app.enums.backup.StatusBackup;
+import com.sgauto.app.enums.backup.TipoBackup;
 import com.sgauto.app.model.BackupHistorico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,8 +1,8 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.CargoFuncionario;
-import com.sgauto.app.enums.PermissaoChave;
-import com.sgauto.app.enums.StatusFuncionario;
+import com.sgauto.app.enums.funcionario.CargoFuncionario;
+import com.sgauto.app.enums.usuario.PermissaoChave;
+import com.sgauto.app.enums.funcionario.StatusFuncionario;
 import com.sgauto.app.model.Funcionario;
 import com.sgauto.app.repository.FuncionarioRepository;
 import com.sgauto.app.util.VerificaPermissaoUtil;

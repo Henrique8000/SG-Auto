@@ -1,6 +1,6 @@
 package com.sgauto.app.service;
 
-import com.sgauto.app.enums.PermissaoChave;
+import com.sgauto.app.enums.usuario.PermissaoChave;
 import com.sgauto.app.model.Cliente;
 import com.sgauto.app.model.Veiculo;
 import com.sgauto.app.repository.ClienteRepository;

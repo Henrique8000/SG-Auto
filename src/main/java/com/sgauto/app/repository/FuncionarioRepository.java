@@ -1,7 +1,7 @@
 package com.sgauto.app.repository;
 
-import com.sgauto.app.enums.CargoFuncionario;
-import com.sgauto.app.enums.StatusFuncionario;
+import com.sgauto.app.enums.funcionario.CargoFuncionario;
+import com.sgauto.app.enums.funcionario.StatusFuncionario;
 import com.sgauto.app.model.Funcionario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
